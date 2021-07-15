@@ -67,10 +67,10 @@ created(){
 <style>
 /*首页*/
 .choosebox{
-    width: 20vw;
+    width: 60vw;
     background: rgb(149, 229, 240);
     border-radius: 15px;
-    margin: 50px auto 0;
+    margin: 35vh auto 0;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -78,9 +78,9 @@ created(){
 }
 .choosebtn,.title{
     width: 50%;
-    height: 10px;
+    height: 30px;
     text-align: center;
-    margin-bottom: 7px;
+    margin-bottom: 15px;
 }
 .choosebtn{
     border-radius: 10px;
@@ -93,8 +93,8 @@ created(){
 }
 .title{
     width: 100%;
-    margin-top: 5px;
-    font-size: 6px;
+    margin-top: 30px;
+    font-size: 20px;
     animation: change 5s infinite;
 }
 @keyframes change {
@@ -120,37 +120,40 @@ created(){
 }
 /*弹窗 */
 .out{
-    width: 40vw;
-    height: 22vw;
+    width: 80vw;
     position: absolute;
     background: url("../assets/img/indexbg.jpg") no-repeat center center;
     left: 50%;
-    top: -200px;
+    top: -50vh;
     transform: translate(-50%,0);
     transition: all .5s;
 }
 .move{
-    transform: translate(-50%,250px);
+    transform: translate(-50%,75vh);
     transition: all .5s;
 }
 .level-content{
     width: 80%;
-    height: 40px;
+    height: 200px;
     margin: 0 auto 5px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: flex-start;
+    align-content: flex-start;
 }
 .level-btn{
     width: 50%;
     margin-left: 40%;
     display: flex;
+
     justify-content: flex-end;
+    margin-bottom: 10px;
 }
 .btn{
-    width: 20%;
-    height: 8px;
-    margin-left: 3px;
+    width: 30%;
+    height: 20px;
+    margin-left: 5px;
+    margin-top: 5px;
     border:none;
     cursor: pointer;
     color: #ffffff;
