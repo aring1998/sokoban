@@ -13,7 +13,7 @@ export default new Router({
       path: '',
       // redirect 重定向
       redirect: to => {
-        return '/create'
+        return '/index'
       }
     },
     {

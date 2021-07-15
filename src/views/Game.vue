@@ -42,6 +42,14 @@ export default {
     GameContent
   },
   mounted() {
+    //判断是否通过选关进入
+    if(this.$route.query.level !== undefined){
+      this.level += this.$route.query.level - 1
+      this.gameCell = []
+      setTimeout(() => {
+        this.gameCell = official[this.level]
+      }, 0);
+    }
     // 判断是否测试地图
     if (this.$route.params.type == 'created') {
       this.gameCell = this.$route.params.gameCell
