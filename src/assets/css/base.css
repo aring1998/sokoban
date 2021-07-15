@@ -1,0 +1,17 @@
+@import url("./normalize.css");
+
+:root {
+  --mainColor: #95d52f;
+  --deepMainColor: #339933;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  box-sizing: border-box;
+  outline: none;
+  text-decoration: none;
+}
