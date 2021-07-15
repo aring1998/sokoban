@@ -17,6 +17,18 @@
         <i class="el-icon-caret-bottom" @click="move(gameCell[0].length)"></i>
       </div>
     </div>
+    <popover v-show="popShow" v-if="this.$route.params.type == 'created'">
+      <div class="test-pop">
+        <span>您已完成该地图的测试</span>
+        <span>您可以选择将地图存储</span>
+        <span>我们需要更多有趣的地图</span>
+        <span>如果可以请选择上传云端</span>
+        <div>
+          <button @click="saveLocal">存在本地</button>
+          <button @click="saveServe">上传云端</button>
+        </div>
+      </div>
+    </popover>
     <button @click="changeLevel(-1)">上一关</button>
     <button @click="changeLevel(1)">下一关</button>
   </div>
@@ -29,17 +41,21 @@ import {request} from '@/network/request'
 
 import TopBar from "@/components/TopBar"
 import GameContent from "@/components/GameContent"
+import Popover from "@/components/Popover"
+
 
 export default {
   data() {
     return {
       level: 0,
-      gameCell: official[0]
+      gameCell: official[0],
+      popShow: false
     };
   },
   components: {
     TopBar,
-    GameContent
+    GameContent,
+    Popover
   },
   mounted() {
     //判断是否通过选关进入
@@ -101,7 +117,7 @@ export default {
               if (boxOnEnd == endCounter) {
                 alert('you win!')
                 if (this.$route.params.type == 'created') {
-                  this.gameCell = this.$route.params.gameCell
+                  this.popShow = true
                 }
                 else this.changeLevel(1)
               }
@@ -114,13 +130,46 @@ export default {
         }
       }
     },
-    // 下一关
+    // 切换关卡
     changeLevel(value) {
       this.level += value
       this.gameCell = []
       setTimeout(() => {
         this.gameCell = official[this.level]
       }, 0);
+    },
+    // 将地图存在本地
+    saveLocal() {
+      for (let i = 0; i < 99; i++){
+        if (!window.localStorage.getItem('map' + i)) {
+          window.localStorage.setItem('map' + i, this.gameCell)
+          break
+        } 
+      }
+    },
+    // 将地图上传云端
+    saveServe() {
+      const mapData = this.gameCell
+      request({
+        url: 'map/add',
+        method: 'POST',
+        data: {
+          creator: '',
+          mapName: '',
+          mapData
+        }
+      }).then(res => {
+        console.log(res);
+        this.$message({
+          message: '上传成功',
+          type: 'success'
+        });
+      }).catch(err => {
+        this.$message({
+          message: '上传失败，错误：' + err,
+          type: 'error'
+        });
+      })
     }
   }
 };
@@ -162,5 +211,16 @@ export default {
 .analog-handle .center {
   display: flex;
   justify-content: space-between;
+}
+
+.test-pop {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.test-pop span {
+  margin-bottom: 8px;
 }
 </style>
