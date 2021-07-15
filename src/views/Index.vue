@@ -81,7 +81,6 @@ created(){
     width: 100vw;
     height: 100vh;
     background: rgb(149, 229, 240);
-    border-radius: 15px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -99,10 +98,6 @@ created(){
     border-radius: 10px;
     cursor: pointer;
     border: 1px solid rgb(2, 20, 31);
-}
-.choosebtn:hover{
-    border: 1px solid rgb(15, 137, 207);
-    color: rgb(15, 137, 207);
 }
 .title{
     width: 100%;
