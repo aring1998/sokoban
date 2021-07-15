@@ -7,8 +7,8 @@
         <button class="choosebtn" @click="toCreate">创建地图</button>
       </div>
       <!--弹窗-->
-      <div class="out" :class="{move:ifchoose}">
-          <p class="title">选择关卡</p>
+      <div class="out" :class="{show:ifchoose}">
+          <p class="title2">选择关卡</p>
           <div class="level-content">
               <button 
               v-for="(item,index) in officials"
@@ -40,7 +40,8 @@ methods:{
     },
     //选择关卡按钮弹出
     chooselevel(el){
-          this.ifchoose = !this.ifchoose  
+          this.ifchoose = !this.ifchoose 
+          this.level = ""
     },
     //选择关卡
     levelis(num){
@@ -66,21 +67,29 @@ created(){
 
 <style>
 /*首页*/
+.mainpage{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
 .choosebox{
-    width: 60vw;
+    width: 100vw;
+    height: 100vh;
     background: rgb(149, 229, 240);
     border-radius: 15px;
-    margin: 35vh auto 0;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
+    transition: all .5s;
 }
 .choosebtn,.title{
     width: 50%;
-    height: 30px;
+    height: 50px;
     text-align: center;
-    margin-bottom: 15px;
+    margin-top: 10px;
 }
 .choosebtn{
     border-radius: 10px;
@@ -96,6 +105,8 @@ created(){
     margin-top: 30px;
     font-size: 20px;
     animation: change 5s infinite;
+    position: relative;
+    top: -20vh;
 }
 @keyframes change {
   0% {
@@ -115,26 +126,26 @@ created(){
   }
 }
 .show{
-    visibility: hidden;
+    transform: translate(0,-100vh);
     transition: all 1s;
 }
 /*弹窗 */
 .out{
-    width: 80vw;
-    position: absolute;
-    background: url("../assets/img/indexbg.jpg") no-repeat center center;
-    left: 50%;
-    top: -50vh;
-    transform: translate(-50%,0);
+    width: 100vw;
+    height: 100vh;
+     background: rgb(149, 229, 240);
     transition: all .5s;
+    padding-top: 50px;
 }
-.move{
-    transform: translate(-50%,75vh);
-    transition: all .5s;
+.title2{
+    font-size: 30px;
+    animation: change 5s infinite;
+    margin: 0 auto 50px;
+    text-align: center;
 }
 .level-content{
     width: 80%;
-    height: 200px;
+    height: 50vh;
     margin: 0 auto 5px;
     display: flex;
     flex-wrap: wrap;
@@ -142,28 +153,29 @@ created(){
     align-content: flex-start;
 }
 .level-btn{
-    width: 50%;
-    margin-left: 40%;
+    width: 80%;
     display: flex;
-
-    justify-content: flex-end;
-    margin-bottom: 10px;
+    justify-content: center;
+    margin: 0 auto 10px;
 }
 .btn{
     width: 30%;
-    height: 20px;
+    height: 50px;
     margin-left: 5px;
     margin-top: 5px;
     border:none;
     cursor: pointer;
     color: #ffffff;
     background: rgb(16, 162, 219);
+    border-radius: 10px;
 }
 .btn-ok{
    background: rgb(16, 162, 219);
+   margin-right: 10px;
 }
 .btn-no{
     background: rgb(255, 46, 46);
+    margin-left: 10px;
 }
 .active{
   background: rgb(26, 23, 179);
