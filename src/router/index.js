@@ -6,6 +6,7 @@ Vue.use(Router)
 const Index = () => import('@/views/Index.vue')
 const Game = () => import('@/views/Game.vue')
 const Create = () => import('@/views/Create.vue')
+const workshop = ()=>import('../views/workshop.vue')
 
 export default new Router({
   routes: [
@@ -28,6 +29,10 @@ export default new Router({
     {
       path: '/create',
       component: Create
+    },
+    {
+      path:'/workshop',
+      component:workshop 
     }
   ]
 })

@@ -3,7 +3,7 @@
       <div class="choosebox" :class="{show:ifchoose}">
         <p class="title">PUSH THE BOX!</p>
         <button class="choosebtn" @click="chooselevel">选择关卡</button>
-        <button class="choosebtn">创意工坊</button>
+        <button class="choosebtn" @click="toWorkshop">创意工坊</button>
         <button class="choosebtn" @click="toCreate">创建地图</button>
       </div>
       <!--弹窗-->
@@ -57,6 +57,10 @@ methods:{
         }else{
             this.$router.push({path:"game",query:{level:this.level}})
         }
+    },
+    //跳转创意工坊
+    toWorkshop(){
+        this.$router.push('/workshop')
     }
 },
 created(){
