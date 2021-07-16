@@ -10,7 +10,7 @@
     </popover>
 
     <!-- 游戏地图 -->
-    <game-content :game-cell="gameCell" :get-column-index="getColumnIndex" :get-row-index="getRowIndex"></game-content>
+    <game-content :game-map="gameMap" :get-column-index="getColumnIndex" :get-row-index="getRowIndex"></game-content>
 
     <!-- 选择地图元素 -->
     <div class="map-el-container">
@@ -64,10 +64,18 @@ export default {
         {
           value: 10,
           label: '10 * 10'
+        },
+        {
+          value: 11,
+          label: '11 * 11'
+        },
+        {
+          value: 12,
+          label: '12 * 12'
         }
       ],
       initialLayout: null,
-      gameCell: [
+      gameMap: [
         [0, 0, 0, 0, 0, 0, 0],
         [0, 1, 1, 1, 1, 1, 0],
         [0, 1, 1, 1, 1, 1, 0],
@@ -116,13 +124,13 @@ export default {
         })
         return
       }
-      this.gameCell = []
+      this.gameMap = []
       for (let i = 0; i < this.initialLayout; i++) {
-        this.gameCell.push([])
+        this.gameMap.push([])
       }
       for (let i = 0; i < this.initialLayout; i++) {
         for (let j = 0; j < this.initialLayout; j++) {
-          this.gameCell[i].push(1)
+          this.gameMap[i].push(1)
         }
       }
       this.popShow = false
@@ -138,7 +146,7 @@ export default {
     },
     // 更改单元格
     changeCell() {
-      Vue.set(this.gameCell[this.choiceRow], this.choiceColumn, this.clickCellType)
+      Vue.set(this.gameMap[this.choiceRow], this.choiceColumn, this.clickCellType)
     },
     // 选择地图元素
     choiceMapEl(index) {
@@ -147,7 +155,7 @@ export default {
     },
     // 测试地图
     testMap() {
-      this.$router.push({ name: 'game', params: { gameCell: this.gameCell, type: 'created' } })
+      this.$router.push({ name: 'game', params: { gameMap: this.gameMap, type: 'created' } })
     }
   }
 }

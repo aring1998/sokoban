@@ -3,7 +3,7 @@
     <!-- 顶部导航栏 -->
     <top-bar></top-bar>
     <!-- 游戏内容 -->
-    <game-content :game-cell="gameMap"></game-content>
+    <game-content :game-map="gameMap"></game-content>
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
       <div class="top">
@@ -72,6 +72,7 @@ export default {
     }
     // 判断是否测试地图
     if (this.$route.params.type == 'created') {
+      console.log('cre');
       this.gameMap = this.$route.params.gameMap
     }
     // 游戏初始化
@@ -157,10 +158,12 @@ export default {
           if (boxPlace == 4) { // 如果箱子抵达终点
             Vue.set(this.gameMap[setBoxY], setBoxX, 5)
             setTimeout(() => {
-              console.log(document.querySelectorAll('.box.end').length);
               if (document.querySelectorAll('.box.end').length == this.endCounter) {
                 alert('you win!')
-                this.changeLevel(1)
+                if (this.$route.params.type == 'created') {
+                  this.popShow = true
+                }
+                else this.changeLevel(1)
               }
             }, 0);
           }

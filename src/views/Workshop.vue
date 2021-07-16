@@ -39,6 +39,7 @@ export default {
         method: 'GET'
       })
         .then(res => {
+          console.log(res);
           res.data.forEach(item => {
             this.mapValue.push(item)
           })

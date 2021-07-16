@@ -1,9 +1,9 @@
 <!-- 游戏地图 -->
 <template>
   <table class="game-container">
-    <tr v-for="(item, index) in gameCell.length" :key="index" @click="getRowIndex(index)">
+    <tr v-for="(item, index) in gameMap.length" :key="index" @click="getRowIndex(index)">
       <td
-        v-for="(item, index) of gameCell[index]"
+        v-for="(item, index) of gameMap[index]"
         @click="getColumnIndex(index)"
         :key="index"
         :class="{
@@ -22,7 +22,7 @@
 <script>
 export default {
   props: {
-    gameCell: Array,
+    gameMap: Array,
     getColumnIndex: {
       type: Function,
       default: () => {}
