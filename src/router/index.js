@@ -6,7 +6,7 @@ Vue.use(Router)
 const Index = () => import('@/views/Index.vue')
 const Game = () => import('@/views/Game.vue')
 const Create = () => import('@/views/Create.vue')
-const workshop = ()=>import('../views/workshop.vue')
+const Workshop = ()=>import('../views/Workshop.vue')
 
 export default new Router({
   routes: [
@@ -32,7 +32,7 @@ export default new Router({
     },
     {
       path:'/workshop',
-      component:workshop 
+      component:Workshop 
     }
   ]
 })

@@ -34,7 +34,7 @@ export default {
 }
 
 .popover-shade .popover {
-  width: 250px;
+  width: 350px;
   padding: 20px;
   background-color: var(--mainColor);
   border: var(--deepMainColor) 4px solid;

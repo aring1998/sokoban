@@ -13,7 +13,7 @@
           'player': item == 2,
           'box': item == 3,
           'end': item == 4,
-          'blank': item == 5
+          'box-on-end': item == 5
         }"
       ></td>
     </tr>
@@ -77,7 +77,7 @@ export default {
   background-image: url('~@/assets/img/down.png');
 }
 
-.box.end {
+.box-on-end {
   background-image: url('~@/assets/img/end-box.png');
 }
 </style>

@@ -7,14 +7,14 @@
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
       <div class="top">
-        <i class="el-icon-caret-top" @click="move(-gameCell[0].length)"></i>
+        <i class="el-icon-caret-top" @click="move('y', -1)"></i>
       </div>
       <div class="center">
-        <i class="el-icon-caret-left" @click="move(-1)"></i>
-        <i class="el-icon-caret-right" @click="move(1)"></i>
+        <i class="el-icon-caret-left" @click="move('x', -1)"></i>
+        <i class="el-icon-caret-right" @click="move('x', 1)"></i>
       </div>
       <div class="bottom">
-        <i class="el-icon-caret-bottom" @click="move(gameCell[0].length)"></i>
+        <i class="el-icon-caret-bottom" @click="move('y', 1)"></i>
       </div>
     </div>
     <popover v-show="popShow" v-if="this.$route.params.type == 'created'">
@@ -35,8 +35,9 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
 import {official} from "@/assets/js/level";
-import {checkClass} from "@/utils/index";
 import {request} from '@/network/request'
 
 import TopBar from "@/components/TopBar"
@@ -48,8 +49,11 @@ export default {
   data() {
     return {
       level: 0,
-      gameCell: official[0],
-      popShow: false
+      gameCell: official[2],  // 游戏地图
+      playerX: 0,  // 人物x轴坐标
+      playerY: 0,  // 人物y轴坐标
+      endCounter: 0,  // 终点个数
+      popShow: false,  // 弹出框是否展示
     };
   },
   components: {
@@ -70,65 +74,111 @@ export default {
     if (this.$route.params.type == 'created') {
       this.gameCell = this.$route.params.gameCell
     }
-    const _this = this
-    document.addEventListener('keydown', function(e){
-      switch(e.keyCode) {
-        case 37: {  // 左
-          _this.move(-1)
-          break
-        }
-        case 38: {  // 上
-          _this.move(-_this.gameCell[0].length)
-          break
-        }
-        case 39: {  // 右
-          _this.move(1)
-          break
-        }
-        case 40: {  // 下
-          _this.move(_this.gameCell[0].length)
-          break
-        }
-      }
-    })
+    // 游戏初始化
+    this.init()
+    // 
+    // const _this = this
+    // document.addEventListener('keydown', function(e){
+    //   switch(e.keyCode) {
+    //     case 37: {  // 左
+    //       _this.move(-1)
+    //       break
+    //     }
+    //     case 38: {  // 上
+    //       _this.move(-_this.gameCell[0].length)
+    //       break
+    //     }
+    //     case 39: {  // 右
+    //       _this.move(1)
+    //       break
+    //     }
+    //     case 40: {  // 下
+    //       _this.move(_this.gameCell[0].length)
+    //       break
+    //     }
+    //   }
+    // })
   },
   methods: {
-    // 玩家移动
-    move(step) {
-      const td = document.getElementsByTagName('td')
-      for(let i in td) {
-        if (checkClass(td[i], 'player') != -1) {
-          const j = eval(i) + step
-          // 如果超出单元格
-          if (j >= td.length || j < 0) return
-          // 如果碰墙
-          if (checkClass(td[j], 'wall') != -1) return
-          // 如果碰箱子
-          if (checkClass(td[j], 'box') != -1) {
-            // 如果箱子撞墙或箱子
-            if (checkClass(td[eval(j) + step], 'wall') != -1 || checkClass(td[eval(j) + step], 'box') != -1) return
-            // 箱子移动
-            td[j].classList.remove('box')
-            td[eval(j) + step].classList.add('box')
-            // 如果箱子抵达终点
-            if (checkClass(td[eval(j) + step], 'end') != -1) {
-              const endCounter = document.getElementsByClassName('end').length  // 获取终点的个数
-              const boxOnEnd = document.querySelectorAll('.box.end').length  // 获取抵达终点箱子的个数
-              if (boxOnEnd == endCounter) {
-                alert('you win!')
-                if (this.$route.params.type == 'created') {
-                  this.popShow = true
-                }
-                else this.changeLevel(1)
-              }
-            }
+    // 初始化
+    init() {
+      // 获取人物坐标、终点个数
+      for (let y in this.gameCell) {
+        for (let x in this.gameCell[y]) {
+          if (this.gameCell[y][x] == 2) {
+            console.log('找到玩家的坐标：', x , y);
+            this.playerX = x
+            this.playerY = y
           }
-          // 玩家移动
-          td[i].classList.remove('player')
-          td[j].classList.add('player')
-          break
+          if (this.gameCell[y][x] == 4) {
+            this.endCounter++
+          }
         }
       }
+    },
+    // 玩家移动
+    move(pos, step) {
+      const fromPlace = this.gameCell[this.playerY][this.playerX]
+      console.log(fromPlace);
+      if (fromPlace == 6) 
+        Vue.set(this.gameCell[this.playerY], this.playerX, 4)
+      else
+        Vue.set(this.gameCell[this.playerY], this.playerX, 1)
+      
+      if (pos == 'x')
+        this.playerX = eval(this.playerX) + step
+      else
+        this.playerY = eval(this.playerY) + step
+
+      const movePlace = this.gameCell[this.playerY][this.playerX]
+      
+      
+      if (movePlace == 0) {  // 碰墙
+        if (pos == 'x')
+          this.playerX -= step  // 复原人物位置
+        else
+          this.playerY -= step
+      }
+      if (movePlace == 3 || movePlace == 5) {  // 碰箱子
+        if (pos == 'x') {
+          const boxPlace = this.gameCell[this.playerY][eval(this.playerX) + step] // 箱子即将抵达位置
+          if (boxPlace == 0 || boxPlace == 3) {
+            this.playerX -= step
+          }
+          if (boxPlace == 4) {  // 如果箱子抵达终点
+            Vue.set(this.gameCell[this.playerY], eval(this.playerX) + step, 5)
+            setTimeout(() => {
+              if (document.getElementsByClassName('box-on-end').length == this.endCounter) {
+                alert('you win!')
+                this.changeLevel(1)
+              }
+            }, 0);
+          } else
+            Vue.set(this.gameCell[this.playerY], eval(this.playerX) + step, 3)
+        }
+        else {
+          const boxPlace = this.gameCell[eval(this.playerY) + step][this.playerX]
+          if (boxPlace == 0 || boxPlace == 3) {
+            this.playerY -= step
+          }
+          if (boxPlace == 4) {
+            Vue.set(this.gameCell[eval(this.playerY) + step], this.playerX, 5)
+            setTimeout(() => {
+              if (document.getElementsByClassName('box-on-end').length == this.endCounter) {
+                alert('you win!')
+                this.changeLevel(1)
+              }
+            }, 0);
+          } else
+            Vue.set(this.gameCell[eval(this.playerY) + step], this.playerX, 3)
+        }
+      }
+      if (movePlace == 4) {
+        Vue.set(this.gameCell[this.playerY], this.playerX, 4)
+      }
+
+      // 人物移动
+      Vue.set(this.gameCell[this.playerY], this.playerX, 2)
     },
     // 切换关卡
     changeLevel(value) {
@@ -136,6 +186,7 @@ export default {
       this.gameCell = []
       setTimeout(() => {
         this.gameCell = official[this.level]
+        this.init()
       }, 0);
     },
     // 将地图存在本地
