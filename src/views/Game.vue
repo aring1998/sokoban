@@ -97,15 +97,15 @@ export default {
     move(direction, step) {
       /**
        * 变量名
-       * direction: 轴方向
-       * step: 步数
-       * fromPlace: 出发点
-       * toPlace: 目标点
-       * setY: 目标点Vue.set中object的index值
-       * setX: 目标点Vue.set中key值
-       * setBoxY: 箱子移动点Vue.set中object的index值
-       * setBoxX: 箱子移动点Vue.set中key值
-       * isDefault: 是否默认的移动方法
+       * @direction: 轴方向
+       * @step: 步数
+       * @fromPlace: 出发点
+       * @toPlace: 目标点
+       * @setY: 目标点Vue.set中object的index值
+       * @setX: 目标点Vue.set中key值
+       * @setBoxY: 箱子移动点Vue.set中object的index值
+       * @setBoxX: 箱子移动点Vue.set中key值
+       * @isDefault: 是否默认的移动方法
        */
       const fromPlace = this.gameMap[this.playerY][this.playerX]
       // 声明初始变量
@@ -220,10 +220,7 @@ export default {
           })
         })
         .catch((err) => {
-          this.$message({
-            message: '上传失败，错误：' + err,
-            type: 'error',
-          })
+          this.$message.error('上传失败，错误：' + err)
         })
     },
   },

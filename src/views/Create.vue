@@ -15,7 +15,7 @@
     <!-- 选择地图元素 -->
     <div class="map-el-container">
       <ul>
-        <li v-for="(item, index) of mapEl" :key="item.value" :class="{ active: index == elIndex }" @click="choiceMapEl(index)">
+        <li v-for="(item, index) of mapEl" :key="item.value" :class="{ active: index == elIndex }" @click="choiceMapEl(index, item.value)">
           <div
             :class="{
               'map-el-img': true,
@@ -43,7 +43,7 @@ import Popover from '@/components/Popover'
 export default {
   data() {
     return {
-      popShow: true,
+      popShow: true,  // 弹窗展示
       options: [
         {
           value: 6,
@@ -74,7 +74,7 @@ export default {
           label: '12 * 12'
         }
       ],
-      initialLayout: null,
+      initialLayout: null,  // 地图初始布局
       gameMap: [
         [0, 0, 0, 0, 0, 0, 0],
         [0, 1, 1, 1, 1, 1, 0],
@@ -82,9 +82,9 @@ export default {
         [0, 1, 1, 1, 1, 1, 0],
         [0, 0, 0, 0, 0, 0, 0]
       ],
-      choiceRow: 0,
-      choiceColumn: 0,
-      mapEl: [
+      choiceRow: 0,  // 选中行
+      choiceColumn: 0,  // 选中列
+      mapEl: [  // 地图元素
         {
           name: '墙',
           value: 0
@@ -106,8 +106,8 @@ export default {
           value: 4
         }
       ],
-      elIndex: null,
-      clickCellType: null
+      elIndex: null,  // 元素对应索引
+      clickCellType: null  // 点击布置元素类型
     }
   },
   components: {
@@ -118,10 +118,7 @@ export default {
     // 更改表格布局
     changeTableLayout() {
       if (this.initialLayout == null) {
-        this.$message({
-          message: '请选择初始地图布局',
-          type: 'error'
-        })
+        this.$message.error('请选择初始地图布局')
         return
       }
       this.gameMap = []
@@ -144,18 +141,52 @@ export default {
       this.choiceRow = index
       this.changeCell()
     },
+    // 选择地图元素
+    choiceMapEl(index, type) {
+      this.elIndex = index
+      this.clickCellType = type
+    },
     // 更改单元格
     changeCell() {
       Vue.set(this.gameMap[this.choiceRow], this.choiceColumn, this.clickCellType)
     },
-    // 选择地图元素
-    choiceMapEl(index) {
-      this.elIndex = index
-      this.clickCellType = index
+    // 检测地图
+    checkMap() {
+      let player = 0
+      let box = 0
+      let end = 0
+      for (let i in this.gameMap) {
+        for (let j in this.gameMap) {
+          if (this.gameMap[i][j] == 2) {
+            player++
+            if (player > 1) {
+              this.$message.error('人物不能超过一个！')
+              return false
+            }
+          }
+          if (this.gameMap[i][j] == 3) {
+            box++
+          }
+          if (this.gameMap[i][j] == 4) {
+            end++
+          }
+        }
+      }
+      console.log(end, box);
+      if (!player) {
+        this.$message.error('不能没有人物！')
+        return false
+      }
+      if (end < box) {
+        this.$message.error('终点数量不应小于箱子数量！')
+        return false
+      }
+      return true
     },
     // 测试地图
     testMap() {
-      this.$router.push({ name: 'game', params: { gameMap: this.gameMap, type: 'created' } })
+      if (this.checkMap())
+        this.$router.push({ name: 'game', params: { gameMap: this.gameMap, type: 'created' } })
     }
   }
 }
@@ -177,20 +208,23 @@ export default {
 
 .map-el-container ul {
   display: flex;
+  flex-flow: row wrap;
   align-items: center;
-  justify-content: space-evenly;
-  height: 60px;
+  justify-content: flex-start;
 }
 
 .map-el-container ul li {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  padding: 0 5px;
+  padding: 10px;
+  margin: 10px 0;
+  width: 20%;
 }
 
 .map-el-container ul li.active {
   background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 
 .map-el-container ul li .map-el-img {
