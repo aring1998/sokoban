@@ -23,11 +23,11 @@
 <script>
 import { official } from '@/assets/js/level'
 export default {
-  data: function() {
+  data: function () {
     return {
       ifchoose: false,
       officials: [],
-      level: ''
+      level: '',
     }
   },
   methods: {
@@ -36,7 +36,7 @@ export default {
       this.$router.push('/create')
     },
     //选择关卡按钮弹出
-    chooseLevel(el) {
+    chooseLevel() {
       this.ifchoose = !this.ifchoose
       this.level = ''
     },
@@ -49,7 +49,7 @@ export default {
       if (this.level === '') {
         this.$message({
           message: '请选择关卡后再确定',
-          type: 'warning'
+          type: 'warning',
         })
       } else {
         this.$router.push({ path: 'game', query: { level: this.level } })
@@ -58,11 +58,11 @@ export default {
     //跳转创意工坊
     toWorkshop() {
       this.$router.push('/workshop')
-    }
+    },
   },
   created() {
     this.officials = official
-  }
+  },
 }
 </script>
 
