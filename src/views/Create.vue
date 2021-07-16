@@ -4,12 +4,7 @@
     <!-- 弹出层选择初始游戏地图布局 -->
     <popover v-show="popShow" :disabled="true">
       <el-select v-model="initialLayout" placeholder="请选择初始地图大小">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
       </el-select>
       <el-button type="primary" @click="changeTableLayout">开始创造</el-button>
     </popover>
@@ -20,19 +15,18 @@
     <!-- 选择地图元素 -->
     <div class="map-el-container">
       <ul>
-        <li v-for="(item, index) of mapEl" :key="item.value" :class="{active: index == elIndex}" @click="choiceMapEl(index)">
-            <div
-              :class="{
-                'map-el-img': true,
-                'wall': item.value == 0,
-                'floor': item.value == 1,
-                'player': item.value == 2,
-                'box': item.value == 3,
-                'end': item.value == 4
-              }"
-            >
-            </div>
-            <span>{{ item.name }}</span>
+        <li v-for="(item, index) of mapEl" :key="item.value" :class="{ active: index == elIndex }" @click="choiceMapEl(index)">
+          <div
+            :class="{
+              'map-el-img': true,
+              wall: item.value == 0,
+              floor: item.value == 1,
+              player: item.value == 2,
+              box: item.value == 3,
+              end: item.value == 4
+            }"
+          ></div>
+          <span>{{ item.name }}</span>
         </li>
       </ul>
     </div>
@@ -43,29 +37,35 @@
 <script>
 import Vue from 'vue'
 
-import GameContent from "@/components/GameContent"
-import Popover from "@/components/Popover"
+import GameContent from '@/components/GameContent'
+import Popover from '@/components/Popover'
 
 export default {
   data() {
     return {
       popShow: true,
-      options: [{
+      options: [
+        {
           value: 6,
           label: '6 * 6'
-        }, {
+        },
+        {
           value: 7,
           label: '7 * 7'
-        }, {
+        },
+        {
           value: 8,
           label: '8 * 8'
-        }, {
+        },
+        {
           value: 9,
           label: '9 * 9'
-        }, {
+        },
+        {
           value: 10,
           label: '10 * 10'
-      }],
+        }
+      ],
       initialLayout: null,
       gameCell: [
         [0, 0, 0, 0, 0, 0, 0],
@@ -96,7 +96,7 @@ export default {
         {
           name: '终点',
           value: 4
-        },
+        }
       ],
       elIndex: null,
       clickCellType: null
@@ -113,15 +113,15 @@ export default {
         this.$message({
           message: '请选择初始地图布局',
           type: 'error'
-        });
+        })
         return
       }
       this.gameCell = []
-      for(let i = 0; i < this.initialLayout; i++) {
+      for (let i = 0; i < this.initialLayout; i++) {
         this.gameCell.push([])
       }
-      for(let i = 0; i < this.initialLayout; i++) {
-        for(let j = 0; j < this.initialLayout; j++) {
+      for (let i = 0; i < this.initialLayout; i++) {
+        for (let j = 0; j < this.initialLayout; j++) {
           this.gameCell[i].push(1)
         }
       }
@@ -147,7 +147,7 @@ export default {
     },
     // 测试地图
     testMap() {
-      this.$router.push({name: 'game', params: {gameCell: this.gameCell, type: 'created'}});
+      this.$router.push({ name: 'game', params: { gameCell: this.gameCell, type: 'created' } })
     }
   }
 }
@@ -164,10 +164,10 @@ export default {
 }
 
 .map-el-container {
-  background-color: rgba(255, 255, 255, .6);
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
-.map-el-container ul{
+.map-el-container ul {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -182,7 +182,7 @@ export default {
 }
 
 .map-el-container ul li.active {
-  background-color: rgba(0, 0, 0, .2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .map-el-container ul li .map-el-img {
@@ -190,5 +190,4 @@ export default {
   width: 30px;
   background-size: 100% 100%;
 }
-
 </style>

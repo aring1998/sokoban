@@ -1,14 +1,12 @@
 <template>
   <div class="top-bar">
-    <img src="~@/assets/img/logo.png" alt="">
+    <img src="~@/assets/img/logo.png" alt="" />
     <span>菜单</span>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {}
 </script>
 
 <style>

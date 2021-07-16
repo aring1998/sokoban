@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { official } from '../assets/js/level'
+import { official } from '@/assets/js/level'
 export default {
   data: function() {
     return {

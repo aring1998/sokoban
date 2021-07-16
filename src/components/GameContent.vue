@@ -10,10 +10,9 @@
           'game-cell': true,
           'wall': item == 0,
           'floor': item == 1,
-          'player': item == 2,
-          'box': item == 3,
-          'end': item == 4,
-          'box-on-end': item == 5
+          'player': item == 2 || item == 6,
+          'box': item == 3 || item == 5,
+          'end': item == 4 || item == 5 || item == 6,
         }"
       ></td>
     </tr>
@@ -77,7 +76,7 @@ export default {
   background-image: url('~@/assets/img/down.png');
 }
 
-.box-on-end {
+.box.end {
   background-image: url('~@/assets/img/end-box.png');
 }
 </style>
