@@ -4,18 +4,30 @@
     <top-bar></top-bar>
     <!-- 游戏内容 -->
     <game-content :game-map="gameMap"></game-content>
+    <div class="checkpoint">
+      <el-button class="regret" @click="onRegret" type="primary" size="mini">悔棋</el-button>
+      <el-button class="reset" @click="onReset" type="primary" size="mini">重置</el-button>
+    </div>
     <!-- 虚拟手柄 -->
-    <div class="analog-handle">
-      <div class="top">
-        <i class="el-icon-caret-top" @click="move('y', -1)"></i>
+    <!-- <div class="operation"> -->
+      <!-- <el-button class="regret" @click="onRegret" type="primary" size="mini">悔棋</el-button> -->
+      <div class="analog-handle">
+        <div class="top">
+          <i class="el-icon-caret-top" @click="move('y', -1)"></i>
+        </div>
+        <div class="center">
+          <i class="el-icon-caret-left" @click="move('x', -1)"></i>
+          <i class="el-icon-caret-right" @click="move('x', 1)"></i>
+        </div>
+        <div class="bottom">
+          <i class="el-icon-caret-bottom" @click="move('y', 1)"></i>
+        </div>
       </div>
-      <div class="center">
-        <i class="el-icon-caret-left" @click="move('x', -1)"></i>
-        <i class="el-icon-caret-right" @click="move('x', 1)"></i>
-      </div>
-      <div class="bottom">
-        <i class="el-icon-caret-bottom" @click="move('y', 1)"></i>
-      </div>
+      <!-- <el-button class="reset" @click="onReset" type="primary" size="mini">重置</el-button> -->
+    <!-- </div> -->
+    <div class="checkpoint">
+      <el-button @click="changeLevel(-1)" type="primary" size="mini">上一关</el-button>
+      <el-button @click="changeLevel(1)" type="primary" size="mini">下一关</el-button>
     </div>
     <popover v-show="popShow" v-if="this.$route.params.type == 'created'">
       <div class="test-pop">
@@ -29,8 +41,6 @@
         </div>
       </div>
     </popover>
-    <button @click="changeLevel(-1)">上一关</button>
-    <button @click="changeLevel(1)">下一关</button>
   </div>
 </template>
 
@@ -182,14 +192,22 @@ export default {
       if (isDefault == true) Vue.set(this.gameMap[setY], setX, 2)
       return
     },
+    // 悔棋（可以连续悔棋置第一步）
+    onRegret() {
+
+    },
+    // 重置当前关卡
+    onreset() {
+
+    },
     // 切换关卡
     changeLevel(value) {
-      this.level += value
-      this.gameMap = []
-      setTimeout(() => {
-        this.gameMap = official[this.level]
+      this.level += value;
+      this.gameMap = [];
+      this.$nextTick(() => {
+        this.gameMap = official[this.level];
         this.init()
-      }, 0)
+      })
     },
     // 将地图存在本地
     saveLocal() {
@@ -230,10 +248,23 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .sokoban {
   background-color: var(--mainColor);
   height: 100vh;
+}
+
+.operation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  .regret {
+    margin-left: 15px;
+  }
+  .reset {
+    margin-right: 15px;
+  }
 }
 
 .analog-handle {
@@ -246,7 +277,7 @@ export default {
   width: 200px;
   height: 200px;
   margin: 0 auto;
-  margin-top: 30px;
+  // margin-top: 30px;
 }
 
 .analog-handle div {
@@ -277,5 +308,11 @@ export default {
 
 .test-pop span {
   margin-bottom: 8px;
+}
+
+.checkpoint {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
 }
 </style>
