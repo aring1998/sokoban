@@ -136,20 +136,22 @@ export default {
 
       // 判断目标点
       switch (toPlace) {
+        // 碰墙
         case 0: {
-          // 碰墙
-          Vue.set(this.gameMap[this.playerY], this.playerX, 2)
+          if (fromPlace == 5 || fromPlace == 6) Vue.set(this.gameMap[this.playerY], this.playerX, 6)
+          else Vue.set(this.gameMap[this.playerY], this.playerX, 2)
           return
         }
+        // 碰箱子
         case 3:
         case 5: {
-          // 碰箱子
           if (direction == 'x') boxPlace = this.gameMap[this.playerY][+this.playerX + step * 2]
           else boxPlace = this.gameMap[+this.playerY + step * 2][this.playerX]
 
           // 如果箱子撞墙/箱子
           if (boxPlace == 0 || boxPlace == 3) {
-            Vue.set(this.gameMap[this.playerY], this.playerX, 2)
+            if (fromPlace == 5 || fromPlace == 6) Vue.set(this.gameMap[this.playerY], this.playerX, 6)
+            else Vue.set(this.gameMap[this.playerY], this.playerX, 2)
             return
           }
           // 如果箱子能移动
@@ -172,8 +174,8 @@ export default {
           }
           break
         }
+        // 碰终点
         case 4: {
-          // 碰终点
           isDefault = false
           Vue.set(this.gameMap[setY], setX, 6)
           break
