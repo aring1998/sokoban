@@ -78,7 +78,7 @@ export default {
   methods: {
     // 初始化
     init() {
-      this.endCounte = 0
+      this.endCounter = 0
       // 获取人物坐标、终点个数
       for (let y in this.gameMap) {
         for (let x in this.gameMap[y]) {
@@ -107,30 +107,34 @@ export default {
        * @setBoxX: 箱子移动点Vue.set中key值
        * @isDefault: 是否默认的移动方法
        */
-      const fromPlace = this.gameMap[this.playerY][this.playerX]
+
       // 声明初始变量
+      const fromPlace = this.gameMap[this.playerY][this.playerX]
       let toPlace, boxPlace, setY, setX, setBoxY, setBoxX
       let isDefault = true
 
-      // 如果出发点是箱子抵达终点或人物在终点上
-      if (fromPlace == 5 || fromPlace == 6) Vue.set(this.gameMap[this.playerY], this.playerX, 4)
-      else Vue.set(this.gameMap[this.playerY], this.playerX, 1)
-
       // 判断方向
       if (direction == 'x') {
-        toPlace = this.gameMap[this.playerY][+this.playerX + step]
         setY = this.playerY
         setX = +this.playerX + step
         setBoxY = setY
         setBoxX = setX + step
       } else {
-        toPlace = this.gameMap[+this.playerY + step][this.playerX]
         setY = +this.playerY + step
         setX = this.playerX
         setBoxY = setY + step
         setBoxX = setX
       }
 
+      // 判断是否超出单元格
+      if (setY < 0 || setY == this.gameMap[0].length || setX < 0 || setX == this.gameMap[0].length) return
+      else toPlace = this.gameMap[setY][setX]
+
+      // 如果出发点是箱子抵达终点或人物在终点上
+      if (fromPlace == 5 || fromPlace == 6) Vue.set(this.gameMap[this.playerY], this.playerX, 4)
+      else Vue.set(this.gameMap[this.playerY], this.playerX, 1)
+
+      // 判断目标点
       switch (toPlace) {
         case 0: {
           // 碰墙
