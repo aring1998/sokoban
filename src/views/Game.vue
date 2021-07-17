@@ -9,22 +9,18 @@
       <el-button class="reset" @click="onReset" type="primary" size="mini">重置</el-button>
     </div>
     <!-- 虚拟手柄 -->
-    <!-- <div class="operation"> -->
-      <!-- <el-button class="regret" @click="onRegret" type="primary" size="mini">悔棋</el-button> -->
-      <div class="analog-handle">
-        <div class="top">
-          <i class="el-icon-caret-top" @click="move('y', -1)"></i>
-        </div>
-        <div class="center">
-          <i class="el-icon-caret-left" @click="move('x', -1)"></i>
-          <i class="el-icon-caret-right" @click="move('x', 1)"></i>
-        </div>
-        <div class="bottom">
-          <i class="el-icon-caret-bottom" @click="move('y', 1)"></i>
-        </div>
+    <div class="analog-handle">
+      <div class="top">
+        <i class="el-icon-caret-top" @click="move('y', -1)"></i>
       </div>
-      <!-- <el-button class="reset" @click="onReset" type="primary" size="mini">重置</el-button> -->
-    <!-- </div> -->
+      <div class="center">
+        <i class="el-icon-caret-left" @click="move('x', -1)"></i>
+        <i class="el-icon-caret-right" @click="move('x', 1)"></i>
+      </div>
+      <div class="bottom">
+        <i class="el-icon-caret-bottom" @click="move('y', 1)"></i>
+      </div>
+    </div>
     <div class="checkpoint">
       <el-button @click="changeLevel(-1)" type="primary" size="mini">上一关</el-button>
       <el-button @click="changeLevel(1)" type="primary" size="mini">下一关</el-button>
@@ -50,6 +46,7 @@ import Vue from 'vue'
 import { official } from '@/assets/js/level'
 import { request } from '@/network/request'
 
+import { deepClone } from '../utils'
 import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
 import Popover from '@/components/Popover'
@@ -63,6 +60,8 @@ export default {
       playerY: 0, // 人物y轴坐标
       endCounter: 0, // 终点个数
       popShow: false, // 弹出框是否展示
+      cloneBaseData: [],
+      mark: false
     }
   },
   components: {
@@ -71,11 +70,14 @@ export default {
     Popover,
   },
   mounted() {
+    console.log(official)
+    window.sessionStorage.setItem('baseData', JSON.stringify(deepClone(official)))
     //判断是否通过创意工坊进入
 
     //判断是否通过选关进入
     if (this.$route.query.level !== undefined) {
-      this.changeLevel(this.$route.query.level - 1)
+      // this.mark = `T-${this.$route.query.level}`;
+      this.changeLevel(this.$route.query.level - 1);
     }
     // 判断是否测试地图
     if (this.$route.params.type == 'created') {
@@ -83,21 +85,21 @@ export default {
       this.gameMap = this.$route.params.gameMap
     }
     // 游戏初始化
-    this.init()
+    this.init(this.gameMap)
   },
   methods: {
     // 初始化
-    init() {
+    init(gameMap) {
       this.endCounter = 0
       // 获取人物坐标、终点个数
-      for (let y in this.gameMap) {
-        for (let x in this.gameMap[y]) {
-          if (this.gameMap[y][x] == 2) {
+      for (let y in gameMap) {
+        for (let x in gameMap[y]) {
+          if (gameMap[y][x] == 2) {
             console.log('找到玩家的坐标：', x, y)
             this.playerX = x
             this.playerY = y
           }
-          if (this.gameMap[y][x] == 4) {
+          if (gameMap[y][x] == 4) {
             this.endCounter++
           }
         }
@@ -203,16 +205,29 @@ export default {
 
     },
     // 重置当前关卡
-    onreset() {
-
+    onReset() {
+      const { level } = this.$route.query;
+      this.gameMap = JSON.parse(window.sessionStorage.getItem('baseData'))[level];
+      this.init(this.gameMap)
     },
     // 切换关卡
     changeLevel(value) {
+      // 待看
+      // console.log(this.mark)
+      // let [t, m] = this.mark.split('-');
+      // if (value === -1 && this.level === 0 && t === 'T') {
+      //   this.$router.push({ path: 'game', query: { level: m+=value } })
+      //   this.$message({type: 'warning', message: '当前关卡，不能进行此操作哦，宝~'});
+      //   return;
+      // }
+      // this.mark = 'F-0';
       this.level += value;
       this.gameMap = [];
+      // 修改关卡，修改路由参数
+      this.$router.push({ path: 'game', query: { level: this.level } })
       this.$nextTick(() => {
         this.gameMap = official[this.level];
-        this.init()
+        this.init(this.gameMap)
       })
     },
     // 将地图存在本地
