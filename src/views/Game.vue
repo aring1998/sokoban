@@ -46,7 +46,7 @@ import Vue from 'vue'
 import { official } from '@/assets/js/level'
 import { request } from '@/network/request'
 
-import { deepClone } from '../utils'
+// import { deepClone } from '../utils'
 import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
 import Popover from '@/components/Popover'
