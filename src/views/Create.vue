@@ -3,10 +3,35 @@
   <div class="create">
     <!-- 弹出层选择初始游戏地图布局 -->
     <popover v-show="popShow" :disabled="true">
-      <el-select v-model="initialLayout" placeholder="请选择初始地图大小">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-      </el-select>
-      <el-button type="primary" @click="changeTableLayout">开始创造</el-button>
+      <van-form>
+        <van-field
+          v-model="gameMapForm.row"
+          type="digit"
+          maxlength="2"
+          label="地图行数"
+          placeholder="可选范围：6~12"
+          :rules="[{ pattern: /^[6_9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
+        />
+        <van-field
+          v-model="gameMapForm.column"
+          type="digit"
+          maxlength="2"
+          label="地图列数"
+          placeholder="可选范围：6~12"
+          :rules="[{ pattern: /^[6_9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
+        />
+        <van-field
+          v-model="gameMapForm.life"
+          type="digit"
+          maxlength="3"
+          label="人物生命"
+          placeholder="可选范围：0~99"
+          :rules="[{ pattern: /^[0-99]$/, message: '请输入小于99的数字' }]"
+        />
+        <div style="margin: 16px;">
+          <van-button round block type="info" @click="changeTableLayout">确定</van-button>
+        </div>
+      </van-form>
     </popover>
 
     <!-- 游戏地图 -->
@@ -44,37 +69,11 @@ export default {
   data() {
     return {
       popShow: true,  // 弹窗展示
-      options: [
-        {
-          value: 6,
-          label: '6 * 6'
-        },
-        {
-          value: 7,
-          label: '7 * 7'
-        },
-        {
-          value: 8,
-          label: '8 * 8'
-        },
-        {
-          value: 9,
-          label: '9 * 9'
-        },
-        {
-          value: 10,
-          label: '10 * 10'
-        },
-        {
-          value: 11,
-          label: '11 * 11'
-        },
-        {
-          value: 12,
-          label: '12 * 12'
-        }
-      ],
-      initialLayout: null,  // 地图初始布局
+      gameMapForm: {  // 地图设置项
+        row: null,
+        column: null,
+        life: null
+      },
       gameMap: [
         [0, 0, 0, 0, 0, 0, 0],
         [0, 1, 1, 1, 1, 1, 0],
@@ -117,16 +116,12 @@ export default {
   methods: {
     // 更改表格布局
     changeTableLayout() {
-      if (this.initialLayout == null) {
-        this.$message.error('请选择初始地图布局')
-        return
-      }
       this.gameMap = []
-      for (let i = 0; i < this.initialLayout; i++) {
+      for (let i = 0; i < this.gameMapForm.row; i++) {
         this.gameMap.push([])
       }
-      for (let i = 0; i < this.initialLayout; i++) {
-        for (let j = 0; j < this.initialLayout; j++) {
+      for (let i = 0; i < this.gameMapForm.row; i++) {
+        for (let j = 0; j < this.gameMapForm.column; j++) {
           this.gameMap[i].push(1)
         }
       }
@@ -160,7 +155,7 @@ export default {
           if (this.gameMap[i][j] == 2) {
             player++
             if (player > 1) {
-              this.$message.error('人物不能超过一个！')
+              this.$notify({type: 'danger', message:'人物不能超过一个！'})
               return false
             }
           }
@@ -172,13 +167,12 @@ export default {
           }
         }
       }
-      console.log(end, box);
       if (!player) {
-        this.$message.error('不能没有人物！')
+        this.$notify({type: 'danger', message:'不能没有人物！'})
         return false
       }
       if (end < box) {
-        this.$message.error('终点数量不应小于箱子数量！')
+        this.$notify({type: 'danger', message:'终点数量不应小于箱子数量！'})
         return false
       }
       return true

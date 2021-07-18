@@ -5,25 +5,25 @@
     <!-- 游戏内容 -->
     <game-content :game-map="gameMap"></game-content>
     <div class="checkpoint">
-      <el-button class="regret" @click="onRegret" type="primary" size="mini">悔棋</el-button>
-      <el-button class="reset" @click="onReset" type="primary" size="mini">重置</el-button>
+      <van-button class="regret" @click="onRegret" type="primary" size="mini">悔棋</van-button>
+      <van-button class="reset" @click="onReset" type="primary" size="mini">重置</van-button>
     </div>
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
       <div class="top">
-        <i class="el-icon-caret-top" @click="move('y', -1)"></i>
+        <van-icon name="arrow-up" @click="move('y', -1)" />
       </div>
       <div class="center">
-        <i class="el-icon-caret-left" @click="move('x', -1)"></i>
-        <i class="el-icon-caret-right" @click="move('x', 1)"></i>
+        <van-icon name="arrow-left" @click="move('x', -1)" />
+        <van-icon name="arrow" @click="move('x', 1)" />
       </div>
       <div class="bottom">
-        <i class="el-icon-caret-bottom" @click="move('y', 1)"></i>
+        <van-icon name="arrow-down" @click="move('y', 1)" />
       </div>
     </div>
     <div class="checkpoint">
-      <el-button @click="changeLevel(-1)" type="primary" size="mini">上一关</el-button>
-      <el-button @click="changeLevel(1)" type="primary" size="mini">下一关</el-button>
+      <van-button @click="changeLevel(-1)" type="primary" size="mini">上一关</van-button>
+      <van-button @click="changeLevel(1)" type="primary" size="mini">下一关</van-button>
     </div>
     <popover v-show="popShow" v-if="this.$route.params.type == 'created'">
       <div class="test-pop">
@@ -217,7 +217,7 @@ export default {
       // let [t, m] = this.mark.split('-');
       // if (value === -1 && this.level === 0 && t === 'T') {
       //   this.$router.push({ path: 'game', query: { level: m+=value } })
-      //   this.$message({type: 'warning', message: '当前关卡，不能进行此操作哦，宝~'});
+      //   this.$notify({type: 'danger', message:'当前关卡，不能进行此操作哦，宝~'})
       //   return;
       // }
       // this.mark = 'F-0';
@@ -253,13 +253,10 @@ export default {
       })
         .then((res) => {
           console.log(res)
-          this.$message({
-            message: '上传成功',
-            type: 'success',
-          })
+          this.$notify({type: 'success', message:'上传成功'})
         })
         .catch((err) => {
-          this.$message.error('上传失败，错误：' + err)
+          this.$notify({type: 'danger', message:'上传失败，错误：' + err})
         })
     },
   },

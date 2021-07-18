@@ -38,10 +38,7 @@ export default {
           })
         })
         .catch((err) => {
-          this.$message({
-            message: '获取地图失败：' + err,
-            type: 'error',
-          })
+          this.$notify({type: 'danger', message:'获取地图失败：' + err})
         })
     },
   },

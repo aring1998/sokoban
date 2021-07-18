@@ -47,10 +47,7 @@ export default {
     //跳转游戏页面
     toGame() {
       if (this.level === '') {
-        this.$message({
-          message: '请选择关卡后再确定',
-          type: 'warning',
-        })
+        this.$notify({type: 'danger', message:'请选择关卡后再确定'})
       } else {
         this.$router.push({ path: 'game', query: { level: this.level } })
       }

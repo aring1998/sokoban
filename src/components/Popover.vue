@@ -3,7 +3,7 @@
   <div class="popover-shade" v-show="isShow">
     <div class="popover">
       <div class="closes">
-        <i class="el-icon-close" @click="isShow = !isShow"></i>
+        <van-icon name="cross" @click="isShow = !isShow" />
       </div>
       <slot></slot>
     </div>
