@@ -167,6 +167,7 @@ export default {
           }
         }
       }
+      console.log(box, end);
       if (!player) {
         this.$notify({type: 'danger', message:'不能没有人物！'})
         return false
@@ -180,7 +181,7 @@ export default {
     // 测试地图
     testMap() {
       if (this.checkMap())
-        this.$router.push({ name: 'game', params: { gameMap: this.gameMap, type: 'created' } })
+        this.$router.push({ name: 'game', params: { gameMap: this.gameMap} , query: { type: 'created' } })
     }
   }
 }

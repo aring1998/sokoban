@@ -1,20 +1,33 @@
 <template>
   <div class="top-bar">
     <img src="~@/assets/img/logo.png" alt="" />
-    <span>菜单</span>
+    <span class="menu" @click="$refs.pop.popShow()">菜单</span>
+    <popover ref="pop" v-show="popShow">
+      <van-button>回到主菜单</van-button>
+    </popover>
   </div>
 </template>
 
 <script>
-export default {}
+import Popover from '@/components/Popover'
+
+export default {
+  data() {
+    return {
+      popShow: false
+    }
+  },
+  components: {
+    Popover
+  }
+}
 </script>
 
 <style>
 .top-bar {
   display: flex;
   align-items: center;
-  height: 30px;
-  margin-bottom: 30px;
+  height: 50px;
   padding: 0 30px;
   justify-content: space-between;
 }
@@ -24,7 +37,7 @@ export default {}
   height: 30px;
 }
 
-.top-bar span {
+.top-bar .menu {
   font-weight: 600;
   color: #fff;
   font-size: 16px;

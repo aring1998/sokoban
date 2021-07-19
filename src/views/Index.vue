@@ -3,14 +3,26 @@
     <div class="choosebox" :class="{ show: ifchoose }">
       <p class="choosebox-title">PUSH THE BOX!</p>
       <button class="choosebtn" @click="chooseLevel">选择关卡</button>
-      <button class="choosebtn" @click="toWorkshop">创意工坊</button>
-      <button class="choosebtn" @click="toCreate">创建地图</button>
+      <button class="choosebtn" @click="$router.push('/workshop')">
+        创意工坊
+      </button>
+      <button class="choosebtn" @click="$router.push('/create')">
+        创建地图
+      </button>
     </div>
     <!--弹窗-->
     <div class="out" :class="{ show: ifchoose }">
       <p class="out-title">选择关卡</p>
       <div class="level-content">
-        <button v-for="(item, index) in officials" :key="index" class="btn" @click="levelIs(index + 1)" :class="{ active: level == index + 1 }">第{{ index + 1 }}关</button>
+        <button
+          v-for="(item, index) in official"
+          :key="index"
+          class="btn"
+          @click="levelIs(index + 1)"
+          :class="{ active: level == index + 1 }"
+        >
+          {{ index + 1 }}
+        </button>
       </div>
       <div class="level-btn">
         <button class="btn btn-ok" @click="toGame">确定</button>
@@ -23,18 +35,14 @@
 <script>
 import { official } from '@/assets/js/level'
 export default {
-  data: function () {
+  data() {
     return {
       ifchoose: false,
-      officials: [],
-      level: '',
+      official: official,
+      level: ''
     }
   },
   methods: {
-    //跳转创建地图
-    toCreate() {
-      this.$router.push('/create')
-    },
     //选择关卡按钮弹出
     chooseLevel() {
       this.ifchoose = !this.ifchoose
@@ -47,19 +55,19 @@ export default {
     //跳转游戏页面
     toGame() {
       if (this.level === '') {
-        this.$notify({type: 'danger', message:'请选择关卡后再确定'})
+        this.$notify({ type: 'danger', message: '请先选择关卡！' })
       } else {
-        this.$router.push({ path: 'game', query: { level: this.level } })
+        this.$router.push({
+          name: 'game',
+          params: { level: this.level },
+          query: { type: 'level' }
+        })
       }
-    },
-    //跳转创意工坊
-    toWorkshop() {
-      this.$router.push('/workshop')
-    },
+    }
   },
   created() {
-    this.officials = official
-  },
+    this.official = official
+  }
 }
 </script>
 
@@ -123,7 +131,7 @@ export default {
   margin: 0 auto 10px;
 }
 .btn {
-  width: 30%;
+  width: 23%;
   height: 50px;
   margin-left: 5px;
   margin-top: 5px;

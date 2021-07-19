@@ -79,4 +79,14 @@ export default {
 .box.end {
   background-image: url('~@/assets/img/end-box.png');
 }
+
+/* 作为缩略图 */
+.map-thumbnail .game-container {
+  height: 100%;
+  width: 100%;
+}
+.map-thumbnail .game-container td{
+  height: 5px;
+  width: 5px;
+}
 </style>

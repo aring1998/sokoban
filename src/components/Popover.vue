@@ -3,7 +3,7 @@
   <div class="popover-shade" v-show="isShow">
     <div class="popover">
       <div class="closes">
-        <van-icon name="cross" @click="isShow = !isShow" />
+        <van-icon name="cross" @click="popShow()" />
       </div>
       <slot></slot>
     </div>
@@ -15,6 +15,11 @@ export default {
   data() {
     return {
       isShow: true
+    }
+  },
+  methods: {
+    popShow() {
+      this.isShow = !this.isShow
     }
   }
 }
@@ -31,6 +36,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 }
 
 .popover-shade .popover {

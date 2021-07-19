@@ -2,6 +2,12 @@
   <div class="sokoban">
     <!-- 顶部导航栏 -->
     <top-bar></top-bar>
+    <!-- 人物生命值 -->
+    <div class="life">
+      <span>当前生命：</span>
+      <van-icon name="like" color="red" v-for="(item, index) in 2" :key="index" />
+      <van-icon name="like" color="gray" v-for="(item, index) in 1" :key="index"/>
+    </div>
     <!-- 游戏内容 -->
     <game-content :game-map="gameMap"></game-content>
     <div class="checkpoint">
@@ -25,7 +31,7 @@
       <van-button @click="changeLevel(-1)" type="primary" size="mini">上一关</van-button>
       <van-button @click="changeLevel(1)" type="primary" size="mini">下一关</van-button>
     </div>
-    <popover v-show="popShow" v-if="this.$route.params.type == 'created'">
+    <popover v-show="popShow" v-if="this.$route.query.type == 'created'">
       <div class="test-pop">
         <span>您已完成该地图的测试</span>
         <span>您可以选择将地图存储</span>
@@ -71,18 +77,18 @@ export default {
   },
   mounted() {
     console.log(official)
-    window.sessionStorage.setItem('baseData', JSON.stringify(deepClone(official)))
-    //判断是否通过创意工坊进入
+    // window.sessionStorage.setItem('baseData', JSON.stringify(deepClone(official)))
 
-    //判断是否通过选关进入
-    if (this.$route.query.level !== undefined) {
-      // this.mark = `T-${this.$route.query.level}`;
-      this.changeLevel(this.$route.query.level - 1);
-    }
-    // 判断是否测试地图
-    if (this.$route.params.type == 'created') {
-      console.log('cre')
-      this.gameMap = this.$route.params.gameMap
+    switch(this.$route.query.type) {
+      // 由选关进入
+      case 'level': {
+        this.changeLevel(this.$route.params.level - 1);
+      }
+      // 由测试地图/创意工坊进入
+      case 'workshop':
+      case 'created': {
+        this.gameMap = this.$route.params.gameMap
+      }
     }
     // 游戏初始化
     this.init(this.gameMap)
@@ -252,7 +258,6 @@ export default {
         },
       })
         .then((res) => {
-          console.log(res)
           this.$notify({type: 'success', message:'上传成功'})
         })
         .catch((err) => {
@@ -329,5 +334,18 @@ export default {
   display: flex;
   justify-content: space-around;
   margin-top: 30px;
+}
+
+.life {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  padding: 0 30px;
+  color: #fff;
+  height: 30px;
+  i {
+    font-size: 18px;
+    font-weight: 600;
+  }
 }
 </style>

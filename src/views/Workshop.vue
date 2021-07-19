@@ -2,95 +2,131 @@
   <div class="workshop">
     <p class="workshop-title out-title">创意工坊</p>
     <div class="workshop-content">
-      <div class="player" v-for="(item, index) in mapValue" :key="index" @click="toGame(item.mapData)">
-        <p class="player-creator">{{ item.creator }}</p>
-        <p class="player-map-name">{{ item.mapName }}</p>
-        <p class="player-time">{{ item.time }}</p>
-      </div>
+      <ul class="workshop-map">
+        <li
+          class="workshop-map-item"
+          v-for="(item, index) in mapData"
+          :key="index"
+          @click="
+            $router.push({
+              name: 'game',
+              params: {gameMap: item.mapData},
+              query: {type: 'workshop'}
+            })
+          "
+        >
+          <div class="map-thumbnail">
+            <game-content :gameMap="item.mapData"></game-content>
+          </div>
+          <div class="map-intro">
+            <span class="name">{{ item.mapName }}</span>
+            <span class="creator">{{ item.creator }}</span>
+            <span class="date">{{ item.time.split(' ')[0] }}</span>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
 import { request } from '@/network/request'
+
+import GameContent from '@/components/GameContent'
 export default {
-  data: function () {
+  data: function() {
     return {
       //地图数据
-      mapValue: [],
+      mapData: []
     }
   },
+  components: {
+    GameContent
+  },
   methods: {
-    //跳转游戏页面
-    toGame(mapData) {
-      this.$router.push({ path: '/game' })
-    },
     //获取地图数据
     getPlayerMap() {
       request({
         url: 'map/list',
-        method: 'GET',
+        method: 'GET'
       })
-        .then((res) => {
+        .then(res => {
           console.log(res)
-          res.data.forEach((item) => {
-            this.mapValue.push(item)
+          res.data.forEach(item => {
+            this.mapData.push(item)
           })
         })
-        .catch((err) => {
-          this.$notify({type: 'danger', message:'获取地图失败：' + err})
+        .catch(err => {
+          this.$notify({ type: 'danger', message: '获取地图失败：' + err })
         })
-    },
+    }
   },
   created() {
     this.getPlayerMap()
-  },
+  }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @import '../assets/css/animation.css';
 
 .workshop {
-  width: 100vw;
+  height: 100vh;
   padding-top: 30px;
-  /*background: #95d52f;*/
-}
-.workshop-content {
-  width: 80%;
-  margin: 20px auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-.player {
-  width: 100%;
-  height: 70px;
-  margin: 10px 0;
-  background: #339933;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  color: #ffffff;
-  font-size: 15px;
-}
-.player-creator {
-  width: 25%;
-  text-align: center;
-}
-.player-map-name,
-.player-time {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 16px;
-}
-.player-map-name {
-  width: 20%;
-}
-.player-time {
-  width: 50%;
-  text-align: center;
-  font-size: 13px;
+  background: var(--mainColor);
+  .workshop-content {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    .workshop-map {
+      display: flex;
+      flex-flow: row nowrap;
+      background-color: var(--deepMainColor);
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      height: 100px;
+      border-radius: 5px;
+      .workshop-map-item {
+        display: flex;
+        flex-flow: row nowrap;
+      }
+      .map-thumbnail {
+        height: 80px;
+        width: 80px;
+        border-radius: 5px;
+        overflow: hidden;
+        background-color: rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+      }
+      .map-intro {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-evenly;
+        span {
+          color: #fff;
+        }
+        .name {
+          font-weight: 600;
+          font-size: 20px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 210px;
+        }
+        .creator {
+          font-size: 16px;
+        }
+        .date {
+          font-size: 14px;
+          margin-left: auto;
+        }
+      }
+    }
+  }
 }
 </style>
