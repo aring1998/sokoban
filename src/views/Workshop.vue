@@ -48,24 +48,22 @@ export default {
   },
   methods: {
     //获取地图数据
-    getPlayerMap() {
+    getGameMap() {
       request({
         url: 'map/list',
         method: 'GET'
       })
         .then(res => {
           console.log(res)
-          res.data.forEach(item => {
-            this.mapData.push(item)
-          })
+          this.mapData = res.data
         })
         .catch(err => {
-          this.$notify({ type: 'danger', message: '获取地图失败：' + err })
+          this.$notify({ type: 'danger', message: '获取地图失败，错误：' + err })
         })
     }
   },
   created() {
-    this.getPlayerMap()
+    this.getGameMap()
   }
 }
 </script>
@@ -84,16 +82,17 @@ export default {
     justify-content: space-around;
     .workshop-map {
       display: flex;
-      flex-flow: row nowrap;
-      background-color: var(--deepMainColor);
-      align-items: center;
+      flex-flow: column nowrap;
       justify-content: space-between;
-      padding: 0 10px;
-      height: 100px;
-      border-radius: 5px;
       .workshop-map-item {
         display: flex;
         flex-flow: row nowrap;
+        align-items: center;
+        padding: 0 10px;
+        background-color: var(--deepMainColor);
+        height: 100px;
+        border-radius: 5px;
+        margin-bottom: 10px;
       }
       .map-thumbnail {
         height: 80px;

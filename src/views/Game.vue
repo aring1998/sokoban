@@ -17,19 +17,24 @@
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
       <div class="top">
-        <van-icon name="arrow-up" @click="move('y', -1)" />
+        <van-icon name="arrow-up" @touchstart="move('y', -1)" @touchend.prevent="stopMove()" />
       </div>
       <div class="center">
-        <van-icon name="arrow-left" @click="move('x', -1)" />
-        <van-icon name="arrow" @click="move('x', 1)" />
+        <van-icon name="arrow-left" @touchstart="move('x', -1)" @touchend.prevent="stopMove()" />
+        <van-icon name="arrow" @touchstart="move('x', 1)" @touchend.prevent="stopMove()" />
       </div>
       <div class="bottom">
-        <van-icon name="arrow-down" @click="move('y', 1)" />
+        <van-icon name="arrow-down" @touchstart="move('y', 1)" @touchend.prevent="stopMove()" />
       </div>
     </div>
-    <div class="check-point">
+    <div class="check-point" v-if="$route.query.type == 'level'">
       <van-button @click="changeLevel(-1)" type="primary" size="mini" :disabled="level == 0">上一关</van-button>
-      <van-button @click="changeLevel(1)" type="primary" size="mini" :disabled="level == levelCounter">下一关</van-button>
+      <van-button @click="changeLevel(1)" type="primary" size="mini" :disabled="level == levelCounter" >下一关</van-button
+      >
+    </div>
+    <div class="check-point" v-if="$route.query.type == 'created'">
+      <van-button @click="$router.push({ name: 'create', params: { gameMap: initMap } })" type="info" size="mini">返回编辑</van-button>
+      <van-button @click="$router.push('/index')" type="danger" size="mini">放弃编辑</van-button>
     </div>
     <popover v-show="popShow" v-if="this.$route.query.type == 'created'">
       <div class="test-map-pop">
@@ -86,7 +91,8 @@ export default {
       uploadMap: { // 上传地图表单
         mapName: '',
         creator: ''
-      }
+      },
+      moveInterval: null
     }
   },
   components: {
@@ -100,7 +106,7 @@ export default {
       // 由选关进入
       case 'level': {
         this.level = this.$route.params.level - 1
-        this.gameMap = official[this.level]
+        this.gameMap = deepClone2Arr(official[this.level])
         break
       }
       // 由测试地图/创意工坊进入
@@ -151,6 +157,12 @@ export default {
        * @setBoxX: 箱子移动点Vue.set中key值
        * @isDefault: 是否默认的移动方法
        */
+
+      // 长按持续移动
+      clearTimeout(this.moveInterval)
+      this.moveInterval = setTimeout(() => {
+        this.move(direction, step)
+      }, 500)
 
       // 声明初始变量
       const fromPlace = this.gameMap[this.playerY][this.playerX]
@@ -205,12 +217,19 @@ export default {
             Vue.set(this.gameMap[setBoxY], setBoxX, 5)
             this.$nextTick(() => {
               if (document.querySelectorAll('.box.end').length == this.endCounter) {
-                Vue.set(this.gameMap[setY], setX, 2)
-                Vue.set(this.gameMap[setBoxY], setBoxX, 5)
                 setTimeout(() => {
                   alert('you win!')
-                  if (this.$route.query.type == 'created') this.popShow = true
-                  else this.changeLevel(1)
+                  switch (this.$route.query) {
+                    case 'level': {
+                      this.changeLevel(1)
+                    }
+                    case 'created': {
+                      this.popShow = true
+                    }
+                    case 'workshop': {
+                      this.$router.push('/workshop')
+                    }
+                  }
                 })
               }
             })
@@ -237,6 +256,10 @@ export default {
       // 记录移动后地图数据
       this.mapRecord.push(deepClone2Arr(this.gameMap))
       this.step++
+    },
+    // 离开按键时，停止移动
+    stopMove() {
+      clearTimeout(this.moveInterval)
     },
     // 撤回（可以连续撤回置第一步）
     onRegret() {
@@ -280,7 +303,7 @@ export default {
       //   params: { level: this.level }
       // })
       this.$nextTick(() => {
-        this.gameMap = official[this.level]
+        this.gameMap = deepClone2Arr(official[this.level])
         this.init(this.gameMap)
       })
     },

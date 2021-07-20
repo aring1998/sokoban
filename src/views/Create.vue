@@ -116,6 +116,12 @@ export default {
     GameContent,
     Popover
   },
+  mounted() {
+    if (this.$route.params.gameMap) {
+      this.gameMap = this.$route.params.gameMap
+      this.popShow = false
+    }
+  },
   methods: {
     // 更改表格布局
     changeTableLayout() {

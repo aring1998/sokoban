@@ -9,18 +9,13 @@ Vue
 
 #### 常用操作
 
-1.  安装依赖
-```
-npm install
-```
-2.  运行项目
-```
-npm run dev
-```
-3.  打包项目
-```
-npm run build
-```
+1.  安装依赖 `npm install`
+2.  运行项目 `npm run dev`
+3.  打包项目 `npm run build`
+
+#### 注意事项
+1. 需求概述可查阅`Demand`文档
+2. git提交日志请务必遵守`commitlint.config`内约定
 
 #### 参与贡献
 

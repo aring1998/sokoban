@@ -27,6 +27,7 @@ export default new Router({
       component: Game
     },
     {
+      name: 'create',
       path: '/create',
       component: Create
     },
