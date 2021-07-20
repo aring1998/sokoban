@@ -222,12 +222,15 @@ export default {
                   switch (this.$route.query.type) {
                     case 'level': {
                       this.changeLevel(1)
+                      break
                     }
                     case 'created': {
                       this.popShow = true
+                      break
                     }
                     case 'workshop': {
                       this.$router.push('/workshop')
+                      break
                     }
                   }
                 })
