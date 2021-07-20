@@ -32,7 +32,7 @@ export default new Router({
       component: Create
     },
     {
-      path:'/workshop',
+      path: '/workshop',
       component:Workshop 
     }
   ]

@@ -1,5 +1,5 @@
 <template>
-  <div class="sokoban">
+  <div class="sokoban" v-cloak>
     <!-- 顶部导航栏 -->
     <top-bar></top-bar>
     <!-- 人物生命值 -->
@@ -27,11 +27,12 @@
         <van-icon name="arrow-down" @touchstart="move('y', 1)" @touchend.prevent="stopMove()" />
       </div>
     </div>
+    <!-- 切关控制：选关进入显示 -->
     <div class="check-point" v-if="$route.query.type == 'level'">
       <van-button @click="changeLevel(-1)" type="primary" size="mini" :disabled="level == 0">上一关</van-button>
-      <van-button @click="changeLevel(1)" type="primary" size="mini" :disabled="level == levelCounter" >下一关</van-button
-      >
+      <van-button @click="changeLevel(1)" type="primary" size="mini" :disabled="level == levelCounter" >下一关</van-button>
     </div>
+    <!-- 编辑控制：创建地图进入显示 -->
     <div class="check-point" v-if="$route.query.type == 'created'">
       <van-button @click="$router.push({ name: 'create', params: { gameMap: initMap } })" type="info" size="mini">返回编辑</van-button>
       <van-button @click="$router.push('/index')" type="danger" size="mini">放弃编辑</van-button>
@@ -68,7 +69,7 @@ import Vue from 'vue'
 
 import { official } from '@/assets/js/level'
 import { request } from '@/network/request'
-import { deepClone2Arr } from '@/utils/index'
+import { deepClone2Arr, isEmptyObject } from '@/utils/index'
 
 import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
@@ -101,6 +102,11 @@ export default {
     Popover
   },
   mounted() {
+    // 页面刷新，返回首页
+    if (isEmptyObject(this.$route.params)) {
+      this.$router.push('/index')
+      return
+    }
     // 判断入口
     switch (this.$route.query.type) {
       // 由选关进入
@@ -113,6 +119,11 @@ export default {
       case 'workshop':
       case 'created': {
         this.gameMap = this.$route.params.gameMap
+        break
+      }
+      case undefined: {
+        this.$notify({ type: 'danger', message: '请先选关哦~' })
+        this.$router.push('/index')
         break
       }
     }

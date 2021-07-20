@@ -1,7 +1,3 @@
-export const checkClass = (el, value) => {
-  return el.classList.toString().indexOf(value)
-}
-
 // export const isArr = (arr) => {
 //   return Object.prototype.toString.call(arr) === '[object Array]'
 // }
@@ -30,4 +26,9 @@ export const deepClone2Arr = arr => {
     }
   }
   return out
+}
+
+// 判断是否为空对象
+export const isEmptyObject = (data) => {
+  return JSON.stringify(data) == '{}'
 }
