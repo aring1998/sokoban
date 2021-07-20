@@ -219,7 +219,7 @@ export default {
               if (document.querySelectorAll('.box.end').length == this.endCounter) {
                 setTimeout(() => {
                   alert('you win!')
-                  switch (this.$route.query) {
+                  switch (this.$route.query.type) {
                     case 'level': {
                       this.changeLevel(1)
                     }
