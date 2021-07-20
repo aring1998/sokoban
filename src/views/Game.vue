@@ -46,7 +46,7 @@ import Vue from 'vue'
 import { official } from '@/assets/js/level'
 import { request } from '@/network/request'
 
-// import { deepClone } from '../utils'
+import { deepClone } from '../utils'
 import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
 import Popover from '@/components/Popover'
@@ -70,8 +70,7 @@ export default {
     Popover,
   },
   mounted() {
-    console.log(official)
-    window.sessionStorage.setItem('baseData', JSON.stringify(deepClone(official)))
+    this.cloneBaseData = deepClone(official);
     //判断是否通过创意工坊进入
 
     //判断是否通过选关进入
@@ -207,7 +206,8 @@ export default {
     // 重置当前关卡
     onReset() {
       const { level } = this.$route.query;
-      this.gameMap = JSON.parse(window.sessionStorage.getItem('baseData'))[level];
+      const deepBase = deepClone(this.cloneBaseData);
+      this.gameMap = deepBase[level];
       this.init(this.gameMap)
     },
     // 切换关卡
