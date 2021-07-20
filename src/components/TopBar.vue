@@ -3,7 +3,7 @@
     <img src="~@/assets/img/logo.png" alt="" />
     <span class="menu" @click="$refs.pop.popShow()">菜单</span>
     <popover ref="pop" v-show="popShow">
-      <van-button>回到主菜单</van-button>
+      <van-button @click="$router.push('/index')">回到主菜单</van-button>
     </popover>
   </div>
 </template>

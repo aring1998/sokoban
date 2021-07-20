@@ -6,12 +6,12 @@
     <div class="life">
       <span>当前生命：</span>
       <van-icon name="like" color="red" v-for="(item, index) in 2" :key="index" />
-      <van-icon name="like" color="gray" v-for="(item, index) in 1" :key="index"/>
+      <van-icon name="like" color="gray" v-for="(item, index) in 1" :key="index" />
     </div>
     <!-- 游戏内容 -->
     <game-content :game-map="gameMap"></game-content>
-    <div class="checkpoint">
-      <van-button class="regret" @click="onRegret" type="primary" size="mini">悔棋</van-button>
+    <div class="check-point">
+      <van-button class="regret" @click="onRegret" type="primary" size="mini">撤回</van-button>
       <van-button class="reset" @click="onReset" type="primary" size="mini">重置</van-button>
     </div>
     <!-- 虚拟手柄 -->
@@ -27,16 +27,28 @@
         <van-icon name="arrow-down" @click="move('y', 1)" />
       </div>
     </div>
-    <div class="checkpoint">
+    <div class="check-point">
       <van-button @click="changeLevel(-1)" type="primary" size="mini">上一关</van-button>
       <van-button @click="changeLevel(1)" type="primary" size="mini">下一关</van-button>
     </div>
     <popover v-show="popShow" v-if="this.$route.query.type == 'created'">
-      <div class="test-pop">
+      <div class="test-map-pop">
         <span>您已完成该地图的测试</span>
         <span>您可以选择将地图存储</span>
         <span>我们需要更多有趣的地图</span>
         <span>如果可以请选择上传云端</span>
+        <van-field
+          v-model="uploadMap.mapName"
+          maxlength="10"
+          label="地图名"
+          placeholder="请为您的地图取个名字，最长10字"
+        />
+        <van-field
+          v-model="uploadMap.creator"
+          maxlength="10"
+          label="作者"
+          placeholder="请输入您的昵称，最长10字"
+        />
         <div>
           <button @click="saveLocal">存在本地</button>
           <button @click="saveServe">上传云端</button>
@@ -51,8 +63,8 @@ import Vue from 'vue'
 
 import { official } from '@/assets/js/level'
 import { request } from '@/network/request'
+import { deepClone2Arr } from '@/utils/index'
 
-// import { deepClone } from '../utils'
 import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
 import Popover from '@/components/Popover'
@@ -60,47 +72,55 @@ import Popover from '@/components/Popover'
 export default {
   data() {
     return {
-      level: 0,
+      level: 0, // 关卡
       gameMap: official[0], // 游戏地图
+      initMap: [], // 初始地图
+      mapRecord: [], // 每步地图记录
+      step: 0, // 步数
       playerX: 0, // 人物x轴坐标
       playerY: 0, // 人物y轴坐标
       endCounter: 0, // 终点个数
       popShow: false, // 弹出框是否展示
-      cloneBaseData: [],
-      mark: false
+      mark: false,
+      uploadMap: {
+        mapName: '',
+        creator: ''
+      }
     }
   },
   components: {
     TopBar,
     GameContent,
-    Popover,
+    Popover
   },
   mounted() {
-    console.log(official)
-    // window.sessionStorage.setItem('baseData', JSON.stringify(deepClone(official)))
-
-    switch(this.$route.query.type) {
+    // 判断入口
+    switch (this.$route.query.type) {
       // 由选关进入
       case 'level': {
-        this.changeLevel(this.$route.params.level - 1);
+        this.gameMap = official[this.$route.params.level - 1]
+        break
       }
       // 由测试地图/创意工坊进入
       case 'workshop':
       case 'created': {
         this.gameMap = this.$route.params.gameMap
+        break
       }
     }
+
     // 游戏初始化
     this.init(this.gameMap)
   },
   methods: {
     // 初始化
     init(gameMap) {
+      this.gameMap = gameMap
       this.endCounter = 0
       // 获取人物坐标、终点个数
       for (let y in gameMap) {
         for (let x in gameMap[y]) {
-          if (gameMap[y][x] == 2) {
+          if (gameMap[y][x] == 2 || gameMap[y][x] == 6) {
             console.log('找到玩家的坐标：', x, y)
             this.playerX = x
             this.playerY = y
@@ -110,6 +130,9 @@ export default {
           }
         }
       }
+      // 深拷贝初始地图
+      this.initMap = deepClone2Arr(this.gameMap)
+      this.mapRecord = [deepClone2Arr(this.gameMap)]
     },
     // 玩家移动
     move(direction, step) {
@@ -168,7 +191,8 @@ export default {
 
           // 如果箱子撞墙/箱子
           if (boxPlace == 0 || boxPlace == 3) {
-            if (fromPlace == 5 || fromPlace == 6) Vue.set(this.gameMap[this.playerY], this.playerX, 6)
+            if (fromPlace == 5 || fromPlace == 6)
+              Vue.set(this.gameMap[this.playerY], this.playerX, 6)
             else Vue.set(this.gameMap[this.playerY], this.playerX, 2)
             return
           }
@@ -176,14 +200,17 @@ export default {
           if (boxPlace == 4) {
             // 如果箱子抵达终点
             Vue.set(this.gameMap[setBoxY], setBoxX, 5)
-            setTimeout(() => {
+            this.$nextTick(() => {
               if (document.querySelectorAll('.box.end').length == this.endCounter) {
-                alert('you win!')
-                if (this.$route.params.type == 'created') {
-                  this.popShow = true
-                } else this.changeLevel(1)
+                Vue.set(this.gameMap[setY], setX, 2)
+                Vue.set(this.gameMap[setBoxY], setBoxX, 5)
+                setTimeout(() => {
+                  alert('you win!')
+                  if (this.$route.query.type == 'created') this.popShow = true
+                  else this.changeLevel(1)
+                })
               }
-            }, 0)
+            })
           } else Vue.set(this.gameMap[setBoxY], setBoxX, 3)
           // 如果目标点是箱子抵达终点或人物在终点上
           if (toPlace == 5 || toPlace == 6) {
@@ -202,19 +229,33 @@ export default {
       // 设定移动后的玩家位置
       if (direction == 'x') this.playerX = +this.playerX + step
       else this.playerY = +this.playerY + step
-
+      // 默认情况下，设定目标点为人物
       if (isDefault == true) Vue.set(this.gameMap[setY], setX, 2)
-      return
+      // 记录移动后地图数据
+      this.mapRecord.push(deepClone2Arr(this.gameMap))
+      this.step++
     },
-    // 悔棋（可以连续悔棋置第一步）
+    // 撤回（可以连续撤回置第一步）
     onRegret() {
-
+      this.gameMap = deepClone2Arr(this.mapRecord[this.step - 1])
+      this.mapRecord.pop()
+      this.step--
+      for (let y in this.gameMap) {
+        for (let x in this.gameMap[y]) {
+          if (this.gameMap[y][x] == 2 || this.gameMap[y][x] == 6) {
+            console.log('找到玩家的坐标：', x, y)
+            this.playerX = x
+            this.playerY = y
+            break
+          }
+        }
+      }
     },
     // 重置当前关卡
     onReset() {
-      const { level } = this.$route.query;
-      this.gameMap = JSON.parse(window.sessionStorage.getItem('baseData'))[level];
-      this.init(this.gameMap)
+      // const { level } = this.$route.query;
+      // this.gameMap = JSON.parse(window.sessionStorage.getItem('baseData'))[level];
+      this.init(this.initMap)
     },
     // 切换关卡
     changeLevel(value) {
@@ -227,12 +268,16 @@ export default {
       //   return;
       // }
       // this.mark = 'F-0';
-      this.level += value;
-      this.gameMap = [];
+      this.level += value
+      this.gameMap = []
       // 修改关卡，修改路由参数
-      this.$router.push({ path: 'game', query: { level: this.level } })
+      // this.$router.push({
+      //   name: 'game',
+      //   query: { type: 'level' },
+      //   params: { level: this.level }
+      // })
       this.$nextTick(() => {
-        this.gameMap = official[this.level];
+        this.gameMap = official[this.level]
         this.init(this.gameMap)
       })
     },
@@ -247,24 +292,22 @@ export default {
     },
     // 将地图上传云端
     saveServe() {
-      const mapData = this.gameMap
+      const mapData = this.initMap
+      const creator = this.uploadMap.creator
+      const mapName = this.uploadMap.mapName
       request({
         url: 'map/add',
         method: 'POST',
-        data: {
-          creator: '',
-          mapName: '',
-          mapData,
-        },
+        data: { creator, mapName, mapData }
       })
-        .then((res) => {
-          this.$notify({type: 'success', message:'上传成功'})
+        .then(res => {
+          this.$notify({ type: 'success', message: '上传成功' })
         })
-        .catch((err) => {
-          this.$notify({type: 'danger', message:'上传失败，错误：' + err})
+        .catch(err => {
+          this.$notify({ type: 'danger', message: '上传失败，错误：' + err })
         })
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -287,6 +330,7 @@ export default {
   }
 }
 
+// 虚拟手柄
 .analog-handle {
   display: flex;
   flex-flow: column nowrap;
@@ -297,45 +341,42 @@ export default {
   width: 200px;
   height: 200px;
   margin: 0 auto;
-  // margin-top: 30px;
+  div {
+    height: 33%;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  i {
+    font-size: 60px;
+    color: #fff;
+  }
+  .center {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
-.analog-handle div {
-  height: 33%;
-  width: 100%;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.analog-handle i {
-  font-size: 60px;
-  color: #fff;
-}
-
-.analog-handle .center {
-  display: flex;
-  justify-content: space-between;
-}
-
-.test-pop {
+// 测试地图弹窗
+.test-map-pop {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
+  span {
+    margin-bottom: 8px;
+  }
 }
 
-.test-pop span {
-  margin-bottom: 8px;
-}
-
-.checkpoint {
+.check-point {
   display: flex;
   justify-content: space-around;
   margin-top: 30px;
 }
 
+// 人物生命值
 .life {
   display: flex;
   align-items: center;

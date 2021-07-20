@@ -1,6 +1,7 @@
 <!-- 自定义地图 -->
 <template>
   <div class="create">
+    <top-bar></top-bar>
     <!-- 弹出层选择初始游戏地图布局 -->
     <popover v-show="popShow" :disabled="true">
       <van-form>
@@ -10,7 +11,7 @@
           maxlength="2"
           label="地图行数"
           placeholder="可选范围：6~12"
-          :rules="[{ pattern: /^[6_9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
+          :rules="[{ pattern: /^[6-9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
         />
         <van-field
           v-model="gameMapForm.column"
@@ -18,7 +19,7 @@
           maxlength="2"
           label="地图列数"
           placeholder="可选范围：6~12"
-          :rules="[{ pattern: /^[6_9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
+          :rules="[{ pattern: /^[6-9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
         />
         <van-field
           v-model="gameMapForm.life"
@@ -62,6 +63,7 @@
 <script>
 import Vue from 'vue'
 
+import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
 import Popover from '@/components/Popover'
 
@@ -110,6 +112,7 @@ export default {
     }
   },
   components: {
+    TopBar,
     GameContent,
     Popover
   },

@@ -1,5 +1,6 @@
 <template>
   <div class="workshop">
+    <top-bar></top-bar>
     <p class="workshop-title out-title">创意工坊</p>
     <div class="workshop-content">
       <ul class="workshop-map">
@@ -32,6 +33,7 @@
 <script>
 import { request } from '@/network/request'
 
+import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
 export default {
   data: function() {
@@ -41,6 +43,7 @@ export default {
     }
   },
   components: {
+    TopBar,
     GameContent
   },
   methods: {

@@ -18,7 +18,7 @@
           v-for="(item, index) in official"
           :key="index"
           class="btn"
-          @click="levelIs(index + 1)"
+          @click="level = index + 1"
           :class="{ active: level == index + 1 }"
         >
           {{ index + 1 }}
@@ -34,6 +34,7 @@
 
 <script>
 import { official } from '@/assets/js/level'
+
 export default {
   data() {
     return {
@@ -48,10 +49,6 @@ export default {
       this.ifchoose = !this.ifchoose
       this.level = ''
     },
-    //选择关卡
-    levelIs(num) {
-      this.level = num
-    },
     //跳转游戏页面
     toGame() {
       if (this.level === '') {
@@ -59,8 +56,8 @@ export default {
       } else {
         this.$router.push({
           name: 'game',
-          params: { level: this.level },
-          query: { type: 'level' }
+          query: { type: 'level' },
+          params: { level: this.level }
         })
       }
     }
