@@ -28,8 +28,8 @@
       </div>
     </div>
     <div class="check-point">
-      <van-button @click="changeLevel(-1)" type="primary" size="mini">上一关</van-button>
-      <van-button @click="changeLevel(1)" type="primary" size="mini">下一关</van-button>
+      <van-button @click="changeLevel(-1)" type="primary" size="mini" :disabled="level == 0">上一关</van-button>
+      <van-button @click="changeLevel(1)" type="primary" size="mini" :disabled="level == levelCounter">下一关</van-button>
     </div>
     <popover v-show="popShow" v-if="this.$route.query.type == 'created'">
       <div class="test-map-pop">
@@ -73,6 +73,7 @@ export default {
   data() {
     return {
       level: 0, // 关卡
+      levelCounter: official.length - 1, // 关卡总量
       gameMap: official[0], // 游戏地图
       initMap: [], // 初始地图
       mapRecord: [], // 每步地图记录
@@ -82,7 +83,7 @@ export default {
       endCounter: 0, // 终点个数
       popShow: false, // 弹出框是否展示
       mark: false,
-      uploadMap: {
+      uploadMap: { // 上传地图表单
         mapName: '',
         creator: ''
       }
@@ -98,7 +99,8 @@ export default {
     switch (this.$route.query.type) {
       // 由选关进入
       case 'level': {
-        this.gameMap = official[this.$route.params.level - 1]
+        this.level = this.$route.params.level - 1
+        this.gameMap = official[this.level]
         break
       }
       // 由测试地图/创意工坊进入
@@ -117,6 +119,7 @@ export default {
     init(gameMap) {
       this.gameMap = gameMap
       this.endCounter = 0
+      this.step = 0
       // 获取人物坐标、终点个数
       for (let y in gameMap) {
         for (let x in gameMap[y]) {
