@@ -26,20 +26,26 @@
           </div>
         </li>
       </ul>
+      <!-- 分页 -->
+      <div>
+        <van-pagination v-model="current" :total-items="total" :items-per-page="size" @change="changePage"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { request } from '@/network/request'
-
-import TopBar from '@/components/TopBar'
-import GameContent from '@/components/GameContent'
+import { request } from '@/network/request';
+import TopBar from '@/components/TopBar';
+import GameContent from '@/components/GameContent';
 export default {
   data: function() {
     return {
       //地图数据
-      mapData: []
+      mapData: [],
+      current: 1,//页码
+      size:20,//每页条数
+      total: "",//总条数
     }
   },
   components: {
@@ -48,22 +54,43 @@ export default {
   },
   methods: {
     //获取地图数据
-    getGameMap() {
+    // getGameMap() {
+    //   request({
+    //     url: 'map/list',
+    //     method: 'GET',
+    //   })
+    //     .then(res => {
+    //       console.log(res)
+    //       this.mapData = res.data
+    //     })
+    //     .catch(err => {
+    //       this.$notify({ type: 'danger', message: '获取地图失败，错误：' + err })
+    //     })
+    // },
+    //分页请求
+    getListDate(){
       request({
-        url: 'map/list',
-        method: 'GET'
+        url:'/map/page',
+        methods:'get',
+        params:{
+          size: this.size,//条数
+          current: this.current,//页码
+        }
+      }).then(res => {
+        this.total = res.data.total;//获取总条数
+        this.mapData = res.data.records;//地图数据赋值
       })
-        .then(res => {
-          console.log(res)
-          this.mapData = res.data
-        })
-        .catch(err => {
-          this.$notify({ type: 'danger', message: '获取地图失败，错误：' + err })
-        })
+    },
+    //分页页码改变时触发
+    changePage(val){
+      this.current = val;
+      console.log(val);
+      this.getListDate();
     }
   },
   created() {
-    this.getGameMap()
+    //this.getGameMap();
+    this.getListDate();
   }
 }
 </script>
