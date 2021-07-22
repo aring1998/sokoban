@@ -93,7 +93,7 @@ export default {
         mapName: '',
         creator: ''
       },
-      moveInterval: null
+      keepMove: null // 持续移动定时器
     }
   },
   components: {
@@ -162,6 +162,7 @@ export default {
        * @step: 步数
        * @fromPlace: 出发点
        * @toPlace: 目标点
+       * @boxPlace: 箱子目标点
        * @setY: 目标点Vue.set中object的index值
        * @setX: 目标点Vue.set中key值
        * @setBoxY: 箱子移动点Vue.set中object的index值
@@ -170,8 +171,8 @@ export default {
        */
 
       // 长按持续移动
-      clearTimeout(this.moveInterval)
-      this.moveInterval = setTimeout(() => {
+      clearTimeout(this.keepMove)
+      this.keepMove = setTimeout(() => {
         this.move(direction, step)
       }, 500)
 
@@ -212,9 +213,8 @@ export default {
         // 碰箱子
         case 3:
         case 5: {
-          if (direction == 'x') boxPlace = this.gameMap[this.playerY][+this.playerX + step * 2]
-          else boxPlace = this.gameMap[+this.playerY + step * 2][this.playerX]
-
+          // 获取箱子目标点
+          boxPlace = this.gameMap[setBoxY][setBoxX]
           // 如果箱子撞墙/箱子
           if (boxPlace == 0 || boxPlace == 3) {
             if (fromPlace == 5 || fromPlace == 6)
@@ -271,9 +271,9 @@ export default {
       this.mapRecord.push(deepClone2Arr(this.gameMap))
       this.step++
     },
-    // 离开按键时，停止移动
+    // 松开按键时，停止移动
     stopMove() {
-      clearTimeout(this.moveInterval)
+      clearTimeout(this.keepMove)
     },
     // 撤回（可以连续撤回置第一步）
     onRegret() {
@@ -325,23 +325,37 @@ export default {
     saveLocal() {
       for (let i = 0; i < 99; i++) {
         if (!window.localStorage.getItem('map' + i)) {
-          window.localStorage.setItem('map' + i, this.gameMap)
+          window.localStorage.setItem('map' + i, JSON.stringify({
+            creator: this.uploadMap.creator,
+            mapName: this.uploadMap.mapName,
+            mapData: this.initMap
+          }))
+          this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
           break
         }
       }
+      this.popShow = false
+      setTimeout(() => {
+        this.$router.push('/index')
+      }, 3000)
     },
     // 将地图上传云端
     saveServe() {
-      const mapData = this.initMap
-      const creator = this.uploadMap.creator
-      const mapName = this.uploadMap.mapName
       request({
         url: 'map/add',
         method: 'POST',
-        data: { creator, mapName, mapData }
+        data: {
+          creator: this.uploadMap.creator,
+          mapName: this.uploadMap.mapName,
+          mapData: this.initMap
+        }
       })
         .then(res => {
-          this.$notify({ type: 'success', message: '上传成功' })
+          this.$notify({ type: 'success', message: '上传成功，3秒后将返回首页' })
+          this.popShow = false
+          setTimeout(() => {
+            this.$router.push('/index')
+          }, 3000)
         })
         .catch(err => {
           this.$notify({ type: 'danger', message: '上传失败，错误：' + err })

@@ -117,6 +117,7 @@ export default {
     Popover
   },
   mounted() {
+    // 接收测试地图页返回编辑
     if (this.$route.params.gameMap) {
       this.gameMap = this.$route.params.gameMap
       this.popShow = false
