@@ -176,7 +176,7 @@ export default {
         this.move(direction, step)
       }, 500)
 
-      // 声明初始变量
+      // 声明初始变量 
       const fromPlace = this.gameMap[this.playerY][this.playerX]
       let toPlace, boxPlace, setY, setX, setBoxY, setBoxX
       let isDefault = true
