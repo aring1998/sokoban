@@ -1,7 +1,7 @@
 <!-- 顶部导航栏 -->
 <template>
   <div class="top-bar">
-    <slot><img src="~@/assets/img/logo.png" alt="" /></slot>
+    <slot><van-icon name="revoke" @click="$router.go(-1)" /></slot>
     <div>
       <van-icon name="user-o" />
       <van-icon name="bars" @click="$refs.menu.popShow()" />

@@ -1,26 +1,39 @@
 <!-- 游戏地图 -->
 <template>
   <table class="game-container">
-    <tr v-for="(item, index) in gameMap.length" :key="index" @click="getRowIndex(index)">
+    <tr v-for="(item, yIndex) in gameMap.length" :key="yIndex" @click="getRowIndex(yIndex)">
       <td
-        v-for="(item, index) of gameMap[index]"
-        @click="getColumnIndex(index)"
-        :key="index"
-        :class="{
-          'game-cell': true,
-          'wall': item == 0,
-          'floor': item == 1,
-          'player': item == 2 || item == 6,
-          'box': item == 3 || item == 5,
-          'end': item == 4 || item == 5 || item == 6,
-        }"
+        v-for="(item, xIndex) of gameMap[yIndex]"
+        @click="getColumnIndex(xIndex)"
+        :key="xIndex"
+        class="game-cell"
+        :class="
+          $route.path == '/game'
+            ? randerClass(yIndex, xIndex)
+            : {
+                wall: item == 0,
+                floor: item == 1,
+                player: item == 2,
+                box: item == 3,
+                end: item == 4,
+                spikeweed: item == 5
+              }
+        "
       ></td>
     </tr>
   </table>
 </template>
 
 <script>
+import { deepClone2Arr } from '@/utils/index'
+
 export default {
+  data() {
+    return {
+      staticMap: [],
+      activeMap: []
+    }
+  },
   props: {
     gameMap: Array,
     getColumnIndex: {
@@ -30,6 +43,72 @@ export default {
     getRowIndex: {
       type: Function,
       default: () => {}
+    }
+  },
+  methods: {
+    // 分离地图
+    separateMap(value) {
+      // 接收父组件的地图数据
+      this.staticMap = deepClone2Arr(value)
+      this.activeMap = deepClone2Arr(value)
+      // 分离静止层
+      for (let y in value) {
+        for (let x in value[y]) {
+          switch (value[y][x]) {
+            case 2:
+            case 3: {
+              this.staticMap[y][x] = 1
+            }
+          }
+        }
+      }
+      // 分离活动层
+      for (let y in value) {
+        for (let x in value[y]) {
+          switch (value[y][x]) {
+            case 0:
+            case 4: {
+              this.activeMap[y][x] = 1
+            }
+          }
+        }
+      }
+    },
+    // 渲染地图
+    randerClass(y, x) {
+      if (this.staticMap.length == 0) return
+      let res = ''
+      // 静止层渲染
+      switch (this.staticMap[y][x]) {
+        case 0: {
+          res += 'wall'
+          break
+        }
+        case 1: {
+          res += 'floor'
+          break
+        }
+        case 4: {
+          res += 'end'
+          break
+        }
+      }
+      // 活动层渲染
+      switch (this.activeMap[y][x]) {
+        case 2: {
+          res += ' player'
+          break
+        }
+        case 3: {
+          res += ' box'
+          break
+        }
+        case 5: {
+          res += ' spikeweed'
+          break
+        }
+      }
+      return res
     }
   }
 }
@@ -85,7 +164,7 @@ export default {
   height: 100%;
   width: 100%;
 }
-.map-thumbnail .game-container td{
+.map-thumbnail .game-container td {
   height: 5px;
   width: 5px;
 }

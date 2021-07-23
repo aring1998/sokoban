@@ -9,7 +9,7 @@
       <van-icon name="like" color="gray" v-for="(item, index) in 1" :key="index" />
     </div>
     <!-- 游戏内容 -->
-    <game-content :game-map="gameMap"></game-content>
+    <game-content :game-map="gameMap" ref="game"></game-content>
     <div class="check-point">
       <van-button class="regret" @click="onRegret" type="primary" size="mini">撤回</van-button>
       <van-button class="reset" @click="onReset" type="primary" size="mini">重置</van-button>
@@ -81,6 +81,8 @@ export default {
       level: 0, // 关卡
       levelCounter: official.length - 1, // 关卡总量
       gameMap: official[0], // 游戏地图
+      staticMap: [],
+      activeMap: [],
       initMap: [], // 初始地图
       mapRecord: [], // 每步地图记录
       step: 0, // 步数
@@ -137,22 +139,30 @@ export default {
       this.gameMap = gameMap
       this.endCounter = 0
       this.step = 0
+
+      // 调用子组件分离方法
+      this.$refs.game.separateMap(gameMap)
+      // 从子组件获取数据
+      this.staticMap = this.$refs.game.staticMap
+      this.activeMap = this.$refs.game.activeMap
+
       // 获取人物坐标、终点个数
       for (let y in gameMap) {
         for (let x in gameMap[y]) {
           if (gameMap[y][x] == 2 || gameMap[y][x] == 6) {
             console.log('找到玩家的坐标：', x, y)
-            this.playerX = x
-            this.playerY = y
+            this.playerX = +x
+            this.playerY = +y
           }
           if (gameMap[y][x] == 4) {
             this.endCounter++
           }
         }
       }
+
       // 深拷贝初始地图
       this.initMap = deepClone2Arr(this.gameMap)
-      this.mapRecord = [deepClone2Arr(this.gameMap)]
+      this.mapRecord = [deepClone2Arr(this.activeMap)]
     },
     // 玩家移动
     move(direction, step) {
@@ -160,14 +170,14 @@ export default {
        * 变量名
        * @direction: 轴方向
        * @step: 步数
-       * @fromPlace: 出发点
-       * @toPlace: 目标点
-       * @boxPlace: 箱子目标点
+       * @staticTarget: 静止层目标点
+       * @activeTarget: 活动层目标点
+       * @staticBoxTarget: 静止层箱子目标点
+       * @activeBoxTarget: 活动层箱子目标点
        * @setY: 目标点Vue.set中object的index值
        * @setX: 目标点Vue.set中key值
        * @setBoxY: 箱子移动点Vue.set中object的index值
        * @setBoxX: 箱子移动点Vue.set中key值
-       * @isDefault: 是否默认的移动方法
        */
 
       // 长按持续移动
@@ -176,19 +186,17 @@ export default {
         this.move(direction, step)
       }, 500)
 
-      // 声明初始变量 
-      const fromPlace = this.gameMap[this.playerY][this.playerX]
-      let toPlace, boxPlace, setY, setX, setBoxY, setBoxX
-      let isDefault = true
+      // 声明初始变量
+      let staticTarget, activeTarget, staticBoxTarget, activeBoxTarget, setY, setX, setBoxY, setBoxX
 
       // 判断方向
       if (direction == 'x') {
         setY = this.playerY
-        setX = +this.playerX + step
+        setX = this.playerX + step
         setBoxY = setY
         setBoxX = setX + step
       } else {
-        setY = +this.playerY + step
+        setY = this.playerY + step
         setX = this.playerX
         setBoxY = setY + step
         setBoxX = setX
@@ -196,80 +204,76 @@ export default {
 
       // 判断是否超出单元格
       if (setY < 0 || setY == this.gameMap[0].length || setX < 0 || setX == this.gameMap[0].length) return
-      else toPlace = this.gameMap[setY][setX]
+      
+      staticTarget = this.staticMap[setY][setX] // 获取静止层目标点的值
+      activeTarget = this.activeMap[setY][setX] // 获取活动层目标点的值
 
-      // 如果出发点是箱子抵达终点或人物在终点上
-      if (fromPlace == 5 || fromPlace == 6) Vue.set(this.gameMap[this.playerY], this.playerX, 4)
-      else Vue.set(this.gameMap[this.playerY], this.playerX, 1)
-
-      // 判断目标点
-      switch (toPlace) {
+      // 判断静止层目标点
+      switch (staticTarget) {
         // 碰墙
-        case 0: {
-          if (fromPlace == 5 || fromPlace == 6) Vue.set(this.gameMap[this.playerY], this.playerX, 6)
-          else Vue.set(this.gameMap[this.playerY], this.playerX, 2)
-          return
-        }
+        case 0: return
+      }
+
+      // 判断活动层目标点
+      switch (activeTarget) {
         // 碰箱子
-        case 3:
-        case 5: {
-          // 获取箱子目标点
-          boxPlace = this.gameMap[setBoxY][setBoxX]
-          // 如果箱子撞墙/箱子
-          if (boxPlace == 0 || boxPlace == 3) {
-            if (fromPlace == 5 || fromPlace == 6)
-              Vue.set(this.gameMap[this.playerY], this.playerX, 6)
-            else Vue.set(this.gameMap[this.playerY], this.playerX, 2)
-            return
+        case 3: {
+          staticBoxTarget = this.staticMap[setBoxY][setBoxX] // 获取静止层箱子目标点
+          activeBoxTarget = this.activeMap[setBoxY][setBoxX] // 获取活动层箱子目标点
+
+          // 判断静止层箱子目标点
+          switch (staticBoxTarget) {
+            // 碰墙
+            case 0: return
+            // 碰终点
+            case 4: {
+              setTimeout(() => {
+                console.log(document.querySelectorAll('.end.box').length);
+                if (document.querySelectorAll('.end.box').length == this.endCounter) {
+                  setTimeout(() => {
+                    alert('you win!')
+                    switch (this.$route.query.type) {
+                      case 'level': {
+                        this.changeLevel(1)
+                        break
+                      }
+                      case 'created': {
+                        this.popShow = true
+                        break
+                      }
+                      case 'workshop': {
+                        this.$router.push('/workshop')
+                        break
+                      }
+                    }
+                  })
+                }
+              })
+              break
+            }
           }
-          // 如果箱子能移动
-          if (boxPlace == 4) {
-            // 如果箱子抵达终点
-            Vue.set(this.gameMap[setBoxY], setBoxX, 5)
-            this.$nextTick(() => {
-              if (document.querySelectorAll('.box.end').length == this.endCounter) {
-                setTimeout(() => {
-                  alert('you win!')
-                  switch (this.$route.query.type) {
-                    case 'level': {
-                      this.changeLevel(1)
-                      break
-                    }
-                    case 'created': {
-                      this.popShow = true
-                      break
-                    }
-                    case 'workshop': {
-                      this.$router.push('/workshop')
-                      break
-                    }
-                  }
-                })
-              }
-            })
-          } else Vue.set(this.gameMap[setBoxY], setBoxX, 3)
-          // 如果目标点是箱子抵达终点或人物在终点上
-          if (toPlace == 5 || toPlace == 6) {
-            isDefault = false
-            Vue.set(this.gameMap[setY], setX, 6)
+
+          // 判断活动层箱子目标点
+          switch (activeBoxTarget) {
+            // 碰箱子
+            case 3: return
           }
-          break
-        }
-        // 碰终点
-        case 4: {
-          isDefault = false
-          Vue.set(this.gameMap[setY], setX, 6)
-          break
+          // 箱子可以正常移动
+          Vue.set(this.activeMap[setBoxY], setBoxX, 3)
         }
       }
-      // 设定移动后的玩家位置
-      if (direction == 'x') this.playerX = +this.playerX + step
-      else this.playerY = +this.playerY + step
-      // 默认情况下，设定目标点为人物
-      if (isDefault == true) Vue.set(this.gameMap[setY], setX, 2)
-      // 记录移动后地图数据
-      this.mapRecord.push(deepClone2Arr(this.gameMap))
+      
+      // 玩家可以正常移动
+      Vue.set(this.activeMap[this.playerY], this.playerX, 1)
+      Vue.set(this.activeMap[setY], setX, 2)
       this.step++
+
+      // 设定移动后的玩家位置
+      if (direction == 'x') this.playerX += step
+      else this.playerY += step
+
+      // 记录移动后地图数据
+      this.mapRecord.push(deepClone2Arr(this.activeMap))
     },
     // 松开按键时，停止移动
     stopMove() {
@@ -277,15 +281,19 @@ export default {
     },
     // 撤回（可以连续撤回置第一步）
     onRegret() {
-      this.gameMap = deepClone2Arr(this.mapRecord[this.step - 1])
+      // 第零步时不可撤回
+      if (this.mapRecord.length == 1) return
+      // 向子组件赋值，并重新浅拷贝
+      this.$refs.game.activeMap = deepClone2Arr(this.mapRecord[this.step - 1])
+      this.activeMap = this.$refs.game.activeMap
       this.mapRecord.pop()
       this.step--
-      for (let y in this.gameMap) {
-        for (let x in this.gameMap[y]) {
-          if (this.gameMap[y][x] == 2 || this.gameMap[y][x] == 6) {
-            console.log('找到玩家的坐标：', x, y)
-            this.playerX = x
-            this.playerY = y
+      // 撤回后重新获取玩家坐标
+      for (let y in this.activeMap) {
+        for (let x in this.activeMap[y]) {
+          if (this.activeMap[y][x] == 2) {
+            this.playerX = +x
+            this.playerY = +y
             break
           }
         }
@@ -293,33 +301,13 @@ export default {
     },
     // 重置当前关卡
     onReset() {
-      // const { level } = this.$route.query;
-      // this.gameMap = JSON.parse(window.sessionStorage.getItem('baseData'))[level];
       this.init(this.initMap)
     },
     // 切换关卡
     changeLevel(value) {
-      // 待看
-      // console.log(this.mark)
-      // let [t, m] = this.mark.split('-');
-      // if (value === -1 && this.level === 0 && t === 'T') {
-      //   this.$router.push({ path: 'game', query: { level: m+=value } })
-      //   this.$notify({type: 'danger', message:'当前关卡，不能进行此操作哦，宝~'})
-      //   return;
-      // }
-      // this.mark = 'F-0';
       this.level += value
-      this.gameMap = []
-      // 修改关卡，修改路由参数
-      // this.$router.push({
-      //   name: 'game',
-      //   query: { type: 'level' },
-      //   params: { level: this.level }
-      // })
-      this.$nextTick(() => {
-        this.gameMap = deepClone2Arr(official[this.level])
-        this.init(this.gameMap)
-      })
+      this.gameMap = deepClone2Arr(official[this.level])
+      this.init(this.gameMap)
     },
     // 将地图存在本地
     saveLocal() {
