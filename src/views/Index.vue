@@ -1,8 +1,11 @@
 <template>
   <div class="mainpage">
-    <div class="choosebox" :class="{ show: ifchoose }">
+    <top-bar>
+      <van-icon name="question-o" @click="$refs.intro.popShow()" />
+    </top-bar>
+    <div class="choosebox" :class="{ show: ifChoice }">
       <p class="choosebox-title">PUSH THE BOX!</p>
-      <button class="choosebtn" @click="chooseLevel">选择关卡</button>
+      <button class="choosebtn" @click="choiceLevel">选择关卡</button>
       <button class="choosebtn" @click="$router.push('/workshop')">
         创意工坊
       </button>
@@ -11,7 +14,7 @@
       </button>
     </div>
     <!--弹窗-->
-    <div class="out" :class="{ show: ifchoose }">
+    <div class="out" :class="{ show: ifChoice }">
       <p class="out-title">选择关卡</p>
       <div class="level-content">
         <button
@@ -26,27 +29,60 @@
       </div>
       <div class="level-btn">
         <button class="btn btn-ok" @click="toGame">确定</button>
-        <button class="btn btn-no" @click="chooseLevel">返回</button>
+        <button class="btn btn-no" @click="choiceLevel">返回</button>
       </div>
     </div>
+    <!-- 关于游戏弹窗 -->
+    <white-popover class="index-intro" ref="intro">
+      <van-tabs v-model="tabIndex" color="var(--mainColor)">
+        <van-tab title="游戏玩法" class="index-intro-item">
+          <span>&emsp;&emsp;通过虚拟手柄</span>
+          <img src="~@/assets/img/index-intro/handle.png" alt="" />
+          <span>控制人物移动，</span>
+          <span>将所有箱子</span>
+          <img src="~@/assets/img/box.png" alt="" />
+          <span>推入终点</span>
+          <img src="~@/assets/img/ball.png" alt="" />
+          <span>即可获得胜利！</span>
+        </van-tab>
+        <van-tab title="地图手册" class="index-intro-item"> </van-tab>
+        <van-tab title="意见反馈" class="index-intro-item"> </van-tab>
+        <van-tab title="关于项目" class="index-intro-item">
+          <span>&emsp;&emsp;该项目为开源项目，欢迎开发者参考学习，并且无比期盼您能加入我们，项目地址如下：</span>
+          <a href="https://gitee.com/aring1998/sokoban">https://gitee.com/aring1998/sokoban</a>
+          <p>也欢迎您为我们点一个star<van-icon name="star-o" color="orange" /></p>
+          <br>
+          <p>团队成员(按首字母排序)：</p>
+          <p style="font-weight: 600">aring, lyl, wangz, yuanyuanna</p>
+        </van-tab>
+      </van-tabs>
+    </white-popover>
   </div>
 </template>
 
 <script>
 import { official } from '@/assets/js/level'
 
+import TopBar from '@/components/TopBar'
+import WhitePopover from '@/components/WhitePopover'
+
 export default {
   data() {
     return {
-      ifchoose: false,
+      ifChoice: false,
       official: official,
-      level: ''
+      level: '',
+      tabIndex: 0
     }
+  },
+  components: {
+    TopBar,
+    WhitePopover
   },
   methods: {
     //选择关卡按钮弹出
-    chooseLevel() {
-      this.ifchoose = !this.ifchoose
+    choiceLevel() {
+      this.ifChoice = !this.ifChoice
       this.level = ''
     },
     //跳转游戏页面
@@ -61,14 +97,11 @@ export default {
         })
       }
     }
-  },
-  created() {
-    this.official = official
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 @import '../assets/css/animation.css';
 /*首页*/
 .mainpage {
@@ -76,11 +109,11 @@ export default {
   height: 100vh;
   overflow: hidden;
   position: relative;
+  background-color: var(--mainColor);
 }
 .choosebox {
   width: 100vw;
   height: 100vh;
-  background: rgb(149, 229, 240);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -108,7 +141,7 @@ export default {
 .out {
   width: 100vw;
   height: 100vh;
-  background: rgb(149, 229, 240);
+  background: var(--mainColor);
   transition: all 0.5s;
   padding-top: 50px;
 }
@@ -148,5 +181,34 @@ export default {
 }
 .active {
   background: rgb(26, 23, 179);
+}
+
+.van-tab__text--ellipsis {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.van-tabs--line {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.index-intro {
+  img {
+    height: 25px;
+    width: 25px;
+  }
+  .index-intro-item {
+    font-size: 16px;
+    padding: 10px;
+    background-color: #fff;
+    height: calc(90vh - 60px);
+  }
+  i {
+    font-size: 20px;
+    display: inline-block;
+    margin-bottom: -100px;
+    line-height: 20px;
+  }
 }
 </style>

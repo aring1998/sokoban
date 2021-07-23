@@ -1,8 +1,12 @@
+<!-- 顶部导航栏 -->
 <template>
   <div class="top-bar">
-    <img src="~@/assets/img/logo.png" alt="" />
-    <span class="menu" @click="$refs.pop.popShow()">菜单</span>
-    <popover ref="pop" v-show="popShow">
+    <slot><img src="~@/assets/img/logo.png" alt="" /></slot>
+    <div>
+      <van-icon name="user-o" />
+      <van-icon name="bars" @click="$refs.menu.popShow()" />
+    </div>
+    <popover ref="menu" v-show="popShow">
       <van-button @click="$router.push('/index')">回到主菜单</van-button>
     </popover>
   </div>
@@ -23,12 +27,12 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .top-bar {
   display: flex;
   align-items: center;
   height: 50px;
-  padding: 0 30px;
+  padding: 20px 15px 0 15px;
   justify-content: space-between;
 }
 
@@ -37,9 +41,13 @@ export default {
   height: 30px;
 }
 
-.top-bar .menu {
+.top-bar i {
   font-weight: 600;
   color: #fff;
-  font-size: 16px;
+  font-size: 22px;
+  background-color: rgba(0, 0, 0, .3);
+  border-radius: 50%;
+  padding: 5px;
+  margin-left: 8px;
 }
 </style>
