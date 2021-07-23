@@ -16,7 +16,7 @@ Vue
 3.  打包项目 `npm run build`
 
 #### 注意事项
-1. 需求概述可查阅[Demand](/Demand.md) 文档
+1. 需求概述可查阅[Demand](/docs/Demand.md)
 2. git提交日志请务必遵守[commitlint.config](/commitlint.config.js)内约定
 
 #### 参与贡献

@@ -92,6 +92,10 @@ export default {
           res += 'end'
           break
         }
+        case 5: {
+          res += 'spikeweed'
+          break
+        }
       }
       // 活动层渲染
       switch (this.activeMap[y][x]) {
@@ -101,10 +105,6 @@ export default {
         }
         case 3: {
           res += ' box'
-          break
-        }
-        case 5: {
-          res += ' spikeweed'
           break
         }
       }
@@ -137,6 +137,10 @@ export default {
 
 .floor {
   background-image: url('~@/assets/img/block.gif');
+}
+
+.spikeweed {
+  background-image: url('~@/assets/img/spikeweed.png');
 }
 
 .box {

@@ -49,7 +49,8 @@
               floor: item.value == 1,
               player: item.value == 2,
               box: item.value == 3,
-              end: item.value == 4
+              end: item.value == 4,
+              spikeweed: item.value == 5
             }"
           ></div>
           <span>{{ item.name }}</span>
@@ -105,6 +106,10 @@ export default {
         {
           name: '终点',
           value: 4
+        },
+        {
+          name: '地刺',
+          value: 5
         }
       ],
       elIndex: null,  // 元素对应索引

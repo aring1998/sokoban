@@ -3,10 +3,10 @@
     <!-- 顶部导航栏 -->
     <top-bar></top-bar>
     <!-- 人物生命值 -->
-    <div class="life">
+    <div class="life" v-if="life > 0 || lostLife > 0">
       <span>当前生命：</span>
-      <van-icon name="like" color="red" v-for="(item, index) in 2" :key="index" />
-      <van-icon name="like" color="gray" v-for="(item, index) in 1" :key="index" />
+      <van-icon name="like" color="red" v-for="(item, index) in life" :key="index" />
+      <van-icon name="like" color="gray" v-for="(item, index) in lostLife" :key="index" />
     </div>
     <!-- 游戏内容 -->
     <game-content :game-map="gameMap" ref="game"></game-content>
@@ -81,16 +81,17 @@ export default {
       level: 0, // 关卡
       levelCounter: official.length - 1, // 关卡总量
       gameMap: official[0], // 游戏地图
-      staticMap: [],
-      activeMap: [],
+      staticMap: [], // 静止层地图
+      activeMap: [], // 活动层地图
       initMap: [], // 初始地图
       mapRecord: [], // 每步地图记录
       step: 0, // 步数
+      endCounter: 0, // 终点个数
+      life: 1, // 人物生命
+      lostLife: 0, // 已损生命
       playerX: 0, // 人物x轴坐标
       playerY: 0, // 人物y轴坐标
-      endCounter: 0, // 终点个数
       popShow: false, // 弹出框是否展示
-      mark: false,
       uploadMap: { // 上传地图表单
         mapName: '',
         creator: ''
@@ -212,6 +213,17 @@ export default {
       switch (staticTarget) {
         // 碰墙
         case 0: return
+        // 碰地刺
+        case 5: {
+          this.life--
+          this.lostLife++
+          if (this.life == 0) {
+            alert('you dead!')
+            this.onReset()
+            return
+          }
+          break
+        }
       }
 
       // 判断活动层目标点
@@ -228,7 +240,6 @@ export default {
             // 碰终点
             case 4: {
               setTimeout(() => {
-                console.log(document.querySelectorAll('.end.box').length);
                 if (document.querySelectorAll('.end.box').length == this.endCounter) {
                   setTimeout(() => {
                     alert('you win!')
