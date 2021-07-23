@@ -11,7 +11,6 @@ Vue
 
 
 #### 常用操作
-
 1.  安装依赖 `npm install`
 2.  运行项目 `npm run dev`
 3.  打包项目 `npm run build`
@@ -21,8 +20,7 @@ Vue
 2. git提交日志请务必遵守`commitlint.config`内约定
 
 #### 参与贡献
-
 1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
+2.  新建 feature-xxx 分支
 3.  提交代码
 4.  新建 Pull Request

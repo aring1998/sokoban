@@ -45,9 +45,9 @@
         <span>如果可以请选择上传云端</span>
         <van-field
           v-model="uploadMap.mapName"
-          maxlength="10"
+          maxlength="32"
           label="地图名"
-          placeholder="请为您的地图取个名字，最长10字"
+          placeholder="请为您的地图取个名字，最长32字"
         />
         <van-field
           v-model="uploadMap.creator"
