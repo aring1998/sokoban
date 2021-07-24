@@ -41,17 +41,10 @@
     <!-- 选择地图元素 -->
     <div class="map-el-container">
       <ul>
-        <li v-for="(item, index) of mapEl" :key="item.value" :class="{ active: index == elIndex }" @click="choiceMapEl(index, item.value)">
+        <li v-for="(item, index) of getMapEl()" :key="item.value" :class="{ active: index == elIndex }" @click="choiceMapEl(index, item.value)">
           <div
-            :class="{
-              'map-el-img': true,
-              wall: item.value == 0,
-              floor: item.value == 1,
-              player: item.value == 2,
-              box: item.value == 3,
-              end: item.value == 4,
-              spikeweed: item.value == 5
-            }"
+            class="map-el-img"
+            :class="item.class"
           ></div>
           <span>{{ item.name }}</span>
         </li>
@@ -63,6 +56,8 @@
 
 <script>
 import Vue from 'vue'
+
+import { mapEl } from '@/assets/js/map-el-class/index'
 
 import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
@@ -110,6 +105,14 @@ export default {
         {
           name: '地刺',
           value: 5
+        },
+        {
+          name: '火',
+          value: 6
+        },
+        {
+          name: '冰箱子',
+          value: 7
         }
       ],
       elIndex: null,  // 元素对应索引
@@ -128,7 +131,16 @@ export default {
       this.popShow = false
     }
   },
+  // computed: {
+  //   getMayVlue() {
+  //     return mapEl
+  //   }
+  // },
   methods: {
+    getMapEl() {
+      console.log(mapEl);
+      return mapEl
+    },
     // 更改表格布局
     changeTableLayout() {
       this.gameMap = []

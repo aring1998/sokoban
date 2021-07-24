@@ -31,8 +31,8 @@ export default {
 .top-bar {
   display: flex;
   align-items: center;
-  height: 50px;
-  padding: 20px 15px 0 15px;
+  height: 80px;
+  padding: 20px 15px;
   justify-content: space-between;
 }
 

@@ -10,14 +10,7 @@
         :class="
           $route.path == '/game'
             ? randerClass(yIndex, xIndex)
-            : {
-                wall: item == 0,
-                floor: item == 1,
-                player: item == 2,
-                box: item == 3,
-                end: item == 4,
-                spikeweed: item == 5
-              }
+            : getmapElClass(item)
         "
       ></td>
     </tr>
@@ -26,6 +19,7 @@
 
 <script>
 import { deepClone2Arr } from '@/utils/index'
+import { mapElClass } from '@/assets/js/map-el-class/index'
 
 export default {
   data() {
@@ -46,6 +40,9 @@ export default {
     }
   },
   methods: {
+    getmapElClass(value) {
+      return mapElClass(value)
+    },
     // 分离地图
     separateMap(value) {
       // 接收父组件的地图数据
@@ -96,6 +93,10 @@ export default {
           res += 'spikeweed'
           break
         }
+        case 6: {
+          res += 'fire'
+          break
+        }
       }
       // 活动层渲染
       switch (this.activeMap[y][x]) {
@@ -105,6 +106,10 @@ export default {
         }
         case 3: {
           res += ' box'
+          break
+        }
+        case 7: {
+          res += ' ice-box'
           break
         }
       }
@@ -147,12 +152,20 @@ export default {
   background-image: url('~@/assets/img/box.png');
 }
 
+.ice-box {
+  background-image: url('~@/assets/img/ice-box.png');
+}
+
 .wall {
   background-image: url('~@/assets/img/wall.png');
 }
 
 .end {
   background-image: url('~@/assets/img/ball.png');
+}
+
+.fire {
+  background-image: url('~@/assets/img/fire.png');
 }
 
 .player {

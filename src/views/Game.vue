@@ -67,7 +67,7 @@
 <script>
 import Vue from 'vue'
 
-import { official } from '@/assets/js/level'
+import { official } from '@/assets/js/level/index'
 import { request } from '@/network/request'
 import { deepClone2Arr, isEmptyObject } from '@/utils/index'
 
@@ -89,6 +89,7 @@ export default {
       endCounter: 0, // 终点个数
       life: 1, // 人物生命
       lostLife: 0, // 已损生命
+      initLife: 0, // 初始生命
       playerX: 0, // 人物x轴坐标
       playerY: 0, // 人物y轴坐标
       popShow: false, // 弹出框是否展示
@@ -140,6 +141,8 @@ export default {
       this.gameMap = gameMap
       this.endCounter = 0
       this.step = 0
+      this.life = 1
+      this.lostLife = 0
 
       // 调用子组件分离方法
       this.$refs.game.separateMap(gameMap)
@@ -150,7 +153,7 @@ export default {
       // 获取人物坐标、终点个数
       for (let y in gameMap) {
         for (let x in gameMap[y]) {
-          if (gameMap[y][x] == 2 || gameMap[y][x] == 6) {
+          if (gameMap[y][x] == 2) {
             console.log('找到玩家的坐标：', x, y)
             this.playerX = +x
             this.playerY = +y
@@ -214,11 +217,12 @@ export default {
         // 碰墙
         case 0: return
         // 碰地刺
-        case 5: {
+        case 5:
+        case 6: {
           this.life--
           this.lostLife++
           if (this.life == 0) {
-            alert('you dead!')
+            this.$notify({ type: 'danger', message: 'you dead!'})
             this.onReset()
             return
           }
@@ -229,9 +233,11 @@ export default {
       // 判断活动层目标点
       switch (activeTarget) {
         // 碰箱子
-        case 3: {
+        case 3:
+        case 7: {
           staticBoxTarget = this.staticMap[setBoxY][setBoxX] // 获取静止层箱子目标点
           activeBoxTarget = this.activeMap[setBoxY][setBoxX] // 获取活动层箱子目标点
+          let isDefault = true // 是否默认移动方法
 
           // 判断静止层箱子目标点
           switch (staticBoxTarget) {
@@ -242,7 +248,7 @@ export default {
               setTimeout(() => {
                 if (document.querySelectorAll('.end.box').length == this.endCounter) {
                   setTimeout(() => {
-                    alert('you win!')
+                    this.$notify({ type: 'success', message: 'you win!'})
                     switch (this.$route.query.type) {
                       case 'level': {
                         this.changeLevel(1)
@@ -262,6 +268,17 @@ export default {
               })
               break
             }
+            // 碰火
+            case 6: {
+              // 如果是冰箱子，灭火
+              if (staticTarget == 7) {
+                Vue.set(this.staticMap[setBoxY], setBoxX, 1)  // 灭火
+                Vue.set(this.activeMap[setBoxY], setBoxX, 3)  // 变为普通箱子
+                isDefault = false
+              }
+              // 烧毁普通箱子
+              else Vue.set(this.activeMap[setBoxY], setBoxX, 1)
+            }
           }
 
           // 判断活动层箱子目标点
@@ -270,7 +287,7 @@ export default {
             case 3: return
           }
           // 箱子可以正常移动
-          Vue.set(this.activeMap[setBoxY], setBoxX, 3)
+          if (isDefault) Vue.set(this.activeMap[setBoxY], setBoxX, activeTarget)
         }
       }
       

@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { official } from '@/assets/js/level'
+import { official } from '@/assets/js/level/index'
 
 import TopBar from '@/components/TopBar'
 import WhitePopover from '@/components/WhitePopover'
@@ -202,7 +202,7 @@ export default {
     font-size: 16px;
     padding: 10px;
     background-color: #fff;
-    height: calc(90vh - 60px);
+    height: calc(90vh - 150px);
   }
   i {
     font-size: 20px;
