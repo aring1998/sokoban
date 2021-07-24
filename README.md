@@ -1,5 +1,7 @@
 # sokoban
 
+#### [在线试玩](http://aring.3vfree.net/game/Sokoban/index.html)
+
 #### 介绍
 基于**Vue**框架开发的Web项目，由推箱子的游戏玩法拓展
 * 带来RPG式体验的生命系统
