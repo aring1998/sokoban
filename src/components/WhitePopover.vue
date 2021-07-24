@@ -3,7 +3,7 @@
   <div class="white-popover-shade" v-show="isShow">
     <div class="white-popover">
       <div class="closes">
-        <van-icon name="cross" @click="popShow()" />
+        <van-icon name="cross" @click="show()" />
       </div>
       <slot></slot>
     </div>
@@ -18,7 +18,7 @@ export default {
     }
   },
   methods: {
-    popShow() {
+    show() {
       this.isShow = !this.isShow
     }
   }

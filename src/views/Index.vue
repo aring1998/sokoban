@@ -1,7 +1,7 @@
 <template>
   <div class="mainpage">
     <top-bar>
-      <van-icon name="question-o" @click="$refs.intro.popShow()" />
+      <van-icon name="question-o" @click="$refs.intro.show()" />
     </top-bar>
     <div class="choosebox" :class="{ show: ifChoice }">
       <p class="choosebox-title">PUSH THE BOX!</p>
@@ -18,7 +18,7 @@
       <p class="out-title">选择关卡</p>
       <div class="level-content">
         <button
-          v-for="(item, index) in official"
+          v-for="(item, index) in basic"
           :key="index"
           class="btn"
           @click="level = index + 1"
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { official } from '@/assets/js/level/index'
+import { basic } from '@/assets/js/level/index'
 
 import TopBar from '@/components/TopBar'
 import WhitePopover from '@/components/WhitePopover'
@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       ifChoice: false,
-      official: official,
+      basic: basic,
       level: '',
       tabIndex: 0
     }

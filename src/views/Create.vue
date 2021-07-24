@@ -3,24 +3,33 @@
   <div class="create">
     <top-bar></top-bar>
     <!-- 弹出层选择初始游戏地图布局 -->
-    <popover v-show="popShow" :disabled="true">
+    <popover ref="gameMapLayout">
       <van-form>
         <van-field
           v-model="gameMapForm.row"
           type="digit"
           maxlength="2"
           label="地图行数"
-          placeholder="可选范围：6~12"
-          :rules="[{ pattern: /^[6-9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
+          placeholder="可选范围：5~12"
+          :rules="[{ pattern: /^[5-9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
         />
         <van-field
           v-model="gameMapForm.column"
           type="digit"
           maxlength="2"
           label="地图列数"
-          placeholder="可选范围：6~12"
-          :rules="[{ pattern: /^[6-9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
+          placeholder="可选范围：5~12"
+          :rules="[{ pattern: /^[5-9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
         />
+        <div style="margin: 16px;">
+          <van-button round block type="info" @click="changeTableLayout">确定</van-button>
+        </div>
+      </van-form>
+    </popover>
+
+    <!-- 高级选项 -->
+    <popover ref="advancedOptions">
+      <van-form>
         <van-field
           v-model="gameMapForm.life"
           type="digit"
@@ -30,7 +39,7 @@
           :rules="[{ pattern: /^[0-99]$/, message: '请输入小于99的数字' }]"
         />
         <div style="margin: 16px;">
-          <van-button round block type="info" @click="changeTableLayout">确定</van-button>
+          <van-button round block type="info" @click="$refs.advancedOptions.show()">确定</van-button>
         </div>
       </van-form>
     </popover>
@@ -50,14 +59,37 @@
         </li>
       </ul>
     </div>
-    <button @click="testMap">测试地图</button>
+
+    <!-- 创建地图按钮 -->
+    <van-row type="flex" justify="space-between" align="center" style="margin: 10px 0">
+      <van-col span="6" align="center">
+        <van-button type="info" size="small" @click="testMap">测试地图</van-button>
+      </van-col>
+      <van-col span="6" align="center">
+        <van-button type="warning" size="small" @click="$refs.advancedOptions.show()">高级选项</van-button>
+      </van-col>
+    </van-row>
+    <van-row type="flex" justify="space-around" align="center" style="margin: 10px 0">
+      <van-col span="6" align="center">
+        <van-button type="primary" size="small" @click="addRow" :disabled="gameMap.length == 12">添加一行</van-button>
+      </van-col>
+      <van-col span="6" align="center">
+        <van-button type="danger" size="small" @click="delRow" :disabled="gameMap.length == 1">删除一行</van-button>
+      </van-col>
+      <van-col span="6" align="center">
+        <van-button type="primary" size="small" @click="addColumn" :disabled="gameMap[0].length == 12">添加一列</van-button>
+      </van-col>
+      <van-col span="6" align="center">
+        <van-button type="danger" size="small" @click="delColumn" :disabled="gameMap[0].length == 1">删除一列</van-button>
+      </van-col>
+    </van-row>
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
 
-import { mapEl } from '@/assets/js/map-el-class/index'
+import { mapEl } from '@/assets/js/map-el/index'
 
 import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
@@ -66,7 +98,6 @@ import Popover from '@/components/Popover'
 export default {
   data() {
     return {
-      popShow: true,  // 弹窗展示
       gameMapForm: {  // 地图设置项
         row: null,
         column: null,
@@ -81,40 +112,6 @@ export default {
       ],
       choiceRow: 0,  // 选中行
       choiceColumn: 0,  // 选中列
-      mapEl: [  // 地图元素
-        {
-          name: '墙',
-          value: 0
-        },
-        {
-          name: '空地',
-          value: 1
-        },
-        {
-          name: '玩家',
-          value: 2
-        },
-        {
-          name: '箱子',
-          value: 3
-        },
-        {
-          name: '终点',
-          value: 4
-        },
-        {
-          name: '地刺',
-          value: 5
-        },
-        {
-          name: '火',
-          value: 6
-        },
-        {
-          name: '冰箱子',
-          value: 7
-        }
-      ],
       elIndex: null,  // 元素对应索引
       clickCellType: null  // 点击布置元素类型
     }
@@ -126,19 +123,12 @@ export default {
   },
   mounted() {
     // 接收测试地图页返回编辑
-    if (this.$route.params.gameMap) {
-      this.gameMap = this.$route.params.gameMap
-      this.popShow = false
-    }
+    if (this.$route.params.gameMap) this.gameMap = this.$route.params.gameMap
+    else this.$refs.gameMapLayout.show()
   },
-  // computed: {
-  //   getMayVlue() {
-  //     return mapEl
-  //   }
-  // },
   methods: {
+    // 获取地图元素
     getMapEl() {
-      console.log(mapEl);
       return mapEl
     },
     // 更改表格布局
@@ -152,7 +142,7 @@ export default {
           this.gameMap[i].push(1)
         }
       }
-      this.popShow = false
+      this.$refs.gameMapLayout.show()
     },
     // 获取列索引
     getColumnIndex(index) {
@@ -208,7 +198,31 @@ export default {
     // 测试地图
     testMap() {
       if (this.checkMap())
-        this.$router.push({ name: 'game', params: { gameMap: this.gameMap} , query: { type: 'created' } })
+        this.$router.push({ name: 'game', params: { gameMap: this.gameMap } , query: { type: 'created' } })
+    },
+    // 增加一行
+    addRow() {
+      this.gameMap.push([])
+      for (let i = 0; i < this.gameMap[0].length; i++) {
+        this.gameMap[this.gameMap.length - 1].push(1)
+      }
+    },
+    // 增加一列
+    addColumn() {
+      for (let i = 0; i < this.gameMap.length - 1; i++) {
+        this.gameMap[i].push(1)
+      }
+    },
+    // 删除一行
+    delRow() {
+      this.gameMap.pop()
+    },
+    // 删除一列
+    delColumn() {
+      for (let i = 0; i < this.gameMap.length; i++) {
+        this.gameMap[i].pop()
+        console.log(this.gameMap);
+      }
     }
   }
 }

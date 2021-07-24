@@ -19,7 +19,7 @@
 
 <script>
 import { deepClone2Arr } from '@/utils/index'
-import { mapElClass } from '@/assets/js/map-el-class/index'
+import { mapElClass } from '@/assets/js/map-el/index'
 
 export default {
   data() {

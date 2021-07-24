@@ -37,7 +37,7 @@
       <van-button @click="$router.push({ name: 'create', params: { gameMap: initMap } })" type="info" size="mini">返回编辑</van-button>
       <van-button @click="$router.push('/index')" type="danger" size="mini">放弃编辑</van-button>
     </div>
-    <popover v-show="popShow" v-if="this.$route.query.type == 'created'">
+    <popover ref="saveMap" v-if="this.$route.query.type == 'created'">
       <div class="test-map-pop">
         <span>您已完成该地图的测试</span>
         <span>您可以选择将地图存储</span>
@@ -67,7 +67,7 @@
 <script>
 import Vue from 'vue'
 
-import { official } from '@/assets/js/level/index'
+import { basic } from '@/assets/js/level/index'
 import { request } from '@/network/request'
 import { deepClone2Arr, isEmptyObject } from '@/utils/index'
 
@@ -79,8 +79,8 @@ export default {
   data() {
     return {
       level: 0, // 关卡
-      levelCounter: official.length - 1, // 关卡总量
-      gameMap: official[0], // 游戏地图
+      levelCounter: basic.length - 1, // 关卡总量
+      gameMap: basic[0], // 游戏地图
       staticMap: [], // 静止层地图
       activeMap: [], // 活动层地图
       initMap: [], // 初始地图
@@ -92,7 +92,6 @@ export default {
       initLife: 0, // 初始生命
       playerX: 0, // 人物x轴坐标
       playerY: 0, // 人物y轴坐标
-      popShow: false, // 弹出框是否展示
       uploadMap: { // 上传地图表单
         mapName: '',
         creator: ''
@@ -116,7 +115,7 @@ export default {
       // 由选关进入
       case 'level': {
         this.level = this.$route.params.level - 1
-        this.gameMap = deepClone2Arr(official[this.level])
+        this.gameMap = deepClone2Arr(basic[this.level])
         break
       }
       // 由测试地图/创意工坊进入
@@ -255,7 +254,7 @@ export default {
                         break
                       }
                       case 'created': {
-                        this.popShow = true
+                        this.$refs.saveMap.show()
                         break
                       }
                       case 'workshop': {
@@ -334,7 +333,7 @@ export default {
     // 切换关卡
     changeLevel(value) {
       this.level += value
-      this.gameMap = deepClone2Arr(official[this.level])
+      this.gameMap = deepClone2Arr(basic[this.level])
       this.init(this.gameMap)
     },
     // 将地图存在本地
@@ -350,7 +349,7 @@ export default {
           break
         }
       }
-      this.popShow = false
+      this.$refs.saveMap.show()
       setTimeout(() => {
         this.$router.push('/index')
       }, 3000)
@@ -368,7 +367,7 @@ export default {
       })
         .then(res => {
           this.$notify({ type: 'success', message: '上传成功，3秒后将返回首页' })
-          this.popShow = false
+          this.$refs.saveMap.show()
           setTimeout(() => {
             this.$router.push('/index')
           }, 3000)

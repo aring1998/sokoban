@@ -100,7 +100,6 @@ export default {
 
 .workshop {
   height: 100vh;
-  padding-top: 30px;
   background: var(--mainColor);
   .workshop-content {
     margin: 20px;
