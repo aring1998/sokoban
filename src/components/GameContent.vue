@@ -125,7 +125,7 @@ export default {
   border-spacing: 0;
   background-size: 30px 30px;
   background-repeat: repeat;
-  background-image: url('~@/assets/img/block.gif');
+  background-image: url('~@/assets/img/theme/forest/floor.png');
   margin: 0 auto;
 }
 
@@ -138,42 +138,6 @@ export default {
 .game-cell {
   background-size: 100% 100%;
   background-repeat: no-repeat;
-}
-
-.floor {
-  background-image: url('~@/assets/img/block.gif');
-}
-
-.spikeweed {
-  background-image: url('~@/assets/img/spikeweed.png');
-}
-
-.box {
-  background-image: url('~@/assets/img/box.png');
-}
-
-.ice-box {
-  background-image: url('~@/assets/img/ice-box.png');
-}
-
-.wall {
-  background-image: url('~@/assets/img/wall.png');
-}
-
-.end {
-  background-image: url('~@/assets/img/ball.png');
-}
-
-.fire {
-  background-image: url('~@/assets/img/fire.png');
-}
-
-.player {
-  background-image: url('~@/assets/img/down.png');
-}
-
-.box.end {
-  background-image: url('~@/assets/img/end-box.png');
 }
 
 /* 作为缩略图 */

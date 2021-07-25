@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <router-view/>
+  <div id="app" :class="$store.state.theme">
+    <router-view />
   </div>
 </template>
 
@@ -11,5 +11,6 @@ export default {
 </script>
 
 <style>
-  @import url("/assets/css/base.css");
+@import url('/assets/css/base.css');
+@import url('/assets/css/theme.css');
 </style>

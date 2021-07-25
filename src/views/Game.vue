@@ -17,14 +17,14 @@
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
       <div class="top">
-        <van-icon name="arrow-up" @touchstart="move('y', -1)" @touchend.prevent="stopMove()" />
+        <van-icon name="arrow-up" @touchstart.prevent="move('y', -1)" @touchend.prevent="stopMove()" />
       </div>
       <div class="center">
-        <van-icon name="arrow-left" @touchstart="move('x', -1)" @touchend.prevent="stopMove()" />
-        <van-icon name="arrow" @touchstart="move('x', 1)" @touchend.prevent="stopMove()" />
+        <van-icon name="arrow-left" @touchstart.prevent="move('x', -1)" @touchend.prevent="stopMove()" />
+        <van-icon name="arrow" @touchstart.prevent="move('x', 1)" @touchend.prevent="stopMove()" />
       </div>
       <div class="bottom">
-        <van-icon name="arrow-down" @touchstart="move('y', 1)" @touchend.prevent="stopMove()" />
+        <van-icon name="arrow-down" @touchstart.prevent="move('y', 1)" @touchend.prevent="stopMove()" />
       </div>
     </div>
     <!-- 切关控制：选关进入显示 -->

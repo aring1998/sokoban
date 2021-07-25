@@ -40,9 +40,9 @@
           <img src="~@/assets/img/index-intro/handle.png" alt="" />
           <span>控制人物移动，</span>
           <span>将所有箱子</span>
-          <img src="~@/assets/img/box.png" alt="" />
+          <div class="img-box box"></div>
           <span>推入终点</span>
-          <img src="~@/assets/img/ball.png" alt="" />
+          <div class="img-box end"></div>
           <span>即可获得胜利！</span>
         </van-tab>
         <van-tab title="地图手册" class="index-intro-item"> </van-tab>
@@ -203,6 +203,12 @@ export default {
     padding: 10px;
     background-color: #fff;
     height: calc(90vh - 150px);
+  }
+  .img-box {
+    height: 25px;
+    width: 25px;
+    background-size: 100% 100%;
+    display: inline-block;
   }
   i {
     font-size: 20px;

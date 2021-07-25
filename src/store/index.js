@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    
+    theme: window.localStorage.getItem('theme') || 'theme-forest'
   },
   mutations,
   getters,

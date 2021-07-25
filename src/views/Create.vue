@@ -168,7 +168,7 @@ export default {
       let box = 0
       let end = 0
       for (let i in this.gameMap) {
-        for (let j in this.gameMap) {
+        for (let j in this.gameMap[i]) {
           if (this.gameMap[i][j] == 2) {
             player++
             if (player > 1) {
@@ -184,7 +184,6 @@ export default {
           }
         }
       }
-      console.log(box, end);
       if (!player) {
         this.$notify({type: 'danger', message:'不能没有人物！'})
         return false

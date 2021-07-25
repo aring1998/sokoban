@@ -1,9 +1,6 @@
 @import url('./normalize.css');
 
-:root {
-  --mainColor: #95d52f;
-  --deepMainColor: #339933;
-}
+
 
 *,
 *::before,
