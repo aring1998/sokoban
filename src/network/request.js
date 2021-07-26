@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '@/store'
 
 export function request(config) {
   // 创建axios实例
@@ -8,6 +9,7 @@ export function request(config) {
 
   // 请求拦截
   instance.interceptors.request.use(config => {
+    config.headers.Authorization = 'Bearer ' + store.state.token
     return config
   }), err => {
 

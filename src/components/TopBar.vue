@@ -4,11 +4,12 @@
     <div class="top-bar-item">
       <slot><van-icon name="revoke" @click="$router.go(-1)" /></slot>
       <div>
-        <van-icon name="user-o" />
+        <van-icon name="user-o" @click="$refs.login.show()" />
         <van-icon name="bars" @click="$refs.menu.show()" />
       </div>
     </div>
-    <popover ref="menu" v-show="popShow">
+    <!-- 菜单弹窗 -->
+    <popover ref="menu">
       <div class="menu">
         <van-button @click="$router.push('/index')" v-if="$route.path !== '/index'" size="large">回到主菜单</van-button>
         <van-button @click="showPicker = true" size="large">切换主题</van-button>
@@ -23,16 +24,87 @@
         </van-popup>
       </div>
     </popover>
+    <!-- 登录弹窗 -->
+    <popover ref="login">
+      <van-tabs v-model="tabIndex" color="var(--mainColor)" v-if="$store==''">
+        <van-tab title="登录">
+          <van-form @submit="login">
+            <van-field
+              v-model="loginForm.username"
+              name="name"
+              label="用户名"
+              placeholder="请填写用户名"
+              maxlength="16"
+              :rules="[{ required: true, message: '请填写用户名' }]"
+            />
+            <van-field
+              v-model="loginForm.password"
+              type="password"
+              name="password"
+              label="密码"
+              placeholder="请填写密码"
+              maxlength="16"
+              :rules="[{ required: true, message: '请填写密码' }]"
+            />
+            <div style="margin: 16px;">
+              <van-button round block type="info" native-type="submit">登录</van-button>
+            </div>
+          </van-form>
+        </van-tab>
+        <van-tab title="注册">
+          <van-form @submit="register">
+            <van-field
+              v-model="registerForm.username"
+              name="name"
+              label="用户名"
+              placeholder="请输入用户名"
+              maxlength="16"
+              :rules="[{ pattern: /^[a-zA-Z0-9_-]{4,16}$/, required: true, message: '请输入字母和数字组合，4~16位' }]"
+            />
+            <van-field
+              v-model="registerForm.password"
+              type="password"
+              name="password"
+              label="密码"
+              placeholder="请输入密码"
+              maxlength="16"
+              :rules="[{ pattern: /^.{6,16}$/, required: true, message: '请填写密码，6~16位' }]"
+            />
+            <van-field
+              v-model="registerForm.checkPassWord"
+              type="password"
+              label="确认密码"
+              placeholder="请再次输入密码"
+              maxlength="16"
+              :rules="[{ validator: checkPassWord, required: true, message: '密码不匹配' }]"
+            />
+            <div style="margin: 16px;">
+              <van-button round block type="info" native-type="submit">注册</van-button>
+            </div>
+          </van-form>
+        </van-tab>
+      </van-tabs>
+       <van-tabs v-model="tabIndex" color="var(--mainColor)" v-else>
+        <van-tab title="个人信息">
+          <span>用户名：{{ $store.state.username }}</span>
+        </van-tab>
+        <van-tab title="修改密码">
+          
+        </van-tab>
+      </van-tabs>
+    </popover>
   </div>
 </template>
 
 <script>
+import { request } from '@/network/request'
+import md5 from'js-md5';
+
 import Popover from '@/components/Popover'
 
 export default {
   data() {
     return {
-      popShow: false,
       showPicker: false,
       columns: [
         {
@@ -43,7 +115,19 @@ export default {
           class: 'theme-forest',
           text: '森林'
         },
-      ]
+      ],
+      tabIndex: 0,
+      loginForm: {
+        username: '',
+        password: ''
+      },
+      registerForm: {
+        username: '',
+        password: '',
+        checkPassWord: '',
+        userNameMsg: '',
+        passWordMsg: ''
+      }
     }
   },
   components: {
@@ -57,6 +141,63 @@ export default {
       this.showPicker = false
       // 存缓存
       window.localStorage.setItem('theme', value.class)
+    },
+    // 登录
+    login() {
+      request({
+        url: 'user/login',
+        method: 'POST',
+        data: {
+          name: this.loginForm.username,
+          password: md5(this.loginForm.password)
+        }
+      })
+        .then(res => {
+          if (res.code == 0) {
+            this.$store.state.username = res.data.username
+            window.localStorage.setItem('token', res.data.token)
+            this.$notify({ type: 'success', message: '登录成功' })
+            this.$refs.login.show()
+          }
+          else {
+            this.$notify({ type: 'danger', message: res.msg })
+          }
+        })
+        .catch(err => {
+          this.$notify({ type: 'danger', message: '登录失败，错误：' + err })
+        })
+    },
+    // 注册
+    register() {
+      request({
+        url: 'user/register',
+        method: 'POST',
+        data: {
+          name: this.registerForm.username,
+          password: md5(this.registerForm.password)
+        }
+      })
+        .then(res => {
+          if (res.code == 0) {
+            this.$notify({ type: 'success', message: '注册成功' })
+            this.loginForm.username = this.registerForm.username
+            this.loginForm.password = md5(this.registerForm.password)
+            this.login()
+          }
+          else {
+            this.$notify({ type: 'danger', message: res.msg })
+          }
+        })
+        .catch(err => {
+          this.$notify({ type: 'danger', message: '注册失败，错误：' + err })
+        })
+    },
+    // 注册表单验证
+    checkPassWord(value) {
+      if (value !== this.registerForm.password) {
+        return false
+      }
+      return true
     }
   }
 }

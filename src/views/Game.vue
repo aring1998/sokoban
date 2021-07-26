@@ -10,6 +10,11 @@
     </div>
     <!-- 游戏内容 -->
     <game-content :game-map="gameMap" ref="game"></game-content>
+    <!-- 步数 -->
+    <div class="step">
+      <span>当前步数：{{ step }}</span>
+    </div>
+    <!-- 行为控制 -->
     <div class="check-point">
       <van-button class="regret" @click="onRegret" type="primary" size="mini">撤回</van-button>
       <van-button class="reset" @click="onReset" type="primary" size="mini">重置</van-button>
@@ -84,7 +89,8 @@ export default {
       staticMap: [], // 静止层地图
       activeMap: [], // 活动层地图
       initMap: [], // 初始地图
-      mapRecord: [], // 每步地图记录
+      staticMapRecord: [], // 静止层每步地图记录
+      activeMapRecord: [], // 活动层每步地图记录
       step: 0, // 步数
       endCounter: 0, // 终点个数
       life: 1, // 人物生命
@@ -165,7 +171,8 @@ export default {
 
       // 深拷贝初始地图
       this.initMap = deepClone2Arr(this.gameMap)
-      this.mapRecord = [deepClone2Arr(this.activeMap)]
+      this.staticMapRecord = [deepClone2Arr(this.staticMap)]
+      this.activeMapRecord = [deepClone2Arr(this.activeMap)]
     },
     // 玩家移动
     move(direction, step) {
@@ -300,7 +307,8 @@ export default {
       else this.playerY += step
 
       // 记录移动后地图数据
-      this.mapRecord.push(deepClone2Arr(this.activeMap))
+      this.staticMapRecord.push(deepClone2Arr(this.staticMap))
+      this.activeMapRecord.push(deepClone2Arr(this.activeMap))
     },
     // 松开按键时，停止移动
     stopMove() {
@@ -309,11 +317,14 @@ export default {
     // 撤回（可以连续撤回置第一步）
     onRegret() {
       // 第零步时不可撤回
-      if (this.mapRecord.length == 1) return
+      if (this.activeMapRecord.length == 1) return
       // 向子组件赋值，并重新浅拷贝
-      this.$refs.game.activeMap = deepClone2Arr(this.mapRecord[this.step - 1])
+      this.$refs.game.staticMap = deepClone2Arr(this.staticMapRecord[this.step - 1]) // 静止层
       this.activeMap = this.$refs.game.activeMap
-      this.mapRecord.pop()
+      this.staticMapRecord.pop()
+      this.$refs.game.activeMap = deepClone2Arr(this.activeMapRecord[this.step - 1]) // 活动层
+      this.staticMap = this.$refs.game.staticMap
+      this.activeMapRecord.pop()
       this.step--
       // 撤回后重新获取玩家坐标
       for (let y in this.activeMap) {
@@ -366,11 +377,15 @@ export default {
         }
       })
         .then(res => {
-          this.$notify({ type: 'success', message: '上传成功，3秒后将返回首页' })
-          this.$refs.saveMap.show()
-          setTimeout(() => {
-            this.$router.push('/index')
-          }, 3000)
+          if (res.code == 0) {
+            this.$notify({ type: 'success', message: '上传成功，3秒后将返回首页' })
+            this.$refs.saveMap.show()
+            setTimeout(() => {
+              this.$router.push('/index')
+            }, 3000)
+          } else {
+            this.$notify({ type: 'danger', message: res.msg })
+          }
         })
         .catch(err => {
           this.$notify({ type: 'danger', message: '上传失败，错误：' + err })
@@ -446,7 +461,8 @@ export default {
 }
 
 // 人物生命值
-.life {
+.life,
+.step {
   display: flex;
   align-items: center;
   font-weight: 600;

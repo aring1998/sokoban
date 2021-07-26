@@ -82,7 +82,7 @@ export default {
           break
         }
         case 1: {
-          res += 'floor'
+          res += ''
           break
         }
         case 4: {
@@ -147,6 +147,5 @@ export default {
 }
 .map-thumbnail .game-container td {
   height: 5px;
-  width: 5px;
 }
 </style>
