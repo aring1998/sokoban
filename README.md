@@ -1,4 +1,4 @@
-# sokoban
+# 魔改推箱子
 
 #### [在线试玩](http://aring.3vfree.net/game/Sokoban/index.html)
 

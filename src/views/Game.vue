@@ -194,7 +194,7 @@ export default {
       clearTimeout(this.keepMove)
       this.keepMove = setTimeout(() => {
         this.move(direction, step)
-      }, 500)
+      }, 200)
 
       // 声明初始变量
       let staticTarget, activeTarget, staticBoxTarget, activeBoxTarget, setY, setX, setBoxY, setBoxX
@@ -320,10 +320,10 @@ export default {
       if (this.activeMapRecord.length == 1) return
       // 向子组件赋值，并重新浅拷贝
       this.$refs.game.staticMap = deepClone2Arr(this.staticMapRecord[this.step - 1]) // 静止层
-      this.activeMap = this.$refs.game.activeMap
-      this.staticMapRecord.pop()
       this.$refs.game.activeMap = deepClone2Arr(this.activeMapRecord[this.step - 1]) // 活动层
       this.staticMap = this.$refs.game.staticMap
+      this.activeMap = this.$refs.game.activeMap
+      this.staticMapRecord.pop()
       this.activeMapRecord.pop()
       this.step--
       // 撤回后重新获取玩家坐标
