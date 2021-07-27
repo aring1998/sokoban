@@ -26,7 +26,7 @@
     </popover>
     <!-- 登录弹窗 -->
     <popover ref="login" class="login">
-      <van-tabs v-model="tabIndex" color="var(--mainColor)" v-if="$store==''">
+      <van-tabs v-model="tabIndex" color="var(--mainColor)" v-if="$store.state.username == ''">
         <van-tab title="登录">
           <van-form @submit="login">
             <van-field
