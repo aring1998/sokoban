@@ -3,10 +3,15 @@
     <!-- 顶部导航栏 -->
     <top-bar></top-bar>
     <!-- 人物生命值 -->
-    <div class="life" v-if="life > 0 || lostLife > 0">
+    <div class="life" v-if="initLife > 0">
       <span>当前生命：</span>
-      <van-icon name="like" color="red" v-for="(item, index) in life" :key="index" />
-      <van-icon name="like" color="gray" v-for="(item, index) in lostLife" :key="index" />
+      <span v-if="life < 12" class="life-show-type">
+        <van-icon name="like" color="red" v-for="(item, index) in life" :key="index" />
+      </span>
+      <span v-else class="life-show-type">
+        <van-icon name="like" color="red" />
+        <span>&ensp;× {{ life }}</span>
+      </span>
     </div>
     <!-- 游戏内容 -->
     <game-content :game-map="gameMap" ref="game"></game-content>
@@ -71,8 +76,9 @@
 
 <script>
 import Vue from 'vue'
+import store from '@/store'
 
-import { basic } from '@/assets/js/level/index'
+import { basic, expand } from '@/assets/js/level/index'
 import { request } from '@/network/request'
 import { deepClone2Arr, isEmptyObject } from '@/utils/index'
 
@@ -83,9 +89,9 @@ import Popover from '@/components/Popover'
 export default {
   data() {
     return {
-      level: 0, // 关卡
-      levelCounter: basic.length - 1, // 关卡总量
-      gameMap: basic[0], // 游戏地图
+      level: 0, // 关卡级数
+      levelCounter: 0, // 关卡总量
+      gameMap: [], // 游戏地图
       staticMap: [], // 静止层地图
       activeMap: [], // 活动层地图
       initMap: [], // 初始地图
@@ -93,14 +99,14 @@ export default {
       activeMapRecord: [], // 活动层每步地图记录
       step: 0, // 步数
       endCounter: 0, // 终点个数
-      life: 1, // 人物生命
-      lostLife: 0, // 已损生命
       initLife: 0, // 初始生命
+      life: 0, // 人物生命
+      lifeRecord: [], // 生命记录
       playerX: 0, // 人物x轴坐标
       playerY: 0, // 人物y轴坐标
       uploadMap: { // 上传地图表单
         mapName: '',
-        creator: ''
+        creator: store.state.username || ''
       },
       keepMove: null // 持续移动定时器
     }
@@ -120,14 +126,28 @@ export default {
     switch (this.$route.query.type) {
       // 由选关进入
       case 'level': {
-        this.level = this.$route.params.level - 1
-        this.gameMap = deepClone2Arr(basic[this.level])
+        this.level = this.$route.params.level
+        // 判断地图包
+        switch (this.$route.query.pack) {
+          case 'basic': {
+            this.gameMap = deepClone2Arr(basic[this.level])
+            this.levelCounter = basic.length - 1
+            break
+          }
+          case 'expand': {
+            this.gameMap = deepClone2Arr(expand[this.level].gameMap)
+            this.initLife = expand[this.level].life
+            this.levelCounter = expand.length - 1
+            break
+          }
+        }
         break
       }
       // 由测试地图/创意工坊进入
       case 'workshop':
       case 'created': {
         this.gameMap = this.$route.params.gameMap
+        this.initLife = +this.$route.params.life || 0
         break
       }
       case undefined: {
@@ -138,16 +158,15 @@ export default {
     }
 
     // 游戏初始化
-    this.init(this.gameMap)
+    this.init(this.gameMap, this.initLife)
   },
   methods: {
     // 初始化
-    init(gameMap) {
+    init(gameMap, life) {
       this.gameMap = gameMap
+      this.life = life
       this.endCounter = 0
       this.step = 0
-      this.life = 1
-      this.lostLife = 0
 
       // 调用子组件分离方法
       this.$refs.game.separateMap(gameMap)
@@ -173,6 +192,7 @@ export default {
       this.initMap = deepClone2Arr(this.gameMap)
       this.staticMapRecord = [deepClone2Arr(this.staticMap)]
       this.activeMapRecord = [deepClone2Arr(this.activeMap)]
+      this.lifeRecord.push(this.initLife)
     },
     // 玩家移动
     move(direction, step) {
@@ -194,7 +214,7 @@ export default {
       clearTimeout(this.keepMove)
       this.keepMove = setTimeout(() => {
         this.move(direction, step)
-      }, 200)
+      }, 300)
 
       // 声明初始变量
       let staticTarget, activeTarget, staticBoxTarget, activeBoxTarget, setY, setX, setBoxY, setBoxX
@@ -226,7 +246,6 @@ export default {
         case 5:
         case 6: {
           this.life--
-          this.lostLife++
           if (this.life == 0) {
             this.$notify({ type: 'danger', message: 'you dead!'})
             this.onReset()
@@ -309,6 +328,7 @@ export default {
       // 记录移动后地图数据
       this.staticMapRecord.push(deepClone2Arr(this.staticMap))
       this.activeMapRecord.push(deepClone2Arr(this.activeMap))
+      this.lifeRecord.push(this.life)
     },
     // 松开按键时，停止移动
     stopMove() {
@@ -325,6 +345,8 @@ export default {
       this.activeMap = this.$refs.game.activeMap
       this.staticMapRecord.pop()
       this.activeMapRecord.pop()
+      this.life = this.lifeRecord[this.step - 1]
+      this.lifeRecord.pop()
       this.step--
       // 撤回后重新获取玩家坐标
       for (let y in this.activeMap) {
@@ -339,13 +361,24 @@ export default {
     },
     // 重置当前关卡
     onReset() {
-      this.init(this.initMap)
+      this.init(this.initMap, this.initLife)
     },
     // 切换关卡
     changeLevel(value) {
       this.level += value
-      this.gameMap = deepClone2Arr(basic[this.level])
-      this.init(this.gameMap)
+      // 判断地图包
+      switch (this.$route.query.pack) {
+        case 'basic': {
+          this.gameMap = deepClone2Arr(basic[this.level])
+          break
+        }
+        case 'expand': {
+          this.gameMap = deepClone2Arr(expand[this.level].gameMap)
+          this.initLife = expand[this.level].life
+          break
+        }
+      }
+      this.init(this.gameMap, this.initLife)
     },
     // 将地图存在本地
     saveLocal() {
@@ -354,7 +387,8 @@ export default {
           window.localStorage.setItem('map' + i, JSON.stringify({
             creator: this.uploadMap.creator,
             mapName: this.uploadMap.mapName,
-            mapData: this.initMap
+            mapData: this.initMap,
+            life: this.initLife
           }))
           this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
           break
@@ -373,7 +407,8 @@ export default {
         data: {
           creator: this.uploadMap.creator,
           mapName: this.uploadMap.mapName,
-          mapData: this.initMap
+          mapData: this.initMap,
+          playerHP: this.initLife
         }
       })
         .then(res => {
@@ -469,9 +504,14 @@ export default {
   padding: 0 30px;
   color: #fff;
   height: 30px;
-  i {
-    font-size: 18px;
-    font-weight: 600;
+  .life-show-type {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    i {
+      font-size: 18px;
+      font-weight: 600;
+    }
   }
 }
 </style>

@@ -31,7 +31,7 @@
     <popover ref="advancedOptions">
       <van-form>
         <van-field
-          v-model="gameMapForm.life"
+          v-model="advancedForm.life"
           type="digit"
           maxlength="3"
           label="人物生命"
@@ -100,7 +100,9 @@ export default {
     return {
       gameMapForm: {  // 地图设置项
         row: null,
-        column: null,
+        column: null
+      },
+      advancedForm: { // 高级选项表单
         life: null
       },
       gameMap: [
@@ -169,18 +171,31 @@ export default {
       let end = 0
       for (let i in this.gameMap) {
         for (let j in this.gameMap[i]) {
-          if (this.gameMap[i][j] == 2) {
-            player++
-            if (player > 1) {
-              this.$notify({type: 'danger', message:'人物不能超过一个！'})
-              return false
+          switch(this.gameMap[i][j]) {
+            case 2: {
+              player++
+              if (player > 1) {
+                this.$notify({type: 'danger', message:'人物不能超过一个！'})
+                return false
+              }
+              break
             }
-          }
-          if (this.gameMap[i][j] == 3) {
-            box++
-          }
-          if (this.gameMap[i][j] == 4) {
-            end++
+            case 3: {
+              box++
+              break
+            }
+            case 4: {
+              end++
+              break
+            }
+            case 5:
+            case 6: {
+              if (this.advancedForm.life < 1) {
+                this.$notify({type: 'danger', message:'有攻击性元素时，必须设定人物生命值！'})
+                this.$refs.advancedOptions.show()
+                return false
+              }
+            }
           }
         }
       }
@@ -197,7 +212,7 @@ export default {
     // 测试地图
     testMap() {
       if (this.checkMap())
-        this.$router.push({ name: 'game', params: { gameMap: this.gameMap } , query: { type: 'created' } })
+        this.$router.push({ name: 'game', params: { gameMap: this.gameMap, life: this.advancedForm.life } , query: { type: 'created' } })
     },
     // 增加一行
     addRow() {
@@ -208,7 +223,7 @@ export default {
     },
     // 增加一列
     addColumn() {
-      for (let i = 0; i < this.gameMap.length - 1; i++) {
+      for (let i = 0; i < this.gameMap.length; i++) {
         this.gameMap[i].push(1)
       }
     },
@@ -220,7 +235,6 @@ export default {
     delColumn() {
       for (let i = 0; i < this.gameMap.length; i++) {
         this.gameMap[i].pop()
-        console.log(this.gameMap);
       }
     }
   }

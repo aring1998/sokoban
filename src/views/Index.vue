@@ -5,7 +5,7 @@
     </top-bar>
     <div class="choosebox" :class="{ show: ifChoice }">
       <p class="choosebox-title">PUSH THE BOX!</p>
-      <button class="choosebtn" @click="choiceLevel">选择关卡</button>
+      <button class="choosebtn" @click="$refs.level.show()">选择关卡</button>
       <button class="choosebtn" @click="$router.push('/workshop')">
         创意工坊
       </button>
@@ -13,28 +13,44 @@
         创建地图
       </button>
     </div>
-    <!--弹窗-->
-    <div class="out" :class="{ show: ifChoice }">
-      <p class="out-title">选择关卡</p>
-      <div class="level-content">
-        <button
-          v-for="(item, index) in basic"
-          :key="index"
-          class="btn"
-          @click="level = index + 1"
-          :class="{ active: level == index + 1 }"
-        >
-          {{ index + 1 }}
-        </button>
-      </div>
-      <div class="level-btn">
-        <button class="btn btn-ok" @click="toGame">确定</button>
-        <button class="btn btn-no" @click="choiceLevel">返回</button>
-      </div>
-    </div>
+    <!-- 选关弹窗 -->
+    <white-popover class="choice-level" ref="level">
+      <van-tabs v-model="levelTab" color="var(--mainColor)">
+        <van-tab title="基础关卡">
+          <ul>
+            <li
+              v-for="(item, index) in basic"
+              :key="index"
+              @click="$router.push({
+                name: 'game',
+                query: { type: 'level', pack: 'basic' },
+                params: { level: index }
+              })"
+            >
+            {{ index + 1 }}
+            </li>
+          </ul>
+        </van-tab>
+        <van-tab title="拓展关卡">
+          <ul>
+            <li
+              v-for="(item, index) in expand"
+              :key="index"
+              @click="$router.push({
+                name: 'game',
+                query: { type: 'level', pack: 'expand' },
+                params: { level: index }
+              })"
+            >
+            {{ index + 1 }}
+            </li>
+          </ul>
+        </van-tab>
+      </van-tabs>
+    </white-popover>
     <!-- 关于游戏弹窗 -->
     <white-popover class="index-intro" ref="intro">
-      <van-tabs v-model="tabIndex" color="var(--mainColor)">
+      <van-tabs v-model="aboutGameTab" color="var(--mainColor)">
         <van-tab title="游戏玩法" class="index-intro-item">
           <span>&emsp;&emsp;通过虚拟手柄</span>
           <img src="~@/assets/img/index-intro/handle.png" alt="" />
@@ -53,7 +69,7 @@
           <p>也欢迎您为我们点一个star<van-icon name="star-o" color="orange" /></p>
           <br>
           <p>团队成员(按首字母排序)：</p>
-          <p style="font-weight: 600">aring, lyl, wangz, yuanyuanna</p>
+          <p style="font-weight: 600">aring, lyl, wangz, yuanyuanna, funzeros</p>
         </van-tab>
       </van-tabs>
     </white-popover>
@@ -61,7 +77,7 @@
 </template>
 
 <script>
-import { basic } from '@/assets/js/level/index'
+import { basic, expand } from '@/assets/js/level/index'
 
 import TopBar from '@/components/TopBar'
 import WhitePopover from '@/components/WhitePopover'
@@ -71,8 +87,10 @@ export default {
     return {
       ifChoice: false,
       basic: basic,
+      expand: expand,
       level: '',
-      tabIndex: 0
+      aboutGameTab: 0,
+      levelTab: 0
     }
   },
   components: {
@@ -160,28 +178,6 @@ export default {
   justify-content: center;
   margin: 0 auto 10px;
 }
-.btn {
-  width: 23%;
-  height: 50px;
-  margin-left: 5px;
-  margin-top: 5px;
-  border: none;
-  cursor: pointer;
-  color: #ffffff;
-  background: rgb(16, 162, 219);
-  border-radius: 10px;
-}
-.btn-ok {
-  background: rgb(16, 162, 219);
-  margin-right: 10px;
-}
-.btn-no {
-  background: rgb(255, 46, 46);
-  margin-left: 10px;
-}
-.active {
-  background: rgb(26, 23, 179);
-}
 
 .van-tab__text--ellipsis {
   font-size: 16px;
@@ -215,6 +211,45 @@ export default {
     display: inline-block;
     margin-bottom: -100px;
     line-height: 20px;
+  }
+  .van-tabs__line {
+    transform: translateX(38.5px) translateX(-50%)
+  }
+}
+
+.choice-level {
+  ul {
+    display: flex;
+    flex-flow: row wrap;
+    background-color: #fff;
+    align-content: flex-start;
+    // justify-content: space-around;
+    height: calc(90vh - 150px);
+    padding: 10px;
+    li {
+      background-color: var(--mainColor);
+      height: 40px;
+      line-height: 40px;
+      width: 56px;
+      margin: 8px;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: 900;
+      font-size: 20px;
+      text-align: center;
+    }
+    li.active {
+      background-color: var(--deepMainColor);
+    }
+    .level-btn {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      justify-content: space-around;
+    }
+  }
+  .van-tabs__line {
+    transform: translateX(77.5px) translateX(-50%)
   }
 }
 </style>

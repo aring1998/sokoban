@@ -25,7 +25,7 @@
       </div>
     </popover>
     <!-- 登录弹窗 -->
-    <popover ref="login">
+    <popover ref="login" class="login">
       <van-tabs v-model="tabIndex" color="var(--mainColor)" v-if="$store==''">
         <van-tab title="登录">
           <van-form @submit="login">
@@ -224,6 +224,12 @@ export default {
       padding: 5px;
       margin-left: 8px;
     }
+  }
+}
+
+.login {
+  .van-tabs__line {
+    transform: translateX(75.5px) translateX(-50%)
   }
 }
 </style>
