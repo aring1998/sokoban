@@ -2,6 +2,20 @@
   <div class="workshop">
     <top-bar></top-bar>
     <p class="workshop-title out-title">创意工坊</p>
+    <!-- 搜索框 -->
+    <div class="workshop-searchMap">
+      <van-field
+        v-model="searchDate"
+        label="地图名称"
+        placeholder="请输入地图名称"
+      />
+      <van-field
+        v-model="searchAuthor"
+        label="作者名称"
+        placeholder="请输入作者名称"
+      />
+      <van-button type="primary" @click="query">搜索</van-button>
+    </div>
     <div class="workshop-content">
       <ul class="workshop-map">
         <li
@@ -11,8 +25,8 @@
           @click="
             $router.push({
               name: 'game',
-              params: {gameMap: item.mapData},
-              query: {type: 'workshop'}
+              params: { gameMap: item.mapData },
+              query: { type: 'workshop' },
             })
           "
         >
@@ -28,29 +42,37 @@
       </ul>
       <!-- 分页 -->
       <div>
-        <van-pagination v-model="current" :total-items="total" :items-per-page="size" @change="changePage"/>
+        <van-pagination
+          v-model="current"
+          :total-items="total"
+          :items-per-page="size"
+          @change="changePage"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { request } from '@/network/request';
-import TopBar from '@/components/TopBar';
-import GameContent from '@/components/GameContent';
+import { request } from '@/network/request'
+import TopBar from '@/components/TopBar'
+import GameContent from '@/components/GameContent'
+
 export default {
-  data: function() {
+  data: function () {
     return {
       //地图数据
       mapData: [],
-      current: 1,//页码
-      size:20,//每页条数
-      total: "",//总条数
+      current: 1, //页码
+      size: 20, //每页条数
+      total: '', //总条数
+      searchDate: '', //地图数据
+      searchAuthor: '', //作者数据
     }
   },
   components: {
     TopBar,
-    GameContent
+    GameContent,
   },
   methods: {
     //获取地图数据
@@ -68,30 +90,58 @@ export default {
     //     })
     // },
     //分页请求
-    getListDate(){
+    getListDate() {
       request({
-        url:'/map/page',
-        methods:'get',
-        params:{
-          size: this.size,//条数
-          current: this.current,//页码
-        }
-      }).then(res => {
-        this.total = res.data.total;//获取总条数
-        this.mapData = res.data.records;//地图数据赋值
+        url: '/map/page',
+        methods: 'get',
+        params: {
+          size: this.size, //条数
+          current: this.current, //页码
+          mapName: this.mapName, //地图名称
+          creator: this.creator, //作者名称
+        },
+      }).then((res) => {
+        this.total = res.data.total //获取总条数
+        this.mapData = res.data.records //地图数据赋值
       })
     },
     //分页页码改变时触发
-    changePage(val){
-      this.current = val;
-      console.log(val);
-      this.getListDate();
-    }
+    changePage(val) {
+      this.current = val
+      console.log(val)
+      this.getListDate()
+    },
+    //查询
+    query(mapName, creator) {
+      mapName = this.searchDate //地图名称参数
+      this.mapName = mapName
+      creator = this.searchAuthor //作者名称参数
+      this.creator = creator
+      this.getListDate() //调用查询
+    },
   },
   created() {
     //this.getGameMap();
-    this.getListDate();
-  }
+    this.getListDate()
+  },
+
+  //监听input查询
+  // watch: {
+  //   //地图
+  //   'searchDate': {
+  //     handler: function (mapName) {
+  //       this.mapName=mapName //地图名称
+  //       this.getListDate(); //调用查询
+  //     },
+  //   },
+  //   //作者
+  //   'searchAuthor': {
+  //     handler: function (creator) {
+  //       this.creator=creator //作者名称
+  //       this.getListDate(); //调用查询
+  //     },
+  //   },
+  // },
 }
 </script>
 
@@ -102,6 +152,19 @@ export default {
   height: 100vh;
   padding-top: 30px;
   background: var(--mainColor);
+  .workshop-searchMap {
+    background: var(--mainColor);
+    .van-field {
+      width: 80%;
+      margin: 0 auto;
+      margin-top: 10px;
+    }
+    .van-button {
+      width: 20%;
+      margin-top: 10px;
+      margin-left: 70%;
+    }
+  }
   .workshop-content {
     margin: 20px;
     display: flex;
@@ -111,6 +174,8 @@ export default {
       display: flex;
       flex-flow: column nowrap;
       justify-content: space-between;
+      max-height: 280px;
+      overflow: scroll;
       .workshop-map-item {
         display: flex;
         flex-flow: row nowrap;
