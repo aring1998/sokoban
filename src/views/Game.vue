@@ -21,7 +21,7 @@
     </div>
     <!-- 行为控制 -->
     <div class="check-point">
-      <van-button class="regret" @click="onRegret" type="primary" size="mini">撤回</van-button>
+      <van-button class="regret" @click="onRegret" type="primary" size="mini" :disabled="this.activeMapRecord.length == 1">撤回</van-button>
       <van-button class="reset" @click="onReset" type="primary" size="mini">重置</van-button>
     </div>
     <!-- 虚拟手柄 -->
@@ -44,7 +44,7 @@
     </div>
     <!-- 编辑控制：创建地图进入显示 -->
     <div class="check-point" v-if="$route.query.type == 'created'">
-      <van-button @click="$router.push({ name: 'create', params: { gameMap: initMap, life: initLife } })" type="info" size="mini">返回编辑</van-button>
+      <van-button @click="$router.push({ name: 'create', params: { gameMap, life: initLife } })" type="info" size="mini">返回编辑</van-button>
       <van-button @click="$router.push('/index')" type="danger" size="mini">放弃编辑</van-button>
     </div>
     <popover ref="saveMap" v-if="this.$route.query.type == 'created'">
@@ -94,7 +94,6 @@ export default {
       gameMap: [], // 游戏地图
       staticMap: [], // 静止层地图
       activeMap: [], // 活动层地图
-      initMap: [], // 初始地图
       staticMapRecord: [], // 静止层每步地图记录
       activeMapRecord: [], // 活动层每步地图记录
       step: 0, // 步数
@@ -109,7 +108,8 @@ export default {
         creator: store.state.username || ''
       },
       keepMove: null, // 持续移动定时器
-      poisoning: false // 是否中毒
+      poisoning: false, // 是否中毒
+      statusRecord: [] // 人物状态记录
     }
   },
   components: {
@@ -159,41 +159,41 @@ export default {
     }
 
     // 游戏初始化
-    this.init(this.gameMap, this.initLife)
+    this.init()
   },
   methods: {
     // 初始化
-    init(gameMap, life) {
-      this.gameMap = gameMap
-      this.life = life
+    init() {
+      // this.gameMap = gameMap
+      // this.life = life
       this.endCounter = 0
       this.step = 0
 
       // 调用子组件分离方法
-      this.$refs.game.separateMap(gameMap)
+      this.$refs.game.separateMap(this.gameMap)
       // 从子组件获取数据
       this.staticMap = this.$refs.game.staticMap
       this.activeMap = this.$refs.game.activeMap
 
       // 获取人物坐标、终点个数
-      for (let y in gameMap) {
-        for (let x in gameMap[y]) {
-          if (gameMap[y][x] == 2) {
+      for (let y in this.gameMap) {
+        for (let x in this.gameMap[y]) {
+          if (this.gameMap[y][x] == 2) {
             console.log('找到玩家的坐标：', x, y)
             this.playerX = +x
             this.playerY = +y
           }
-          if (gameMap[y][x] == 4) {
+          if (this.gameMap[y][x] == 4) {
             this.endCounter++
           }
         }
       }
 
       // 深拷贝初始地图
-      this.initMap = deepClone2Arr(this.gameMap)
       this.staticMapRecord = [deepClone2Arr(this.staticMap)]
       this.activeMapRecord = [deepClone2Arr(this.activeMap)]
       this.lifeRecord.push(this.initLife)
+      this.statusRecord.push({poisoning: this.poisoning})
     },
     // 玩家移动
     move(direction, step) {
@@ -338,6 +338,7 @@ export default {
       this.staticMapRecord.push(deepClone2Arr(this.staticMap))
       this.activeMapRecord.push(deepClone2Arr(this.activeMap))
       this.lifeRecord.push(this.life)
+      this.statusRecord.push({poisoning: this.poisoning})
     },
     // 松开按键时，停止移动
     stopMove() {
@@ -345,8 +346,6 @@ export default {
     },
     // 撤回（可以连续撤回置第一步）
     onRegret() {
-      // 第零步时不可撤回
-      if (this.activeMapRecord.length == 1) return
       // 向子组件赋值，并重新浅拷贝
       this.$refs.game.staticMap = deepClone2Arr(this.staticMapRecord[this.step - 1]) // 静止层
       this.$refs.game.activeMap = deepClone2Arr(this.activeMapRecord[this.step - 1]) // 活动层
@@ -354,8 +353,12 @@ export default {
       this.activeMap = this.$refs.game.activeMap
       this.staticMapRecord.pop()
       this.activeMapRecord.pop()
+      // 读取记录中生命值
       this.life = this.lifeRecord[this.step - 1]
       this.lifeRecord.pop()
+      // 读取人物状态记录
+      this.poisoning = this.statusRecord[this.step - 1].poisoning
+      this.statusRecord.pop()
       this.step--
       // 撤回后重新获取玩家坐标
       for (let y in this.activeMap) {
@@ -370,7 +373,7 @@ export default {
     },
     // 重置当前关卡
     onReset() {
-      this.init(this.initMap, this.initLife)
+      this.init()
     },
     // 切换关卡
     changeLevel(value) {
@@ -387,7 +390,7 @@ export default {
           break
         }
       }
-      this.init(this.gameMap, this.initLife)
+      this.init()
     },
     // 将地图存在本地
     saveLocal() {
@@ -396,7 +399,7 @@ export default {
           window.localStorage.setItem('map' + i, JSON.stringify({
             creator: this.uploadMap.creator,
             mapName: this.uploadMap.mapName,
-            mapData: this.initMap,
+            mapData: this.gameMap,
             life: this.initLife
           }))
           this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
@@ -416,7 +419,7 @@ export default {
         data: {
           creator: this.uploadMap.creator,
           mapName: this.uploadMap.mapName,
-          mapData: this.initMap,
+          mapData: this.gameMap,
           playerHP: this.initLife
         }
       })
@@ -443,19 +446,6 @@ export default {
 .sokoban {
   background-color: var(--mainColor);
   height: 100vh;
-}
-
-.operation {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 30px;
-  .regret {
-    margin-left: 15px;
-  }
-  .reset {
-    margin-right: 15px;
-  }
 }
 
 // 虚拟手柄

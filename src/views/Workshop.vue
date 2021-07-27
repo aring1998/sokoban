@@ -4,17 +4,9 @@
     <p class="workshop-title out-title">创意工坊</p>
     <!-- 搜索框 -->
     <div class="workshop-searchMap">
-      <van-field
-        v-model="searchDate"
-        label="地图名称"
-        placeholder="请输入地图名称"
-      />
-      <van-field
-        v-model="searchAuthor"
-        label="作者名称"
-        placeholder="请输入作者名称"
-      />
-      <van-button type="primary" @click="query">搜索</van-button>
+      <van-field v-model="searchInfo.mapName" label="地图名称" placeholder="请输入地图名称" />
+      <van-field v-model="searchInfo.creator" label="作者名称" placeholder="请输入作者名称" />
+      <van-button type="primary" @click="getGameMap">搜索</van-button>
     </div>
     <div class="workshop-content">
       <ul class="workshop-map">
@@ -25,9 +17,8 @@
           @click="
             $router.push({
               name: 'game',
-              params: {gameMap: item.mapData, life: item.playerHP},
-              query: {type: 'workshop'}
-
+              params: { gameMap: item.mapData, life: item.playerHP },
+              query: { type: 'workshop' }
             })
           "
         >
@@ -60,89 +51,53 @@ import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
 
 export default {
-  data: function () {
+  data: function() {
     return {
-      //地图数据
-      mapData: [],
-      current: 1, //页码
-      size: 20, //每页条数
-      total: '', //总条数
-      searchDate: '', //地图数据
-      searchAuthor: '', //作者数据
+      mapData: [], // 地图数据
+      current: 1, // 页码
+      size: 20, // 每页条数
+      total: '', // 总条数
+      searchInfo: { // 搜索列表
+        mapName: '',
+        creator: ''
+      }
     }
   },
   components: {
     TopBar,
-    GameContent,
-  },
-  methods: {
-    //获取地图数据
-    // getGameMap() {
-    //   request({
-    //     url: 'map/list',
-    //     method: 'GET',
-    //   })
-    //     .then(res => {
-    //       console.log(res)
-    //       this.mapData = res.data
-    //     })
-    //     .catch(err => {
-    //       this.$notify({ type: 'danger', message: '获取地图失败，错误：' + err })
-    //     })
-    // },
-    //分页请求
-    getListDate() {
-      request({
-        url: '/map/page',
-        methods: 'get',
-        params: {
-          size: this.size, //条数
-          current: this.current, //页码
-          mapName: this.mapName, //地图名称
-          creator: this.creator, //作者名称
-        },
-      }).then((res) => {
-        this.total = res.data.total //获取总条数
-        this.mapData = res.data.records //地图数据赋值
-      })
-    },
-    //分页页码改变时触发
-    changePage(val) {
-      this.current = val
-      console.log(val)
-      this.getListDate()
-    },
-    //查询
-    query(mapName, creator) {
-      mapName = this.searchDate //地图名称参数
-      this.mapName = mapName
-      creator = this.searchAuthor //作者名称参数
-      this.creator = creator
-      this.getListDate() //调用查询
-    },
+    GameContent
   },
   created() {
-    //this.getGameMap();
-    this.getListDate()
+    this.getGameMap()
   },
-
-  //监听input查询
-  // watch: {
-  //   //地图
-  //   'searchDate': {
-  //     handler: function (mapName) {
-  //       this.mapName=mapName //地图名称
-  //       this.getListDate(); //调用查询
-  //     },
-  //   },
-  //   //作者
-  //   'searchAuthor': {
-  //     handler: function (creator) {
-  //       this.creator=creator //作者名称
-  //       this.getListDate(); //调用查询
-  //     },
-  //   },
-  // },
+  methods: {
+    // 获取地图数据
+    getGameMap() {
+      request({
+        url: '/map/page',
+        methods: 'GET',
+        params: {
+          size: this.size, // 条数
+          current: this.current, // 页码
+          mapName: this.searchInfo.mapName, // 地图名称
+          creator: this.searchInfo.creator // 作者名称
+        }
+      })
+        .then(res => {
+          console.log(res);
+          this.total = res.data.total // 获取总条数
+          this.mapData = res.data.records // 地图数据赋值
+        })
+        .catch(err => {
+          this.$notify({ type: 'err', message: '获取地图数据失败，错误：' + err })
+        })
+    },
+    // 分页页码改变时触发
+    changePage(value) {
+      this.current = value
+      this.getGameMap()
+    }
+  }
 }
 </script>
 
@@ -174,17 +129,19 @@ export default {
       display: flex;
       flex-flow: column nowrap;
       justify-content: space-between;
-      max-height: 280px;
+      max-height: calc(100vh - 400px);
       overflow: scroll;
+      padding: 10px 0;
+      margin-bottom: 20px;
       .workshop-map-item {
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
         padding: 0 10px;
         background-color: var(--deepMainColor);
-        height: 100px;
+        min-height: 100px;
         border-radius: 5px;
-        margin-bottom: 10px;
+        margin: 5px 0;
       }
       .map-thumbnail {
         height: 80px;
