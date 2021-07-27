@@ -125,7 +125,10 @@ export default {
   },
   mounted() {
     // 接收测试地图页返回编辑
-    if (this.$route.params.gameMap) this.gameMap = this.$route.params.gameMap
+    if (this.$route.params.gameMap) {
+      this.gameMap = this.$route.params.gameMap
+      this.advancedForm.life = this.$route.params.life
+    }
     else this.$refs.gameMapLayout.show()
   },
   methods: {
@@ -191,7 +194,7 @@ export default {
             case 5:
             case 6: {
               if (this.advancedForm.life < 1) {
-                this.$notify({type: 'danger', message:'有攻击性元素时，必须设定人物生命值！'})
+                this.$notify({type: 'danger', message:'有攻击性元素时，人物生命值不得为零！'})
                 this.$refs.advancedOptions.show()
                 return false
               }

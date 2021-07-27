@@ -80,6 +80,10 @@
   background-image: url('~@/assets/img/theme/forest/fire.png');
 }
 
+.theme-forest .toadstool {
+  background-image: url('~@/assets/img/theme/forest/toadstool.png');
+}
+
 .theme-forest .player {
   background-image: url('~@/assets/img/theme/forest/player.png');
 }

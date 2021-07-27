@@ -97,6 +97,10 @@ export default {
           res += 'fire'
           break
         }
+        case 8: {
+          res += 'toadstool'
+          break
+        }
       }
       // 活动层渲染
       switch (this.activeMap[y][x]) {

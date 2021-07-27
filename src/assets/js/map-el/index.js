@@ -39,6 +39,11 @@ export const mapEl= [
     name: '冰箱子',
     value: 7,
     class: 'ice-box'
+  },
+  {
+    name: '毒蘑菇',
+    value: 8,
+    class: 'toadstool'
   }
 ]
 

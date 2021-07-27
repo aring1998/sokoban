@@ -44,7 +44,7 @@
     </div>
     <!-- 编辑控制：创建地图进入显示 -->
     <div class="check-point" v-if="$route.query.type == 'created'">
-      <van-button @click="$router.push({ name: 'create', params: { gameMap: initMap } })" type="info" size="mini">返回编辑</van-button>
+      <van-button @click="$router.push({ name: 'create', params: { gameMap: initMap, life: initLife } })" type="info" size="mini">返回编辑</van-button>
       <van-button @click="$router.push('/index')" type="danger" size="mini">放弃编辑</van-button>
     </div>
     <popover ref="saveMap" v-if="this.$route.query.type == 'created'">
@@ -108,7 +108,8 @@ export default {
         mapName: '',
         creator: store.state.username || ''
       },
-      keepMove: null // 持续移动定时器
+      keepMove: null, // 持续移动定时器
+      poisoning: false // 是否中毒
     }
   },
   components: {
@@ -219,6 +220,9 @@ export default {
       // 声明初始变量
       let staticTarget, activeTarget, staticBoxTarget, activeBoxTarget, setY, setX, setBoxY, setBoxX
 
+      // 判断是否中毒
+      if (this.poisoning) step = -step
+
       // 判断方向
       if (direction == 'x') {
         setY = this.playerY
@@ -252,6 +256,11 @@ export default {
             return
           }
           break
+        }
+        // 碰毒蘑菇
+        case 8: {
+          this.poisoning = true
+          Vue.set(this.staticMap[setY], setX, 1)  // 消除蘑菇
         }
       }
 
