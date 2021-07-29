@@ -52,24 +52,30 @@
     <white-popover class="index-intro" ref="intro">
       <van-tabs v-model="aboutGameTab" color="var(--mainColor)">
         <van-tab title="游戏玩法" class="index-intro-item">
-          <span>&emsp;&emsp;通过虚拟手柄</span>
-          <img src="~@/assets/img/index-intro/handle.png" alt="" />
-          <span>控制人物移动，</span>
-          <span>将所有箱子</span>
-          <div class="img-box box"></div>
-          <span>推入终点</span>
-          <div class="img-box end"></div>
-          <span>即可获得胜利！</span>
+          <span>
+            &emsp;通过虚拟手柄<img src="~@/assets/img/index-intro/handle.png" alt="" />
+            控制人物移动，将所有箱子<div class="img-box box"></div>
+            推入终点<div class="img-box end"></div>即可获得胜利
+          </span>
+          <br>
+          <span>&emsp;● 请留意您无法同时推动两个箱子<div class="img-box box"></div></span>
+          <br>
+          <span>&emsp;● 务必小心地图中各种各样的陷阱<div class="img-box spikeweed"></div>它们将夺走您的生命<van-icon name="like" color="red" /></span>
+          <br>
+          <span>
+            &emsp;● 如果您想了解更多地图元素<div class="img-box fire"></div>的作用，请点击上方
+            <span style="font-weight: 600"><img src="~@/assets/img/index-intro/mapManual.png" alt="" />地图手册</span>
+          </span>
         </van-tab>
         <van-tab title="地图手册" class="index-intro-item"> </van-tab>
         <van-tab title="意见反馈" class="index-intro-item"> </van-tab>
         <van-tab title="关于项目" class="index-intro-item">
-          <span>&emsp;&emsp;该项目为开源项目，欢迎开发者参考学习，并且无比期盼您能加入我们，项目地址如下：</span>
+          <span>&emsp;该项目为开源项目，欢迎开发者参考学习，并且无比期盼您能加入我们，项目地址如下：</span>
           <a href="https://gitee.com/aring1998/sokoban">https://gitee.com/aring1998/sokoban</a>
           <p>也欢迎您为我们点一个star<van-icon name="star-o" color="orange" /></p>
           <br>
           <p>团队成员(按首字母排序)：</p>
-          <p style="font-weight: 600">aring, lyl, wangz, yuanyuanna, funzeros</p>
+          <p style="font-weight: 600">aring, funzeros, lyl, wangz, yuanyuanna</p>
         </van-tab>
       </van-tabs>
     </white-popover>

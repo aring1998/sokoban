@@ -21,8 +21,8 @@
     </div>
     <!-- 行为控制 -->
     <div class="check-point">
-      <van-button class="regret" @click="onRegret" type="primary" size="mini" :disabled="this.activeMapRecord.length == 1">撤回</van-button>
-      <van-button class="reset" @click="onReset" type="primary" size="mini">重置</van-button>
+      <van-button @click="onRegret" type="primary" size="mini" :disabled="this.activeMapRecord.length == 1">撤回</van-button>
+      <van-button @click="onReset" type="primary" size="mini">重置</van-button>
     </div>
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
@@ -164,8 +164,7 @@ export default {
   methods: {
     // 初始化
     init() {
-      // this.gameMap = gameMap
-      // this.life = life
+      // 重置终点个数，步数
       this.endCounter = 0
       this.step = 0
 

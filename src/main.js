@@ -7,6 +7,13 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 Vue.use(Vant)
 
+/**
+ * 复制文本插件
+ * 使用: this.$copyText(text)
+ */
+import VueClipboard from 'vue-clipboard2'
+Vue.use(VueClipboard);
+VueClipboard.config.autoSetContainer = true
 
 Vue.config.productionTip = false
 

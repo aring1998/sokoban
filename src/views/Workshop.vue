@@ -8,6 +8,13 @@
       <van-field v-model="searchInfo.creator" label="作者名称" placeholder="请输入作者名称" />
       <van-button type="primary" @click="getGameMap">搜索</van-button>
     </div>
+    <!-- tab标签 -->
+    <van-tabs v-model="workshopTab" color="var(--mainColor)" class="workshop-tab">
+      <van-tab title="最新"></van-tab>
+      <van-tab title="最热门"></van-tab>
+      <van-tab title="我的收藏"></van-tab>
+    </van-tabs>
+    <!-- 创意工坊列表 -->
     <div class="workshop-content">
       <ul class="workshop-map">
         <li
@@ -28,20 +35,27 @@
           <div class="map-intro">
             <span class="name">{{ item.mapName }}</span>
             <span class="creator">{{ item.creator }}</span>
-            <span class="date">{{ item.time.split(' ')[0] }}</span>
+            <div class="tool-bar">
+              <van-icon name="good-job" color="red" v-show="item.hasPraise" @click.stop="like(index, item.id)" />
+              <van-icon name="good-job-o" v-show="!item.hasPraise" @click.stop="like(index, item.id)" />
+              <van-icon name="star" color="yellow" v-show="hasCollect" @click.stop="collect(index, item.id)" />
+              <van-icon name="star-o" v-show="!hasCollect" @click.stop="collect(index, item.id)" />
+              <van-icon name="share" color="orange" v-show="index == shareIndex" @click.stop="share(item.mapName)" />
+              <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(item.mapName, index)" />
+              <span class="date">{{ item.time.split(' ')[0] }}</span>
+            </div>
           </div>
         </li>
       </ul>
-      <!-- 分页 -->
-      <div>
-        <van-pagination
-          v-model="current"
-          :total-items="total"
-          :items-per-page="size"
-          @change="changePage"
-        />
-      </div>
     </div>
+    <!-- 分页 -->
+    <van-pagination
+      v-model="current"
+      :total-items="total"
+      :items-per-page="size"
+      @change="changePage"
+      style="margin: 0 20px"
+    />
   </div>
 </template>
 
@@ -59,8 +73,12 @@ export default {
       total: '', // 总条数
       searchInfo: { // 搜索列表
         mapName: '',
-        creator: ''
-      }
+        creator: '',
+        sort: 0,
+      },
+      workshopTab: 0,
+      hasCollect: false,
+      shareIndex: null
     }
   },
   components: {
@@ -70,9 +88,19 @@ export default {
   created() {
     this.getGameMap()
   },
+  watch: {
+    workshopTab: {
+      handler(value) {
+        this.searchInfo.sort = 0
+        if (value === 1) this.searchInfo.sort = 1
+        this.getGameMap()
+      }
+    }
+  },
   methods: {
     // 获取地图数据
     getGameMap() {
+      this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: '/map/page',
         methods: 'GET',
@@ -80,13 +108,15 @@ export default {
           size: this.size, // 条数
           current: this.current, // 页码
           mapName: this.searchInfo.mapName, // 地图名称
-          creator: this.searchInfo.creator // 作者名称
+          creator: this.searchInfo.creator, // 作者名称
+          sort: this.searchInfo.sort // 排序
         }
       })
         .then(res => {
           console.log(res);
           this.total = res.data.total // 获取总条数
           this.mapData = res.data.records // 地图数据赋值
+          this.$toast.clear()
         })
         .catch(err => {
           this.$notify({ type: 'err', message: '获取地图数据失败，错误：' + err })
@@ -96,6 +126,54 @@ export default {
     changePage(value) {
       this.current = value
       this.getGameMap()
+    },
+    // 点赞
+    like(index, id) {
+      this.$toast.loading({ message: '加载中', forbidClick: true })
+      request({
+        url: `like/${id}`,
+        methods: 'GET',
+      })
+        .then(res => {
+          console.log(res);
+          if (res.code == 0) {
+            this.$notify({ type: 'success', message: res.msg })
+            // 修改列表数据，以展示不同的点赞图标
+            if (res.data) this.mapData[index].hasPraise = true
+            else this.mapData[index].hasPraise = false
+          }
+          this.$toast.clear()
+        })
+        .catch(err => {
+          this.$notify({ type: 'err', message: '点赞失败，错误：' + err })
+        })
+    },
+    // 收藏
+    collect(index, id) {
+      this.$toast.loading({ message: '加载中', forbidClick: true })
+      request({
+        url: `collet/${id}`,
+        methods: 'GET',
+      })
+        .then(res => {
+          console.log(res);
+          if (res.code == 0) {
+            this.$notify({ type: 'success', message: res.msg })
+            // 修改列表数据，以展示不同的收藏图标
+            if (res.data) this.mapData[index].hasCollect = true
+            else this.mapData[index].hasCollect = false
+          }
+          this.$toast.clear()
+        })
+        .catch(err => {
+          this.$notify({ type: 'err', message: '收藏失败，错误：' + err })
+        })
+    },
+    // 分享
+    share(name, index) {
+      this.shareIndex = index
+      this.$copyText(name)
+      this.$notify({ type: 'success', message: '已复制地图名到剪贴板，快去分享给好友吧！' })
     }
   }
 }
@@ -120,8 +198,13 @@ export default {
       margin-left: 70%;
     }
   }
+  .workshop-tab {
+    border-bottom-left-radius: unset;
+    border-bottom-right-radius: unset;
+    margin: 10px 20px 0 20px;
+  }
   .workshop-content {
-    margin: 20px;
+    margin: -1px 20px 0 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -129,10 +212,10 @@ export default {
       display: flex;
       flex-flow: column nowrap;
       justify-content: space-between;
-      max-height: calc(100vh - 400px);
+      height: calc(100vh - 400px);
       overflow: scroll;
-      padding: 10px 0;
-      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #fff;
       .workshop-map-item {
         display: flex;
         flex-flow: row nowrap;
@@ -176,8 +259,26 @@ export default {
           font-size: 14px;
           margin-left: auto;
         }
+        .tool-bar {
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: center;
+          font-size: 20px;
+          font-weight: 600;
+          color: #fff;
+          margin-top: 5px;
+          i {
+            margin-right: 8px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            padding: 4px;
+          }
+        }
       }
     }
   }
 }
+.van-pagination__item .van-pagination__item--active .van-pagination__page .van-hairline {
+  background-color: var(--mainColor);
+} 
 </style>
