@@ -5,10 +5,10 @@
     <!-- 人物生命值 -->
     <div class="life" v-if="initLife > 0">
       <span>当前生命：</span>
-      <span v-if="life < 12" class="life-show-type">
+      <span v-if="life < 12">
         <van-icon name="like" color="red" v-for="(item, index) in life" :key="index" />
       </span>
-      <span v-else class="life-show-type">
+      <span v-else>
         <van-icon name="like" color="red" />
         <span>&ensp;× {{ life }}</span>
       </span>
@@ -138,6 +138,7 @@ export default {
           case 'expand': {
             this.gameMap = deepClone2Arr(expand[this.level].gameMap)
             this.initLife = expand[this.level].life
+            console.log(this.initLife);
             this.levelCounter = expand.length - 1
             break
           }
@@ -164,7 +165,8 @@ export default {
   methods: {
     // 初始化
     init() {
-      // 重置终点个数，步数
+      // 重置生命、终点个数，步数
+      this.life = this.initLife
       this.endCounter = 0
       this.step = 0
 
