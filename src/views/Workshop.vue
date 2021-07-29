@@ -38,8 +38,8 @@
             <div class="tool-bar">
               <van-icon name="good-job" color="red" v-show="item.hasPraise" @click.stop="like(index, item.id)" />
               <van-icon name="good-job-o" v-show="!item.hasPraise" @click.stop="like(index, item.id)" />
-              <van-icon name="star" color="yellow" v-show="hasCollect" @click.stop="collect(index, item.id)" />
-              <van-icon name="star-o" v-show="!hasCollect" @click.stop="collect(index, item.id)" />
+              <van-icon name="star" color="yellow" v-show="item.hasCollect" @click.stop="collect(index, item.id)" />
+              <van-icon name="star-o" v-show="!item.hasCollect" @click.stop="collect(index, item.id)" />
               <van-icon name="share" color="orange" v-show="index == shareIndex" @click.stop="share(item.mapName)" />
               <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(item.mapName, index)" />
               <span class="date">{{ item.time.split(' ')[0] }}</span>
@@ -77,7 +77,6 @@ export default {
         sort: 0,
       },
       workshopTab: 0,
-      hasCollect: false,
       shareIndex: null
     }
   },
@@ -152,7 +151,7 @@ export default {
     collect(index, id) {
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
-        url: `collet/${id}`,
+        url: `collect/${id}`,
         methods: 'GET',
       })
         .then(res => {
