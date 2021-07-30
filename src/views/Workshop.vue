@@ -36,11 +36,11 @@
             <span class="name">{{ item.mapName }}</span>
             <span class="creator">{{ item.creator }}</span>
             <div class="tool-bar">
-              <van-icon name="good-job" color="red" v-show="item.hasPraise" @click.stop="like(index, item.id)" />
+              <van-icon name="good-job" v-show="item.hasPraise" @click.stop="like(index, item.id)" />
               <van-icon name="good-job-o" v-show="!item.hasPraise" @click.stop="like(index, item.id)" />
-              <van-icon name="star" color="yellow" v-show="item.hasCollect" @click.stop="collect(index, item.id)" />
+              <van-icon name="star" v-show="item.hasCollect" @click.stop="collect(index, item.id)" />
               <van-icon name="star-o" v-show="!item.hasCollect" @click.stop="collect(index, item.id)" />
-              <van-icon name="share" color="orange" v-show="index == shareIndex" @click.stop="share(item.mapName)" />
+              <van-icon name="share" v-show="index == shareIndex" @click.stop="share(item.mapName, index)" />
               <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(item.mapName, index)" />
               <span class="date">{{ item.time.split(' ')[0] }}</span>
             </div>
@@ -72,9 +72,10 @@ export default {
       size: 20, // 每页条数
       total: '', // 总条数
       searchInfo: { // 搜索列表
-        mapName: '',
-        creator: '',
-        sort: 0,
+        mapName: '',  // 地图名
+        creator: '', // 作者
+        sort: 0, // 排序
+        type: '' // 方式
       },
       workshopTab: 0,
       shareIndex: null
@@ -91,7 +92,9 @@ export default {
     workshopTab: {
       handler(value) {
         this.searchInfo.sort = 0
+        this.searchInfo.type = ''
         if (value === 1) this.searchInfo.sort = 1
+        if (value === 2) this.searchInfo.type = 'collect'
         this.getGameMap()
       }
     }
@@ -106,13 +109,10 @@ export default {
         params: {
           size: this.size, // 条数
           current: this.current, // 页码
-          mapName: this.searchInfo.mapName, // 地图名称
-          creator: this.searchInfo.creator, // 作者名称
-          sort: this.searchInfo.sort // 排序
+          ...this.searchInfo, // 展开搜索参数
         }
       })
         .then(res => {
-          console.log(res);
           this.total = res.data.total // 获取总条数
           this.mapData = res.data.records // 地图数据赋值
           this.$toast.clear()
@@ -134,14 +134,13 @@ export default {
         methods: 'GET',
       })
         .then(res => {
-          console.log(res);
+          this.$toast.clear()
           if (res.code == 0) {
-            this.$notify({ type: 'success', message: res.msg })
+            this.$toast.success({ message: res.msg, duration: 500 })
             // 修改列表数据，以展示不同的点赞图标
             if (res.data) this.mapData[index].hasPraise = true
             else this.mapData[index].hasPraise = false
           }
-          this.$toast.clear()
         })
         .catch(err => {
           this.$notify({ type: 'err', message: '点赞失败，错误：' + err })
@@ -155,14 +154,13 @@ export default {
         methods: 'GET',
       })
         .then(res => {
-          console.log(res);
+          this.$toast.clear()
           if (res.code == 0) {
-            this.$notify({ type: 'success', message: res.msg })
+            this.$toast.success({ message: res.msg, duration: 500 })
             // 修改列表数据，以展示不同的收藏图标
             if (res.data) this.mapData[index].hasCollect = true
             else this.mapData[index].hasCollect = false
           }
-          this.$toast.clear()
         })
         .catch(err => {
           this.$notify({ type: 'err', message: '收藏失败，错误：' + err })

@@ -103,7 +103,7 @@ export default {
         column: null
       },
       advancedForm: { // 高级选项表单
-        life: null
+        life: 0
       },
       gameMap: [
         [0, 0, 0, 0, 0, 0, 0],
