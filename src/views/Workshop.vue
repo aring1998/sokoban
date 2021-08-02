@@ -117,9 +117,6 @@ export default {
           this.mapData = res.data.records // 地图数据赋值
           this.$toast.clear()
         })
-        .catch(err => {
-          this.$notify({ type: 'err', message: '获取地图数据失败，错误：' + err })
-        })
     },
     // 分页页码改变时触发
     changePage(value) {
@@ -142,9 +139,6 @@ export default {
             else this.mapData[index].hasPraise = false
           }
         })
-        .catch(err => {
-          this.$notify({ type: 'err', message: '点赞失败，错误：' + err })
-        })
     },
     // 收藏
     collect(index, id) {
@@ -161,9 +155,6 @@ export default {
             if (res.data) this.mapData[index].hasCollect = true
             else this.mapData[index].hasCollect = false
           }
-        })
-        .catch(err => {
-          this.$notify({ type: 'err', message: '收藏失败，错误：' + err })
         })
     },
     // 分享

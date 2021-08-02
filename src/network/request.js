@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import { Notify } from 'vant'
 
 export function request(config) {
   // 创建axios实例
@@ -16,6 +17,7 @@ export function request(config) {
   }
   // 响应拦截
   instance.interceptors.response.use(res => {
+    if (res.status != 200) Notify({ type: 'danger', message: '网络请求错误，错误：' + res.statusText })
     return res.data  // 配置只返回data
   }), err => {
 

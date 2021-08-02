@@ -163,9 +163,6 @@ export default {
             this.$notify({ type: 'danger', message: res.msg })
           }
         })
-        .catch(err => {
-          this.$notify({ type: 'danger', message: '登录失败，错误：' + err })
-        })
     },
     // 注册
     register() {
@@ -187,9 +184,6 @@ export default {
           else {
             this.$notify({ type: 'danger', message: res.msg })
           }
-        })
-        .catch(err => {
-          this.$notify({ type: 'danger', message: '注册失败，错误：' + err })
         })
     },
     // 注册表单验证

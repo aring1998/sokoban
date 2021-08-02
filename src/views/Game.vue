@@ -435,9 +435,6 @@ export default {
             this.$notify({ type: 'danger', message: res.msg })
           }
         })
-        .catch(err => {
-          this.$notify({ type: 'danger', message: '上传失败，错误：' + err })
-        })
     }
   }
 }
