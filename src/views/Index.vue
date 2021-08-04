@@ -67,8 +67,17 @@
             <span style="font-weight: 600"><img src="~@/assets/img/index-intro/mapManual.png" alt="" />地图手册</span>
           </span>
         </van-tab>
-        <van-tab title="地图手册" class="index-intro-item"> </van-tab>
-        <van-tab title="意见反馈" class="index-intro-item"> </van-tab>
+        <van-tab title="地图手册" class="index-intro-item">
+          <ul>
+            <li v-for="(item, index) of mapManual" :key="index">
+              <div class="img-box" :class="item.class"></div>&emsp;{{ item.name }}：
+              <span v-for="(item, index) of mapManual[index].intro" :key="index">{{ index + 1 }}）{{ item }}；</span>
+            </li>
+          </ul>
+        </van-tab>
+        <van-tab title="意见反馈" class="index-intro-item">
+          <a href="http://wpa.qq.com/msgrd?v=3&uin=1303340995&site=qq&menu=yes">点击这里联系作者</a>
+        </van-tab>
         <van-tab title="关于项目" class="index-intro-item">
           <span>&emsp;该项目为开源项目，欢迎开发者参考学习，并且无比期盼您能加入我们，项目地址如下：</span>
           <a href="https://gitee.com/aring1998/sokoban">https://gitee.com/aring1998/sokoban</a>
@@ -84,6 +93,7 @@
 
 <script>
 import { basic, expand } from '@/assets/js/level/index'
+import { mapEl } from '@/assets/js/map-el/index'
 
 import TopBar from '@/components/TopBar'
 import WhitePopover from '@/components/WhitePopover'
@@ -96,7 +106,8 @@ export default {
       expand: expand,
       level: '',
       aboutGameTab: 0,
-      levelTab: 0
+      levelTab: 0,
+      mapManual: mapEl
     }
   },
   components: {
@@ -205,6 +216,9 @@ export default {
     padding: 10px;
     background-color: #fff;
     height: calc(90vh - 150px);
+    li {
+      margin-bottom: 10px;
+    }
   }
   .img-box {
     height: 25px;

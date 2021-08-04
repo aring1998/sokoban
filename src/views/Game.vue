@@ -401,11 +401,12 @@ export default {
             creator: this.uploadMap.creator,
             mapName: this.uploadMap.mapName,
             mapData: this.gameMap,
-            life: this.initLife
+            life: this.initLife,
+            time: new Date()
           }))
           this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
           break
-        }
+        } else this.$notify({ type: 'error', message: '本地存储已达上限' })
       }
       this.$refs.saveMap.show()
       setTimeout(() => {

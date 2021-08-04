@@ -13,6 +13,7 @@
       <van-tab title="最新"></van-tab>
       <van-tab title="最热门"></van-tab>
       <van-tab title="我的收藏"></van-tab>
+      <van-tab title="本地地图"></van-tab>
     </van-tabs>
     <!-- 创意工坊列表 -->
     <div class="workshop-content">
@@ -42,7 +43,7 @@
               <van-icon name="star-o" v-show="!item.hasCollect" @click.stop="collect(index, item.id)" />
               <van-icon name="share" v-show="index == shareIndex" @click.stop="share(item.mapName, index)" />
               <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(item.mapName, index)" />
-              <span class="date">{{ item.time.split(' ')[0] }}</span>
+              <span class="date">{{ item.time | formatDate}}</span>
             </div>
           </div>
         </li>
@@ -93,6 +94,15 @@ export default {
       handler(value) {
         this.searchInfo.sort = 0
         this.searchInfo.type = ''
+        if (value === 3) {
+          this.mapData = []
+          for (let i = 0; i < 99; i++) {
+            if (window.localStorage.getItem('map' + i)) {
+              this.mapData.push(JSON.parse(window.localStorage.getItem('map' + i)))
+              console.log(JSON.parse(window.localStorage.getItem('map' + i)));
+            } else return
+          }
+        }
         if (value === 1) this.searchInfo.sort = 1
         if (value === 2) this.searchInfo.type = 'collect'
         this.getGameMap()
@@ -199,7 +209,6 @@ export default {
     .workshop-map {
       display: flex;
       flex-flow: column nowrap;
-      justify-content: space-between;
       height: calc(100vh - 400px);
       overflow: scroll;
       padding: 10px;

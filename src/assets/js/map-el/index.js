@@ -3,47 +3,80 @@ export const mapEl= [
   {
     name: '墙',
     value: 0,
-    class: 'wall'
+    class: 'wall',
+    intro: [
+      '顾名思义，此路不通'
+    ]
   },
   {
     name: '空地',
     value: 1,
-    class: 'floor'
+    class: 'floor',
+    intro: [
+      '您脚下的大地母亲'
+    ]
   },
   {
-    name: '玩家',
+    name: '人物',
     value: 2,
-    class: 'player'
+    class: 'player',
+    intro: [
+      '您',
+      '可通过虚拟手柄操纵移动'
+    ]
   },
   {
     name: '箱子',
     value: 3,
-    class: 'box'
+    class: 'box',
+    intro: [
+      '碰撞后会朝移动对应碰撞方向移动',
+      '全部推入终点即可获得胜利'
+    ]
   },
   {
     name: '终点',
     value: 4,
-    class: 'end'
+    class: 'end',
+    intro: [
+      '所有箱子的目标点',
+      '填满后可获得胜利'
+    ]
   },
   {
     name: '地刺',
     value: 5,
-    class: 'spikeweed'
+    class: 'spikeweed',
+    intro: [
+      '人物经过时，扣1点生命'
+    ]
   },
   {
     name: '火',
     value: 6,
-    class: 'fire'
+    class: 'fire',
+    intro: [
+      '人物经过时，扣1点生命',
+      '当普通箱子触碰时，会损毁'
+    ]
   },
   {
     name: '冰箱子',
     value: 7,
-    class: 'ice-box'
+    class: 'ice-box',
+    intro: [
+      '抵达终点不记入抵达终点箱子数',
+      '触碰火焰时，会变为普通箱子，并灭火'
+    ]
   },
   {
     name: '毒蘑菇',
     value: 8,
-    class: 'toadstool'
+    class: 'toadstool',
+    intro: [
+      '触碰时消失',
+      '触碰后，整局按键皆为反向'
+    ]
   }
 ]
 

@@ -13,14 +13,14 @@ export function request(config) {
     config.headers.Authorization = 'Bearer ' + store.state.token
     return config
   }), err => {
-
+    console.log(err);
   }
   // 响应拦截
   instance.interceptors.response.use(res => {
     if (res.status != 200) Notify({ type: 'danger', message: '网络请求错误，错误：' + res.statusText })
     return res.data  // 配置只返回data
   }), err => {
-
+    console.log(err);
   }
 
   // 发送网络请求

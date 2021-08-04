@@ -89,7 +89,35 @@
           <span>用户名：{{ $store.state.username }}</span>
         </van-tab>
         <van-tab title="修改密码">
-          
+          <van-form @submit="forget">
+            <van-field
+              v-model="forgetForm.oldPassword"
+              type="oldPassword"
+              label="原密码"
+              placeholder="请输入用户名"
+              maxlength="16"
+              :rules="[{ pattern: /^[a-zA-Z0-9_-]{4,16}$/, required: true, message: '请输入字母和数字组合，4~16位' }]"
+            />
+            <van-field
+              v-model="forgetForm.newPassword"
+              type="password"
+              label="密码"
+              placeholder="请输入密码"
+              maxlength="16"
+              :rules="[{ pattern: /^.{6,16}$/, required: true, message: '请填写密码，6~16位' }]"
+            />
+            <van-field
+              v-model="forgetForm.checkPassWord"
+              type="password"
+              label="确认密码"
+              placeholder="请再次输入密码"
+              maxlength="16"
+              :rules="[{ validator: checkPassWord, required: true, message: '密码不匹配' }]"
+            />
+            <div style="margin: 16px;">
+              <van-button round block type="info" native-type="submit">确认修改</van-button>
+            </div>
+          </van-form>
         </van-tab>
       </van-tabs>
     </popover>
@@ -127,6 +155,11 @@ export default {
         checkPassWord: '',
         userNameMsg: '',
         passWordMsg: ''
+      },
+      forgetForm: {
+        oldPassword: '',
+        newPassword: '',
+        checkPassWord: ''
       }
     }
   },
@@ -186,9 +219,13 @@ export default {
           }
         })
     },
-    // 注册表单验证
+    // 忘记密码
+    forget() {
+
+    },
+    // 密码匹配验证
     checkPassWord(value) {
-      if (value !== this.registerForm.password) {
+      if (value !== this.registerForm.password || value !== this.forgetForm.newPassword) {
         return false
       }
       return true
