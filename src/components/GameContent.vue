@@ -1,20 +1,22 @@
 <!-- 游戏地图 -->
 <template>
-  <table class="game-container">
-    <tr v-for="(item, yIndex) in gameMap.length" :key="yIndex" @click="getRowIndex(yIndex)">
-      <td
-        v-for="(item, xIndex) of gameMap[yIndex]"
-        @click="getColumnIndex(xIndex)"
-        :key="xIndex"
-        class="game-cell"
-        :class="
-          $route.path == '/game'
-            ? randerClass(yIndex, xIndex)
-            : getmapElClass(item)
-        "
-      ></td>
-    </tr>
-  </table>
+  <div class="game-container">
+    <div class="game-table">
+      <div class="game-row" v-for="(item, yIndex) in gameMap.length" :key="yIndex" @click="getRowIndex(yIndex)">
+        <div
+          v-for="(item, xIndex) of gameMap[yIndex]"
+          @click="getColumnIndex(xIndex)"
+          :key="xIndex"
+          class="game-cell"
+          :class="
+            $route.path == '/game'
+              ? randerClass(yIndex, xIndex)
+              : getmapElClass(item)
+          "
+        ></div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -123,33 +125,43 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .game-container {
-  border-collapse: collapse;
-  border-spacing: 0;
-  background-size: 30px 30px;
-  background-repeat: repeat;
-  background-image: url('~@/assets/img/theme/forest/floor.png');
+  text-align: center;
   margin: 0 auto;
-}
-
-.game-container td {
-  height: 30px;
-  width: 30px;
-  padding: 0;
-}
-
-.game-cell {
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
+  overflow: auto;
+  max-height: 360px;
+  max-width: 360px;
+  .game-table {
+    background-size: 30px 30px;
+    background-repeat: repeat;
+    background-image: url('~@/assets/img/theme/forest/floor.png');
+    display: inline-block;
+    text-align: center;
+    .game-row {
+      display: flex;
+      .game-cell {
+        height: 30px;
+        width: 30px;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
+    }
+  }
 }
 
 /* 作为缩略图 */
-.map-thumbnail .game-container {
-  height: 100%;
-  width: 100%;
-}
-.map-thumbnail .game-container td {
-  height: 5px;
+.map-thumbnail  {
+  .game-container {
+    .game-table {
+      background-size: 8px 8px;
+      .game-row {
+        .game-cell {
+          height: 8px;
+          width: 8px;
+        }
+      }
+    }
+  }
 }
 </style>

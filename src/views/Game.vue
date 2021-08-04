@@ -80,7 +80,7 @@ import store from '@/store'
 
 import { basic, expand } from '@/assets/js/level/index'
 import { request } from '@/network/request'
-import { deepClone2Arr, isEmptyObject } from '@/utils/index'
+import { deepCloneObj, deepClone2Arr, isEmptyObject } from '@/utils/index'
 
 import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
@@ -108,7 +108,10 @@ export default {
         creator: store.state.username || ''
       },
       keepMove: null, // 持续移动定时器
-      poisoning: false, // 是否中毒
+      initStatus: { // 初始状态
+        poisoning: false, // 是否中毒
+      },
+      status: null,
       statusRecord: [] // 人物状态记录
     }
   },
@@ -138,7 +141,6 @@ export default {
           case 'expand': {
             this.gameMap = deepClone2Arr(expand[this.level].gameMap)
             this.initLife = expand[this.level].life
-            console.log(this.initLife);
             this.levelCounter = expand.length - 1
             break
           }
@@ -169,7 +171,7 @@ export default {
       this.life = this.initLife
       this.endCounter = 0
       this.step = 0
-
+      this.status = deepCloneObj(this.initStatus) // 对象深拷贝
       // 调用子组件分离方法
       this.$refs.game.separateMap(this.gameMap)
       // 从子组件获取数据
@@ -193,8 +195,8 @@ export default {
       // 深拷贝初始地图
       this.staticMapRecord = [deepClone2Arr(this.staticMap)]
       this.activeMapRecord = [deepClone2Arr(this.activeMap)]
-      this.lifeRecord.push(this.initLife)
-      this.statusRecord.push({poisoning: this.poisoning})
+      this.lifeRecord = [this.initLife]
+      this.statusRecord = [deepCloneObj(this.status)]
     },
     // 玩家移动
     move(direction, step) {
@@ -222,7 +224,7 @@ export default {
       let staticTarget, activeTarget, staticBoxTarget, activeBoxTarget, setY, setX, setBoxY, setBoxX
 
       // 判断是否中毒
-      if (this.poisoning) step = -step
+      if (this.status.poisoning) step = -step
 
       // 判断方向
       if (direction == 'x') {
@@ -260,7 +262,7 @@ export default {
         }
         // 碰毒蘑菇
         case 8: {
-          this.poisoning = true
+          this.status.poisoning = true
           Vue.set(this.staticMap[setY], setX, 1)  // 消除蘑菇
         }
       }
@@ -339,7 +341,7 @@ export default {
       this.staticMapRecord.push(deepClone2Arr(this.staticMap))
       this.activeMapRecord.push(deepClone2Arr(this.activeMap))
       this.lifeRecord.push(this.life)
-      this.statusRecord.push({poisoning: this.poisoning})
+      this.statusRecord.push(deepCloneObj(this.status))
     },
     // 松开按键时，停止移动
     stopMove() {
@@ -358,7 +360,7 @@ export default {
       this.life = this.lifeRecord[this.step - 1]
       this.lifeRecord.pop()
       // 读取人物状态记录
-      this.poisoning = this.statusRecord[this.step - 1].poisoning
+      this.status = deepCloneObj(this.statusRecord[this.step - 1])
       this.statusRecord.pop()
       this.step--
       // 撤回后重新获取玩家坐标

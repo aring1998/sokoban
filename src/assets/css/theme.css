@@ -3,7 +3,7 @@
   --deepMainColor: #333;
 }
 
-.theme-abstract .game-container {
+.theme-abstract .game-table {
   background-image: url('~@/assets/img/theme/abstract/floor.png');
 }
 
@@ -48,7 +48,7 @@
   --deepMainColor: #339933;
 }
 
-.theme-forest .game-container {
+.theme-forest .game-table {
   background-image: url('~@/assets/img/theme/forest/floor.png');
 }
 

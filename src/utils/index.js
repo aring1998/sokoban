@@ -1,3 +1,8 @@
+// 深拷贝对象
+export const deepCloneObj = obj => {
+  return JSON.parse(JSON.stringify(obj))
+}
+
 // 深拷贝二维数组
 export const deepClone2Arr = arr => {
   let out = []

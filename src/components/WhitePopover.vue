@@ -1,13 +1,15 @@
 <!-- 弹出框 -->
 <template>
-  <div class="white-popover-shade" v-show="isShow">
-    <div class="white-popover">
-      <div class="closes">
-        <van-icon name="cross" @click="show()" />
+  <transition name="van-fade">
+    <div class="white-popover-shade" v-show="isShow">
+      <div class="white-popover">
+        <div class="closes">
+          <van-icon name="cross" @click="show()" />
+        </div>
+        <slot></slot>
       </div>
-      <slot></slot>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
