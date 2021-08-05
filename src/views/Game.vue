@@ -192,6 +192,18 @@ export default {
         }
       }
 
+      // 大图中初始移动到玩家视角
+      this.$nextTick(() => {
+        if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
+          if (this.playerX * 30 >= 180) {
+            this.$refs.game.$el.scrollLeft = this.playerX * 30 - 165
+          }
+          if (this.playerY * 30 >= 180) {
+            this.$refs.game.$el.scrollTop = this.playerY * 30 - 165
+          }
+        }
+      })
+
       // 深拷贝初始地图
       this.staticMapRecord = [deepClone2Arr(this.staticMap)]
       this.activeMapRecord = [deepClone2Arr(this.activeMap)]
@@ -336,6 +348,23 @@ export default {
       // 设定移动后的玩家位置
       if (direction == 'x') this.playerX += step
       else this.playerY += step
+      
+      // 大图追踪视角
+      if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
+        if (direction == 'x') {
+          if (this.playerX * 30 >= 180) {
+            this.$nextTick(() => {
+              this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, behavior: 'smooth' })
+            })
+          }
+        } else {
+          if (this.playerY * 30 >= 180) {
+            this.$nextTick(() => {
+              this.$refs.game.$el.scrollTo({ top: this.playerY * 30 - 165, behavior: 'smooth' })
+            })
+          }
+        }
+      }
 
       // 记录移动后地图数据
       this.staticMapRecord.push(deepClone2Arr(this.staticMap))

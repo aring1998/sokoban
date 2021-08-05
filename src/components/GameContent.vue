@@ -132,6 +132,7 @@ export default {
   overflow: auto;
   max-height: 360px;
   max-width: 360px;
+  &::-webkit-scrollbar { width: 0 !important }
   .game-table {
     background-size: 30px 30px;
     background-repeat: repeat;

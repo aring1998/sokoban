@@ -10,16 +10,16 @@
           type="digit"
           maxlength="2"
           label="地图行数"
-          placeholder="可选范围：5~12"
-          :rules="[{ pattern: /^[5-9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
+          placeholder="可选范围：5~40"
+          :rules="[{ pattern: /^(5|40|[1-3][0-9])$/, required: true, message: '可选范围：5~40' }]"
         />
         <van-field
           v-model="gameMapForm.column"
           type="digit"
           maxlength="2"
           label="地图列数"
-          placeholder="可选范围：5~12"
-          :rules="[{ pattern: /^[5-9]|1[0,2]$/, required: true, message: '请输入小于12的数字' }]"
+          placeholder="可选范围：5~40"
+          :rules="[{ pattern: /^(5|40|[1-3][0-9])$/, required: true, message: '可选范围：5~40' }]"
         />
         <div style="margin: 16px;">
           <van-button round block type="info" @click="changeTableLayout">确定</van-button>
@@ -36,7 +36,7 @@
           maxlength="3"
           label="人物生命"
           placeholder="可选范围：0~99"
-          :rules="[{ pattern: /^[0-99]$/, message: '请输入小于99的数字' }]"
+          :rules="[{ pattern: /^[0-99]$/, message: '可选范围：0~99' }]"
         />
         <div style="margin: 16px;">
           <van-button round block type="info" @click="$refs.advancedOptions.show()">确定</van-button>

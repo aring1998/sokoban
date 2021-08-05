@@ -30,20 +30,46 @@
             })
           "
         >
+          <!-- 地图缩略图 -->
           <div class="map-thumbnail">
             <game-content :gameMap="item.mapData"></game-content>
           </div>
           <div class="map-intro">
             <span class="name">{{ item.mapName }}</span>
             <span class="creator">{{ item.creator }}</span>
+            <!-- 点赞/收藏/分享 -->
             <div class="tool-bar">
-              <van-icon name="good-job" v-show="item.hasPraise" @click.stop="like(index, item.id)" />
-              <van-icon name="good-job-o" v-show="!item.hasPraise" @click.stop="like(index, item.id)" />
-              <van-icon name="star" v-show="item.hasCollect" @click.stop="collect(index, item.id)" />
-              <van-icon name="star-o" v-show="!item.hasCollect" @click.stop="collect(index, item.id)" />
-              <van-icon name="share" v-show="index == shareIndex" @click.stop="share(item.mapName, index)" />
-              <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(item.mapName, index)" />
-              <span class="date">{{ item.time | formatDate}}</span>
+              <van-icon
+                name="good-job"
+                v-show="item.hasPraise"
+                @click.stop="like(index, item.id)"
+              />
+              <van-icon
+                name="good-job-o"
+                v-show="!item.hasPraise"
+                @click.stop="like(index, item.id)"
+              />
+              <van-icon
+                name="star"
+                v-show="item.hasCollect"
+                @click.stop="collect(index, item.id)"
+              />
+              <van-icon
+                name="star-o"
+                v-show="!item.hasCollect"
+                @click.stop="collect(index, item.id)"
+              />
+              <van-icon
+                name="share"
+                v-show="index == shareIndex"
+                @click.stop="share(index, item.mapName)"
+              />
+              <van-icon
+                name="share-o"
+                v-show="index != shareIndex"
+                @click.stop="share(index, item.mapName)"
+              />
+              <span class="date">{{ item.time | formatDate }}</span>
             </div>
           </div>
         </li>
@@ -72,8 +98,9 @@ export default {
       current: 1, // 页码
       size: 20, // 每页条数
       total: '', // 总条数
-      searchInfo: { // 搜索列表
-        mapName: '',  // 地图名
+      searchInfo: {
+        // 搜索列表
+        mapName: '', // 地图名
         creator: '', // 作者
         sort: 0, // 排序
         type: '' // 方式
@@ -99,7 +126,6 @@ export default {
           for (let i = 0; i < 99; i++) {
             if (window.localStorage.getItem('map' + i)) {
               this.mapData.push(JSON.parse(window.localStorage.getItem('map' + i)))
-              console.log(JSON.parse(window.localStorage.getItem('map' + i)));
             } else return
           }
         }
@@ -119,14 +145,13 @@ export default {
         params: {
           size: this.size, // 条数
           current: this.current, // 页码
-          ...this.searchInfo, // 展开搜索参数
+          ...this.searchInfo // 展开搜索参数
         }
+      }).then(res => {
+        this.total = res.data.total // 获取总条数
+        this.mapData = res.data.records // 地图数据赋值
+        this.$toast.clear()
       })
-        .then(res => {
-          this.total = res.data.total // 获取总条数
-          this.mapData = res.data.records // 地图数据赋值
-          this.$toast.clear()
-        })
     },
     // 分页页码改变时触发
     changePage(value) {
@@ -138,37 +163,35 @@ export default {
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `like/${id}`,
-        methods: 'GET',
+        methods: 'GET'
+      }).then(res => {
+        this.$toast.clear()
+        if (res.code == 0) {
+          this.$toast.success({ message: res.msg, duration: 500 })
+          // 修改列表数据，以展示不同的点赞图标
+          if (res.data) this.mapData[index].hasPraise = true
+          else this.mapData[index].hasPraise = false
+        }
       })
-        .then(res => {
-          this.$toast.clear()
-          if (res.code == 0) {
-            this.$toast.success({ message: res.msg, duration: 500 })
-            // 修改列表数据，以展示不同的点赞图标
-            if (res.data) this.mapData[index].hasPraise = true
-            else this.mapData[index].hasPraise = false
-          }
-        })
     },
     // 收藏
     collect(index, id) {
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `collect/${id}`,
-        methods: 'GET',
+        methods: 'GET'
+      }).then(res => {
+        this.$toast.clear()
+        if (res.code == 0) {
+          this.$toast.success({ message: res.msg, duration: 500 })
+          // 修改列表数据，以展示不同的收藏图标
+          if (res.data) this.mapData[index].hasCollect = true
+          else this.mapData[index].hasCollect = false
+        }
       })
-        .then(res => {
-          this.$toast.clear()
-          if (res.code == 0) {
-            this.$toast.success({ message: res.msg, duration: 500 })
-            // 修改列表数据，以展示不同的收藏图标
-            if (res.data) this.mapData[index].hasCollect = true
-            else this.mapData[index].hasCollect = false
-          }
-        })
     },
     // 分享
-    share(name, index) {
+    share(index, name) {
       this.shareIndex = index
       this.$copyText(name)
       this.$notify({ type: 'success', message: '已复制地图名到剪贴板，快去分享给好友吧！' })
@@ -277,5 +300,5 @@ export default {
 }
 .van-pagination__item .van-pagination__item--active .van-pagination__page .van-hairline {
   background-color: var(--mainColor);
-} 
+}
 </style>
