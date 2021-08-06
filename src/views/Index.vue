@@ -15,7 +15,7 @@
     </div>
     <!-- 选关弹窗 -->
     <white-popover class="choice-level" ref="level">
-      <van-tabs v-model="levelTab" color="var(--mainColor)">
+      <van-tabs v-model="levelTab" color="var(--mainColor)" swipeable>
         <van-tab title="基础关卡">
           <ul>
             <li
@@ -50,7 +50,7 @@
     </white-popover>
     <!-- 关于游戏弹窗 -->
     <white-popover class="index-intro" ref="intro">
-      <van-tabs v-model="aboutGameTab" color="var(--mainColor)">
+      <van-tabs v-model="aboutGameTab" color="var(--mainColor)" swipeable>
         <van-tab title="游戏玩法" class="index-intro-item">
           <span>
             &emsp;通过虚拟手柄<img src="~@/assets/img/index-intro/handle.png" alt="" />

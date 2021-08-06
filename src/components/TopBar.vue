@@ -26,7 +26,7 @@
     </popover>
     <!-- 登录弹窗 -->
     <popover ref="login" class="login">
-      <van-tabs v-model="tabIndex" color="var(--mainColor)" v-if="$store.state.username == ''">
+      <van-tabs v-model="tabIndex" color="var(--mainColor)" v-if="$store.state.username == ''" swipeable>
         <van-tab title="登录">
           <van-form @submit="login">
             <van-field
@@ -84,7 +84,7 @@
           </van-form>
         </van-tab>
       </van-tabs>
-       <van-tabs v-model="tabIndex" color="var(--mainColor)" v-else>
+       <van-tabs v-model="tabIndex" color="var(--mainColor)" v-else swipeable>
         <van-tab title="个人信息">
           <span>用户名：{{ $store.state.username }}</span>
         </van-tab>

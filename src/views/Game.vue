@@ -108,10 +108,10 @@ export default {
         creator: store.state.username || ''
       },
       keepMove: null, // 持续移动定时器
-      initStatus: { // 初始状态
+      initStatus: { // 初始人物状态
         poisoning: false, // 是否中毒
       },
-      status: null,
+      status: null, // 人物当前状态
       statusRecord: [] // 人物状态记录
     }
   },
@@ -152,11 +152,6 @@ export default {
       case 'created': {
         this.gameMap = this.$route.params.gameMap
         this.initLife = +this.$route.params.life || 0
-        break
-      }
-      case undefined: {
-        this.$notify({ type: 'danger', message: '请先选关哦~' })
-        this.$router.push('/index')
         break
       }
     }
