@@ -98,7 +98,7 @@ import Popover from '@/components/Popover'
 export default {
   data() {
     return {
-      gameMapForm: {  // 地图设置项
+      gameMapForm: { // 地图设置项
         row: null,
         column: null
       },
@@ -112,10 +112,10 @@ export default {
         [0, 1, 1, 1, 1, 1, 0],
         [0, 0, 0, 0, 0, 0, 0]
       ],
-      choiceRow: 0,  // 选中行
-      choiceColumn: 0,  // 选中列
-      elIndex: null,  // 元素对应索引
-      clickCellType: null  // 点击布置元素类型
+      choiceRow: 0, // 选中行
+      choiceColumn: 0, // 选中列
+      elIndex: null, // 元素对应索引
+      clickCellType: null // 点击布置元素类型
     }
   },
   components: {
@@ -128,8 +128,7 @@ export default {
     if (this.$route.params.gameMap) {
       this.gameMap = this.$route.params.gameMap
       this.advancedForm.life = this.$route.params.life
-    }
-    else this.$refs.gameMapLayout.show()
+    } else this.$refs.gameMapLayout.show()
   },
   methods: {
     // 获取地图元素
@@ -172,13 +171,15 @@ export default {
       let player = 0
       let box = 0
       let end = 0
-      for (let i in this.gameMap) {
-        for (let j in this.gameMap[i]) {
-          switch(this.gameMap[i][j]) {
+      let singlePortalEntry = 0
+      let singlePortalExit = 0
+      for (let y in this.gameMap) {
+        for (let x in this.gameMap[y]) {
+          switch (this.gameMap[y][x]) {
             case 2: {
               player++
               if (player > 1) {
-                this.$notify({type: 'danger', message:'人物不能超过一个！'})
+                this.$notify({ type: 'danger', message: '人物不能超过一个！' })
                 return false
               }
               break
@@ -194,20 +195,32 @@ export default {
             case 5:
             case 6: {
               if (this.advancedForm.life < 1) {
-                this.$notify({type: 'danger', message:'有攻击性元素时，人物生命值不得为零！'})
+                this.$notify({ type: 'danger', message: '有攻击性元素时，人物生命值不得为零！' })
                 this.$refs.advancedOptions.show()
                 return false
               }
+            }
+            case 10: {
+              singlePortalEntry++
+              break
+            }
+            case 11: {
+              singlePortalExit++
+              break
             }
           }
         }
       }
       if (!player) {
-        this.$notify({type: 'danger', message:'不能没有人物！'})
+        this.$notify({ type: 'danger', message: '不能没有人物！' })
         return false
       }
       if (end < box) {
-        this.$notify({type: 'danger', message:'终点数量不应小于箱子数量！'})
+        this.$notify({ type: 'danger', message: '终点数量不应小于箱子数量！' })
+        return false
+      }
+      if ((singlePortalEntry > 0 && singlePortalExit === 0) || (singlePortalEntry === 0 && singlePortalExit > 0)) {
+        this.$notify({ type: 'danger', message: '传送门入口和传送门出口必须同时存在！' })
         return false
       }
       return true
