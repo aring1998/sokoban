@@ -167,9 +167,9 @@ export default {
       this.endCounter = 0
       this.step = 0
       this.status = deepCloneObj(this.initStatus) // 对象深拷贝
-      // 调用子组件分离方法
+      // 调用子组件分离地图方法
       this.$refs.game.separateMap(this.gameMap)
-      // 从子组件获取数据
+      // 从子组件浅拷贝数据
       this.staticMap = this.$refs.game.staticMap
       this.activeMap = this.$refs.game.activeMap
 
@@ -256,7 +256,7 @@ export default {
       switch (staticTarget) {
         // 碰墙
         case 0: return
-        // 碰地刺
+        // 碰地刺/火
         case 5:
         case 6: {
           this.life--
@@ -271,6 +271,12 @@ export default {
         case 8: {
           this.status.poisoning = true
           Vue.set(this.staticMap[setY], setX, 1)  // 消除蘑菇
+          break
+        }
+        // 碰弹簧
+        case 9: {
+          this.move(direction, step * 3)
+          return
         }
       }
 

@@ -84,6 +84,10 @@
   background-image: url('~@/assets/img/theme/forest/toadstool.png');
 }
 
+.theme-forest .spring {
+  background-image: url('~@/assets/img/theme/forest/spring.png');
+}
+
 .theme-forest .player {
   background-image: url('~@/assets/img/theme/forest/player.png');
 }

@@ -3,7 +3,7 @@
     <top-bar>
       <van-icon name="question-o" @click="$refs.intro.show()" />
     </top-bar>
-    <div class="choosebox" :class="{ show: ifChoice }">
+    <div class="choosebox">
       <p class="choosebox-title">PUSH THE BOX!</p>
       <button class="choosebtn" @click="$refs.level.show()">选择关卡</button>
       <button class="choosebtn" @click="$router.push('/workshop')">
@@ -79,12 +79,16 @@
           <a href="http://wpa.qq.com/msgrd?v=3&uin=1303340995&site=qq&menu=yes">点击这里联系作者</a>
         </van-tab>
         <van-tab title="关于项目" class="index-intro-item">
-          <span>&emsp;该项目为开源项目，欢迎开发者参考学习，并且无比期盼您能加入我们，项目地址如下：</span>
-          <a href="https://gitee.com/aring1998/sokoban">https://gitee.com/aring1998/sokoban</a>
-          <p>也欢迎您为我们点一个star<van-icon name="star-o" color="orange" /></p>
+          <p>&emsp;这是作者在学习前端一年后创建的第一个开源项目，目前项目仍在优化推进阶段，真挚地恳请您提出宝贵意见。</p>
+          <p>&emsp;项目开源，欢迎开发者参考学习，并且无比期盼您的参与，项目地址如下：</p>
+          <a href="https://gitee.com/aring1998/sokoban"><span>&emsp;https://gitee.com/aring1998/sokoban</span></a>
+          <p>&emsp;同时也欢迎您前来为我们点一个star<van-icon name="star-o" color="orange" /></p>
+          <p>&emsp;开发过程十分感谢以下小伙伴(按首字母排序)：</p>
+          <p style="font-weight: 600">&emsp;funzeros, lyl, wangz, yuanyuanna</p>
           <br>
-          <p>团队成员(按首字母排序)：</p>
-          <p style="font-weight: 600">aring, funzeros, lyl, wangz, yuanyuanna</p>
+          <p>&emsp;祝您游戏愉快！</p>
+          <br><br>
+          <p style="text-align: right;font-weight: 600">aring</p>
         </van-tab>
       </van-tabs>
     </white-popover>
@@ -101,10 +105,8 @@ import WhitePopover from '@/components/WhitePopover'
 export default {
   data() {
     return {
-      ifChoice: false,
       basic: basic,
       expand: expand,
-      level: '',
       aboutGameTab: 0,
       levelTab: 0,
       mapManual: mapEl
@@ -113,25 +115,6 @@ export default {
   components: {
     TopBar,
     WhitePopover
-  },
-  methods: {
-    //选择关卡按钮弹出
-    choiceLevel() {
-      this.ifChoice = !this.ifChoice
-      this.level = ''
-    },
-    //跳转游戏页面
-    toGame() {
-      if (this.level === '') {
-        this.$notify({ type: 'danger', message: '请先选择关卡！' })
-      } else {
-        this.$router.push({
-          name: 'game',
-          query: { type: 'level' },
-          params: { level: this.level }
-        })
-      }
-    }
   }
 }
 </script>

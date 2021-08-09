@@ -8,11 +8,7 @@
           @click="getColumnIndex(xIndex)"
           :key="xIndex"
           class="game-cell"
-          :class="
-            $route.path == '/game'
-              ? randerClass(yIndex, xIndex)
-              : getmapElClass(item)
-          "
+          :class="$route.path == '/game' ? randerClass(yIndex, xIndex) : getMapElClass(item)"
         ></div>
       </div>
     </div>
@@ -42,7 +38,7 @@ export default {
     }
   },
   methods: {
-    getmapElClass(value) {
+    getMapElClass(value) {
       return mapElClass(value)
     },
     // 分离地图
@@ -50,28 +46,6 @@ export default {
       // 接收父组件的地图数据
       this.staticMap = deepClone2Arr(value)
       this.activeMap = deepClone2Arr(value)
-      // 分离静止层
-      for (let y in value) {
-        for (let x in value[y]) {
-          switch (value[y][x]) {
-            case 2:
-            case 3: {
-              this.staticMap[y][x] = 1
-            }
-          }
-        }
-      }
-      // 分离活动层
-      for (let y in value) {
-        for (let x in value[y]) {
-          switch (value[y][x]) {
-            case 0:
-            case 4: {
-              this.activeMap[y][x] = 1
-            }
-          }
-        }
-      }
     },
     // 渲染地图
     randerClass(y, x) {
@@ -103,6 +77,10 @@ export default {
           res += 'toadstool'
           break
         }
+        case 9: {
+          res += 'spring'
+          break
+        }
       }
       // 活动层渲染
       switch (this.activeMap[y][x]) {
@@ -132,7 +110,9 @@ export default {
   overflow: auto;
   max-height: 360px;
   max-width: 360px;
-  &::-webkit-scrollbar { width: 0 !important }
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
   .game-table {
     background-size: 30px 30px;
     background-repeat: repeat;
@@ -152,7 +132,7 @@ export default {
 }
 
 /* 作为缩略图 */
-.map-thumbnail  {
+.map-thumbnail {
   .game-container {
     .game-table {
       background-size: 8px 8px;

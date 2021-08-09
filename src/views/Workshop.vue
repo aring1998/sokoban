@@ -206,6 +206,7 @@ export default {
 .workshop {
   height: 100vh;
   background: var(--mainColor);
+  overflow: hidden;
   .workshop-searchMap {
     background: var(--mainColor);
     .van-field {
