@@ -88,6 +88,14 @@
   background-image: url('~@/assets/img/theme/forest/spring.png');
 }
 
+.theme-forest .single-portal-entry {
+  background-image: url('~@/assets/img/theme/forest/single-portal-entry.png');
+}
+
+.theme-forest .single-portal-exit {
+  background-image: url('~@/assets/img/theme/forest/single-portal-exit.png');
+}
+
 .theme-forest .player {
   background-image: url('~@/assets/img/theme/forest/player.png');
 }

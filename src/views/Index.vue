@@ -199,6 +199,7 @@ export default {
     padding: 10px;
     background-color: #fff;
     height: calc(90vh - 150px);
+    overflow: auto;
     li {
       margin-bottom: 10px;
     }

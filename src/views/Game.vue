@@ -112,7 +112,8 @@ export default {
         poisoning: false, // 是否中毒
       },
       status: null, // 人物当前状态
-      statusRecord: [] // 人物状态记录
+      statusRecord: [], // 人物状态记录
+      singlePortalExit: [] // 单向传送门出口
     }
   },
   components: {
@@ -176,13 +177,16 @@ export default {
       // 获取人物坐标、终点个数
       for (let y in this.gameMap) {
         for (let x in this.gameMap[y]) {
-          if (this.gameMap[y][x] == 2) {
+          if (this.gameMap[y][x] === 2) {
             console.log('找到玩家的坐标：', x, y)
             this.playerX = +x
             this.playerY = +y
           }
-          if (this.gameMap[y][x] == 4) {
+          if (this.gameMap[y][x] === 4) {
             this.endCounter++
+          }
+          if (this.gameMap[y][x] === 11) {
+            this.singlePortalExit.push({y, x})
           }
         }
       }
@@ -261,7 +265,7 @@ export default {
         case 6: {
           this.life--
           if (this.life == 0) {
-            this.$notify({ type: 'danger', message: 'you dead!'})
+            this.$notify({ type: 'danger', message: 'you dead!' })
             this.onReset()
             return
           }
@@ -277,6 +281,21 @@ export default {
         case 9: {
           this.move(direction, step * 3)
           return
+        }
+        // 传送门入口
+        case 10: {
+          // 随机指定传送出口
+          const exit = this.singlePortalExit[Math.floor(Math.random() * this.singlePortalExit.length)]
+          // 修改目标点
+          setY = +exit.y
+          setX = +exit.x
+          // 修改玩家坐标
+          Vue.set(this.activeMap[this.playerY], this.playerX, 1)
+          this.playerY = +exit.y
+          this.playerX = +exit.x
+          // 非正常移动，移动步数清零
+          step = 0
+          break
         }
       }
 

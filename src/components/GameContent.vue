@@ -81,6 +81,14 @@ export default {
           res += 'spring'
           break
         }
+        case 10: {
+          res += 'single-portal-entry'
+          break
+        }
+        case 11: {
+          res += 'single-portal-exit'
+          break
+        }
       }
       // 活动层渲染
       switch (this.activeMap[y][x]) {

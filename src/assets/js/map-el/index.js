@@ -86,6 +86,24 @@ export const mapEl= [
       '触碰时无视面前第一格障碍物移动到目标方向两格位置',
       '若目标点为障碍物，则不触发'
     ]
+  },
+  {
+    name: '单向传送门入口',
+    value: 10,
+    class: 'single-portal-entry',
+    intro: [
+      '与单向传送门出口联调',
+      '触碰后随机前往传送门出口位置'
+    ]
+  },
+  {
+    name: '单向传送门出口',
+    value: 11,
+    class: 'single-portal-exit',
+    intro: [
+      '与单向传送门入口联调',
+      '触碰时不会传送'
+    ]
   }
 ]
 
