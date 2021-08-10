@@ -174,7 +174,7 @@ export default {
       this.staticMap = this.$refs.game.staticMap
       this.activeMap = this.$refs.game.activeMap
 
-      // 获取人物坐标、终点个数
+      // 获取人物坐标、终点个数、单向传送门出口
       for (let y in this.gameMap) {
         for (let x in this.gameMap[y]) {
           if (this.gameMap[y][x] === 2) {
@@ -260,6 +260,8 @@ export default {
       switch (staticTarget) {
         // 碰墙
         case 0: return
+        // 空地
+        case 1: break
         // 碰地刺/火
         case 5:
         case 6: {
@@ -301,6 +303,8 @@ export default {
 
       // 判断活动层目标点
       switch (activeTarget) {
+        // 空地
+        case 1: break
         // 碰箱子
         case 3:
         case 7: {
@@ -365,9 +369,9 @@ export default {
       Vue.set(this.activeMap[setY], setX, 2)
       this.step++
 
-      // 设定移动后的玩家位置
-      if (direction == 'x') this.playerX += step
-      else this.playerY += step
+      // 设定移动后的玩家坐标
+      this.playerX = setX
+      this.playerY = setY
       
       // 大图追踪视角
       if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
@@ -398,20 +402,20 @@ export default {
     },
     // 撤回（可以连续撤回置第一步）
     onRegret() {
+      this.step--
       // 向子组件赋值，并重新浅拷贝
-      this.$refs.game.staticMap = deepClone2Arr(this.staticMapRecord[this.step - 1]) // 静止层
-      this.$refs.game.activeMap = deepClone2Arr(this.activeMapRecord[this.step - 1]) // 活动层
+      this.$refs.game.staticMap = deepClone2Arr(this.staticMapRecord[this.step]) // 静止层
+      this.$refs.game.activeMap = deepClone2Arr(this.activeMapRecord[this.step]) // 活动层
       this.staticMap = this.$refs.game.staticMap
       this.activeMap = this.$refs.game.activeMap
       this.staticMapRecord.pop()
       this.activeMapRecord.pop()
       // 读取记录中生命值
-      this.life = this.lifeRecord[this.step - 1]
+      this.life = this.lifeRecord[this.step]
       this.lifeRecord.pop()
       // 读取人物状态记录
-      this.status = deepCloneObj(this.statusRecord[this.step - 1])
+      this.status = deepCloneObj(this.statusRecord[this.step])
       this.statusRecord.pop()
-      this.step--
       // 撤回后重新获取玩家坐标
       for (let y in this.activeMap) {
         for (let x in this.activeMap[y]) {
@@ -457,7 +461,11 @@ export default {
           }))
           this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
           break
-        } else this.$notify({ type: 'error', message: '本地存储已达上限' })
+        }
+        if (i == 99) {
+          this.$notify({ type: 'error', message: '本地存储已达上限' })
+          return
+        }
       }
       this.$refs.saveMap.show()
       setTimeout(() => {
@@ -483,8 +491,6 @@ export default {
             setTimeout(() => {
               this.$router.push('/index')
             }, 3000)
-          } else {
-            this.$notify({ type: 'danger', message: res.msg })
           }
         })
     }
@@ -509,6 +515,8 @@ export default {
   width: 200px;
   height: 200px;
   margin: 0 auto;
+  font-size: 60px;
+  color: #fff;
   div {
     height: 33%;
     width: 100%;
@@ -516,10 +524,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  i {
-    font-size: 60px;
-    color: #fff;
   }
   .center {
     display: flex;

@@ -50,7 +50,7 @@
     <!-- 选择地图元素 -->
     <div class="map-el-container">
       <ul>
-        <li v-for="(item, index) of getMapEl()" :key="item.value" :class="{ active: index == elIndex }" @click="choiceMapEl(index, item.value)">
+        <li v-for="(item, index) of mapEl" :key="item.value" :class="{ active: index == elIndex }" @click="choiceMapEl(index, item.value)">
           <div
             class="map-el-img"
             :class="item.class"
@@ -115,7 +115,8 @@ export default {
       choiceRow: 0, // 选中行
       choiceColumn: 0, // 选中列
       elIndex: null, // 元素对应索引
-      clickCellType: null // 点击布置元素类型
+      clickCellType: null, // 点击布置元素类型
+      mapEl // 地图元素
     }
   },
   components: {
@@ -131,10 +132,6 @@ export default {
     } else this.$refs.gameMapLayout.show()
   },
   methods: {
-    // 获取地图元素
-    getMapEl() {
-      return mapEl
-    },
     // 更改表格布局
     changeTableLayout() {
       this.gameMap = []
@@ -261,33 +258,32 @@ export default {
 .create {
   background-color: var(--mainColor);
   height: 100vh;
-}
-
-.map-el-container {
-  background-color: rgba(255, 255, 255, 0.6);
-  height: 170px;
-  overflow: auto;
-  ul {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    justify-content: flex-start;
-    li {
+  .map-el-container {
+    background-color: rgba(255, 255, 255, 0.6);
+    height: 170px;
+    overflow: auto;
+    ul {
       display: flex;
-      flex-flow: column nowrap;
+      flex-flow: row wrap;
       align-items: center;
-      padding: 10px;
-      margin: 10px 0;
-      width: 20%;
-      .map-el-img {
-        height: 30px;
-        width: 30px;
-        background-size: 100% 100%;
+      justify-content: flex-start;
+      li {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        padding: 10px;
+        margin: 10px 0;
+        width: 20%;
+        .map-el-img {
+          height: 30px;
+          width: 30px;
+          background-size: 100% 100%;
+        }
       }
-    }
-    li.active {
-      background-color: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
+      li.active {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
     }
   }
 }

@@ -1,8 +1,8 @@
 <!-- 游戏地图 -->
 <template>
   <div class="game-container">
-    <div class="game-table">
-      <div class="game-row" v-for="(item, yIndex) in gameMap.length" :key="yIndex" @click="getRowIndex(yIndex)">
+    <div class="game-table" :class="{'table-border': gameMap.length > 12 || gameMap[0].length > 12}">
+      <div class="game-row" v-for="(item, yIndex) of gameMap" :key="yIndex" @click="getRowIndex(yIndex)">
         <div
           v-for="(item, xIndex) of gameMap[yIndex]"
           @click="getColumnIndex(xIndex)"
@@ -152,5 +152,9 @@ export default {
       }
     }
   }
+}
+
+.table-border {
+  border: 2px #eaeaea solid;
 }
 </style>
