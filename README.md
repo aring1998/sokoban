@@ -20,6 +20,7 @@
 #### 注意事项
 1. 需求概述可查阅[Demand](/docs/Demand.md)
 2. git提交日志请务必遵守[commitlint.config](/commitlint.config.js)内约定
+3. 了解接口及服务请访问[后台仓库](https://gitee.com/funzeros/box-man)
 
 #### 参与贡献
 1.  Fork 本仓库

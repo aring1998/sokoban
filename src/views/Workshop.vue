@@ -92,7 +92,7 @@ import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
 
 export default {
-  data: function() {
+  data() {
     return {
       mapData: [], // 地图数据
       current: 1, // 页码

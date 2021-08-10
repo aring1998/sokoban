@@ -23,6 +23,7 @@
     <div class="check-point">
       <van-button @click="onRegret" type="primary" size="mini" :disabled="this.activeMapRecord.length == 1">撤回</van-button>
       <van-button @click="onReset" type="primary" size="mini">重置</van-button>
+      <van-button @click="tipsShow = true" type="primary" size="mini">提示</van-button>
     </div>
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
@@ -71,6 +72,28 @@
         </div>
       </div>
     </popover>
+    <!-- 提示弹出层 -->
+    <van-popup
+      v-model="tipsShow"
+      closeable
+      position="bottom"
+      :style="{ height: '50%' }"
+    >
+      <div class="tips">
+        <div class="tips-container" v-if="basicTips[level]">
+          <span 
+            v-for="(item, index) of basicTips[level]" 
+            :key="index"
+            :class="processRecord[index] ? processRecord[index] == item ? 'right' : 'wrong' : ''"
+          >
+            {{ item == 0 ? '↑' : item == 1 ? '→' : i == 2 ? '↓' : item == 3 ? '←' : ''}}
+          </span>
+        </div>
+        <span v-else>
+          暂时还没有有人通过哦~
+        </span>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -79,6 +102,7 @@ import Vue from 'vue'
 import store from '@/store'
 
 import { basic, expand } from '@/assets/js/level/index'
+import { basicTips } from '@/assets/js/level-tips/index'
 import { request } from '@/network/request'
 import { deepCloneObj, deepClone2Arr, isEmptyObject } from '@/utils/index'
 
@@ -113,7 +137,10 @@ export default {
       },
       status: null, // 人物当前状态
       statusRecord: [], // 人物状态记录
-      singlePortalExit: [] // 单向传送门出口
+      singlePortalExit: [], // 单向传送门出口
+      tipsShow: false, // 提示弹出层
+      basicTips, // 基础关提示
+      processRecord: [] // 过程记录
     }
   },
   components: {
@@ -168,6 +195,7 @@ export default {
       this.endCounter = 0
       this.step = 0
       this.status = deepCloneObj(this.initStatus) // 对象深拷贝
+      this.processRecord = []
       // 调用子组件分离地图方法
       this.$refs.game.separateMap(this.gameMap)
       // 从子组件浅拷贝数据
@@ -243,11 +271,15 @@ export default {
         setX = this.playerX + step
         setBoxY = setY
         setBoxX = setX + step
+        if (step > 0) this.processRecord.push(1)
+        else this.processRecord.push(3)
       } else {
         setY = this.playerY + step
         setX = this.playerX
         setBoxY = setY + step
         setBoxX = setX
+        if (step > 0) this.processRecord.push(0)
+        else this.processRecord.push(2)
       }
 
       // 判断是否超出单元格
@@ -416,6 +448,7 @@ export default {
       // 读取人物状态记录
       this.status = deepCloneObj(this.statusRecord[this.step])
       this.statusRecord.pop()
+      this.processRecord.pop()
       // 撤回后重新获取玩家坐标
       for (let y in this.activeMap) {
         for (let x in this.activeMap[y]) {
@@ -565,6 +598,19 @@ export default {
       font-size: 18px;
       font-weight: 600;
     }
+  }
+}
+
+// 提示弹窗
+.tips {
+  padding: 50px 20px;
+  font-size: 30px;
+  font-weight: 900;
+  .right {
+    color: #07c160;
+  }
+  .wrong {
+    color: #ee0a24;
   }
 }
 </style>
