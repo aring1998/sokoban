@@ -1,26 +1,31 @@
 <!-- 游戏地图 -->
 <template>
-  <table class="game-container">
-    <tr v-for="(item, index) in gameMap.length" :key="index" @click="getRowIndex(index)">
-      <td
-        v-for="(item, index) of gameMap[index]"
-        @click="getColumnIndex(index)"
-        :key="index"
-        :class="{
-          'game-cell': true,
-          'wall': item == 0,
-          'floor': item == 1,
-          'player': item == 2 || item == 6,
-          'box': item == 3 || item == 5,
-          'end': item == 4 || item == 5 || item == 6,
-        }"
-      ></td>
-    </tr>
-  </table>
+  <div class="game-container">
+    <div class="game-table" :class="{'table-border': gameMap.length > 12 || gameMap[0].length > 12}">
+      <div class="game-row" v-for="(item, yIndex) of gameMap" :key="yIndex" @click="getRowIndex(yIndex)">
+        <div
+          v-for="(item, xIndex) of gameMap[yIndex]"
+          @click="getColumnIndex(xIndex)"
+          :key="xIndex"
+          class="game-cell"
+          :class="$route.path == '/game' ? randerClass(yIndex, xIndex) : getMapElClass(item)"
+        ></div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import { deepClone2Arr } from '@/utils/index'
+import { mapElClass } from '@/assets/js/map-el/index'
+
 export default {
+  data() {
+    return {
+      staticMap: [],
+      activeMap: []
+    }
+  },
   props: {
     gameMap: Array,
     getColumnIndex: {
@@ -31,52 +36,125 @@ export default {
       type: Function,
       default: () => {}
     }
+  },
+  methods: {
+    getMapElClass(value) {
+      return mapElClass(value)
+    },
+    // 分离地图
+    separateMap(value) {
+      // 接收父组件的地图数据
+      this.staticMap = deepClone2Arr(value)
+      this.activeMap = deepClone2Arr(value)
+    },
+    // 渲染地图
+    randerClass(y, x) {
+      if (this.staticMap.length == 0) return
+      let res = ''
+      // 静止层渲染
+      switch (this.staticMap[y][x]) {
+        case 0: {
+          res += 'wall'
+          break
+        }
+        case 1: {
+          res += ''
+          break
+        }
+        case 4: {
+          res += 'end'
+          break
+        }
+        case 5: {
+          res += 'spikeweed'
+          break
+        }
+        case 6: {
+          res += 'fire'
+          break
+        }
+        case 8: {
+          res += 'toadstool'
+          break
+        }
+        case 9: {
+          res += 'spring'
+          break
+        }
+        case 10: {
+          res += 'single-portal-entry'
+          break
+        }
+        case 11: {
+          res += 'single-portal-exit'
+          break
+        }
+      }
+      // 活动层渲染
+      switch (this.activeMap[y][x]) {
+        case 2: {
+          res += ' player'
+          break
+        }
+        case 3: {
+          res += ' box'
+          break
+        }
+        case 7: {
+          res += ' ice-box'
+          break
+        }
+      }
+      return res
+    }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 .game-container {
-  border-collapse: collapse;
-  border-spacing: 0;
-  background-size: 30px 30px;
-  background-repeat: repeat;
-  background-image: url('~@/assets/img/block.gif');
+  text-align: center;
   margin: 0 auto;
+  overflow: auto;
+  max-height: 360px;
+  max-width: 360px;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
+  .game-table {
+    background-size: 30px 30px;
+    background-repeat: repeat;
+    background-image: url('~@/assets/img/theme/forest/floor.png');
+    display: inline-block;
+    text-align: center;
+    .game-row {
+      display: flex;
+      .game-cell {
+        height: 30px;
+        width: 30px;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
+    }
+  }
 }
 
-.game-container td {
-  height: 30px;
-  width: 30px;
-  padding: 0;
+/* 作为缩略图 */
+.map-thumbnail {
+  .game-container {
+    .game-table {
+      background-size: 8px 8px;
+      .game-row {
+        .game-cell {
+          height: 8px;
+          width: 8px;
+        }
+      }
+    }
+  }
 }
 
-.game-cell {
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-}
-
-.floor {
-  background-image: url('~@/assets/img/block.gif');
-}
-
-.box {
-  background-image: url('~@/assets/img/box.png');
-}
-
-.wall {
-  background-image: url('~@/assets/img/wall.png');
-}
-
-.end {
-  background-image: url('~@/assets/img/ball.png');
-}
-
-.player {
-  background-image: url('~@/assets/img/down.png');
-}
-
-.box.end {
-  background-image: url('~@/assets/img/end-box.png');
+.table-border {
+  border: 2px #eaeaea solid;
 }
 </style>

@@ -1,7 +1,9 @@
-export const checkClass = (el, value) => {
-  return el.classList.toString().indexOf(value)
+// 深拷贝对象
+export const deepCloneObj = obj => {
+  return JSON.parse(JSON.stringify(obj))
 }
 
+<<<<<<< HEAD
 export const isArr = (arr) => {
   return Object.prototype.toString.call(arr) === '[object Array]'
 }
@@ -20,3 +22,22 @@ export const deepClone = (quote) => {
   }
   return result;
 }
+=======
+// 深拷贝二维数组
+export const deepClone2Arr = arr => {
+  let out = []
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] instanceof Array) {
+      out[i] = deepClone2Arr(arr[i])
+    } else {
+      out[i] = arr[i]
+    }
+  }
+  return out
+}
+
+// 判断是否为空对象
+export const isEmptyObject = (data) => {
+  return JSON.stringify(data) == '{}'
+}
+>>>>>>> master

@@ -9,23 +9,24 @@
 .out-title {
   font-size: 20px;
   animation: change 5s infinite;
+  font-weight: 900;
   margin: 0 auto 50px;
   text-align: center;
 }
 @keyframes change {
   0% {
-    color: #c89c4b;
+    color: #FF3300;
   }
   25% {
-    color: #c779d0;
+    color: #FFCC33;
   }
   50% {
-    color: rgb(194, 66, 66);
+    color: #FFFF66;
   }
   75% {
-    color: rgb(110, 143, 18);
+    color: #33CCFF;
   }
   100% {
-    color: rgb(48, 190, 60);
+    color: #FF3300;
   }
 }

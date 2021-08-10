@@ -1,36 +1,70 @@
 <template>
-  <div class="sokoban">
+  <div class="sokoban" v-cloak>
     <!-- 顶部导航栏 -->
     <top-bar></top-bar>
+    <!-- 人物生命值 -->
+    <div class="life" v-if="initLife > 0">
+      <span>当前生命：</span>
+      <span v-if="life < 12">
+        <van-icon name="like" color="red" v-for="(item, index) in life" :key="index" />
+      </span>
+      <span v-else>
+        <van-icon name="like" color="red" />
+        <span>&ensp;× {{ life }}</span>
+      </span>
+    </div>
     <!-- 游戏内容 -->
-    <game-content :game-map="gameMap"></game-content>
-    <div class="checkpoint">
-      <van-button class="regret" @click="onRegret" type="primary" size="mini">悔棋</van-button>
-      <van-button class="reset" @click="onReset" type="primary" size="mini">重置</van-button>
+    <game-content :game-map="gameMap" ref="game"></game-content>
+    <!-- 步数 -->
+    <div class="step">
+      <span>当前步数：{{ step }}</span>
+    </div>
+    <!-- 行为控制 -->
+    <div class="check-point">
+      <van-button @click="onRegret" type="primary" size="mini" :disabled="this.activeMapRecord.length == 1">撤回</van-button>
+      <van-button @click="onReset" type="primary" size="mini">重置</van-button>
     </div>
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
       <div class="top">
-        <van-icon name="arrow-up" @click="move('y', -1)" />
+        <van-icon name="arrow-up" @touchstart.prevent="move('y', -1)" @touchend.prevent="stopMove()" />
       </div>
       <div class="center">
-        <van-icon name="arrow-left" @click="move('x', -1)" />
-        <van-icon name="arrow" @click="move('x', 1)" />
+        <van-icon name="arrow-left" @touchstart.prevent="move('x', -1)" @touchend.prevent="stopMove()" />
+        <van-icon name="arrow" @touchstart.prevent="move('x', 1)" @touchend.prevent="stopMove()" />
       </div>
       <div class="bottom">
-        <van-icon name="arrow-down" @click="move('y', 1)" />
+        <van-icon name="arrow-down" @touchstart.prevent="move('y', 1)" @touchend.prevent="stopMove()" />
       </div>
     </div>
-    <div class="checkpoint">
-      <van-button @click="changeLevel(-1)" type="primary" size="mini">上一关</van-button>
-      <van-button @click="changeLevel(1)" type="primary" size="mini">下一关</van-button>
+    <!-- 切关控制：选关进入显示 -->
+    <div class="check-point" v-if="$route.query.type == 'level'">
+      <van-button @click="changeLevel(-1)" type="primary" size="mini" :disabled="level == 0">上一关</van-button>
+      <van-button @click="changeLevel(1)" type="primary" size="mini" :disabled="level == levelCounter" >下一关</van-button>
     </div>
-    <popover v-show="popShow" v-if="this.$route.params.type == 'created'">
-      <div class="test-pop">
+    <!-- 编辑控制：创建地图进入显示 -->
+    <div class="check-point" v-if="$route.query.type == 'created'">
+      <van-button @click="$router.push({ name: 'create', params: { gameMap, life: initLife } })" type="info" size="mini">返回编辑</van-button>
+      <van-button @click="$router.push('/index')" type="danger" size="mini">放弃编辑</van-button>
+    </div>
+    <popover ref="saveMap" v-if="this.$route.query.type == 'created'">
+      <div class="test-map-pop">
         <span>您已完成该地图的测试</span>
         <span>您可以选择将地图存储</span>
         <span>我们需要更多有趣的地图</span>
         <span>如果可以请选择上传云端</span>
+        <van-field
+          v-model="uploadMap.mapName"
+          maxlength="32"
+          label="地图名"
+          placeholder="请为您的地图取个名字，最长32字"
+        />
+        <van-field
+          v-model="uploadMap.creator"
+          maxlength="10"
+          label="作者"
+          placeholder="请输入您的昵称，最长10字"
+        />
         <div>
           <button @click="saveLocal">存在本地</button>
           <button @click="saveServe">上传云端</button>
@@ -42,11 +76,12 @@
 
 <script>
 import Vue from 'vue'
+import store from '@/store'
 
-import { official } from '@/assets/js/level'
+import { basic, expand } from '@/assets/js/level/index'
 import { request } from '@/network/request'
+import { deepCloneObj, deepClone2Arr, isEmptyObject } from '@/utils/index'
 
-import { deepClone } from '../utils'
 import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
 import Popover from '@/components/Popover'
@@ -54,55 +89,125 @@ import Popover from '@/components/Popover'
 export default {
   data() {
     return {
-      level: 0,
-      gameMap: official[0], // 游戏地图
+      level: 0, // 关卡级数
+      levelCounter: 0, // 关卡总量
+      gameMap: [], // 游戏地图
+      staticMap: [], // 静止层地图
+      activeMap: [], // 活动层地图
+      staticMapRecord: [], // 静止层每步地图记录
+      activeMapRecord: [], // 活动层每步地图记录
+      step: 0, // 步数
+      endCounter: 0, // 终点个数
+      initLife: 0, // 初始生命
+      life: 0, // 人物生命
+      lifeRecord: [], // 生命记录
       playerX: 0, // 人物x轴坐标
       playerY: 0, // 人物y轴坐标
-      endCounter: 0, // 终点个数
-      popShow: false, // 弹出框是否展示
-      cloneBaseData: [],
-      mark: false
+      uploadMap: { // 上传地图表单
+        mapName: '',
+        creator: store.state.username || ''
+      },
+      keepMove: null, // 持续移动定时器
+      initStatus: { // 初始人物状态
+        poisoning: false, // 是否中毒
+      },
+      status: null, // 人物当前状态
+      statusRecord: [], // 人物状态记录
+      singlePortalExit: [] // 单向传送门出口
     }
   },
   components: {
     TopBar,
     GameContent,
-    Popover,
+    Popover
   },
   mounted() {
-    this.cloneBaseData = deepClone(official);
-    //判断是否通过创意工坊进入
+    // 页面刷新，返回首页
+    if (isEmptyObject(this.$route.params)) {
+      this.$router.push('/index')
+      return
+    }
+    // 判断入口
+    switch (this.$route.query.type) {
+      // 由选关进入
+      case 'level': {
+        this.level = this.$route.params.level
+        // 判断地图包
+        switch (this.$route.query.pack) {
+          case 'basic': {
+            this.gameMap = deepClone2Arr(basic[this.level])
+            this.levelCounter = basic.length - 1
+            break
+          }
+          case 'expand': {
+            this.gameMap = deepClone2Arr(expand[this.level].gameMap)
+            this.initLife = expand[this.level].life
+            this.levelCounter = expand.length - 1
+            break
+          }
+        }
+        break
+      }
+      // 由测试地图/创意工坊进入
+      case 'workshop':
+      case 'created': {
+        this.gameMap = this.$route.params.gameMap
+        this.initLife = +this.$route.params.life || 0
+        break
+      }
+    }
 
-    //判断是否通过选关进入
-    if (this.$route.query.level !== undefined) {
-      // this.mark = `T-${this.$route.query.level}`;
-      this.changeLevel(this.$route.query.level - 1);
-    }
-    // 判断是否测试地图
-    if (this.$route.params.type == 'created') {
-      console.log('cre')
-      this.gameMap = this.$route.params.gameMap
-    }
     // 游戏初始化
-    this.init(this.gameMap)
+    this.init()
   },
   methods: {
     // 初始化
-    init(gameMap) {
+    init() {
+      // 重置生命、终点个数，步数
+      this.life = this.initLife
       this.endCounter = 0
-      // 获取人物坐标、终点个数
-      for (let y in gameMap) {
-        for (let x in gameMap[y]) {
-          if (gameMap[y][x] == 2) {
+      this.step = 0
+      this.status = deepCloneObj(this.initStatus) // 对象深拷贝
+      // 调用子组件分离地图方法
+      this.$refs.game.separateMap(this.gameMap)
+      // 从子组件浅拷贝数据
+      this.staticMap = this.$refs.game.staticMap
+      this.activeMap = this.$refs.game.activeMap
+
+      // 获取人物坐标、终点个数、单向传送门出口
+      for (let y in this.gameMap) {
+        for (let x in this.gameMap[y]) {
+          if (this.gameMap[y][x] === 2) {
             console.log('找到玩家的坐标：', x, y)
-            this.playerX = x
-            this.playerY = y
+            this.playerX = +x
+            this.playerY = +y
           }
-          if (gameMap[y][x] == 4) {
+          if (this.gameMap[y][x] === 4) {
             this.endCounter++
+          }
+          if (this.gameMap[y][x] === 11) {
+            this.singlePortalExit.push({y, x})
           }
         }
       }
+
+      // 大图中初始移动到玩家视角
+      this.$nextTick(() => {
+        if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
+          if (this.playerX * 30 >= 180) {
+            this.$refs.game.$el.scrollLeft = this.playerX * 30 - 165
+          }
+          if (this.playerY * 30 >= 180) {
+            this.$refs.game.$el.scrollTop = this.playerY * 30 - 165
+          }
+        }
+      })
+
+      // 深拷贝初始地图
+      this.staticMapRecord = [deepClone2Arr(this.staticMap)]
+      this.activeMapRecord = [deepClone2Arr(this.activeMap)]
+      this.lifeRecord = [this.initLife]
+      this.statusRecord = [deepCloneObj(this.status)]
     },
     // 玩家移动
     move(direction, step) {
@@ -110,28 +215,36 @@ export default {
        * 变量名
        * @direction: 轴方向
        * @step: 步数
-       * @fromPlace: 出发点
-       * @toPlace: 目标点
+       * @staticTarget: 静止层目标点
+       * @activeTarget: 活动层目标点
+       * @staticBoxTarget: 静止层箱子目标点
+       * @activeBoxTarget: 活动层箱子目标点
        * @setY: 目标点Vue.set中object的index值
        * @setX: 目标点Vue.set中key值
        * @setBoxY: 箱子移动点Vue.set中object的index值
        * @setBoxX: 箱子移动点Vue.set中key值
-       * @isDefault: 是否默认的移动方法
        */
 
+      // 长按持续移动
+      clearTimeout(this.keepMove)
+      this.keepMove = setTimeout(() => {
+        this.move(direction, step)
+      }, 300)
+
       // 声明初始变量
-      const fromPlace = this.gameMap[this.playerY][this.playerX]
-      let toPlace, boxPlace, setY, setX, setBoxY, setBoxX
-      let isDefault = true
+      let staticTarget, activeTarget, staticBoxTarget, activeBoxTarget, setY, setX, setBoxY, setBoxX
+
+      // 判断是否中毒
+      if (this.status.poisoning) step = -step
 
       // 判断方向
       if (direction == 'x') {
         setY = this.playerY
-        setX = +this.playerX + step
+        setX = this.playerX + step
         setBoxY = setY
         setBoxX = setX + step
       } else {
-        setY = +this.playerY + step
+        setY = this.playerY + step
         setX = this.playerX
         setBoxY = setY + step
         setBoxX = setX
@@ -139,127 +252,249 @@ export default {
 
       // 判断是否超出单元格
       if (setY < 0 || setY == this.gameMap[0].length || setX < 0 || setX == this.gameMap[0].length) return
-      else toPlace = this.gameMap[setY][setX]
+      
+      staticTarget = this.staticMap[setY][setX] // 获取静止层目标点的值
+      activeTarget = this.activeMap[setY][setX] // 获取活动层目标点的值
 
-      // 如果出发点是箱子抵达终点或人物在终点上
-      if (fromPlace == 5 || fromPlace == 6) Vue.set(this.gameMap[this.playerY], this.playerX, 4)
-      else Vue.set(this.gameMap[this.playerY], this.playerX, 1)
-
-      // 判断目标点
-      switch (toPlace) {
+      // 判断静止层目标点
+      switch (staticTarget) {
         // 碰墙
-        case 0: {
-          if (fromPlace == 5 || fromPlace == 6) Vue.set(this.gameMap[this.playerY], this.playerX, 6)
-          else Vue.set(this.gameMap[this.playerY], this.playerX, 2)
-          return
-        }
-        // 碰箱子
-        case 3:
-        case 5: {
-          if (direction == 'x') boxPlace = this.gameMap[this.playerY][+this.playerX + step * 2]
-          else boxPlace = this.gameMap[+this.playerY + step * 2][this.playerX]
-
-          // 如果箱子撞墙/箱子
-          if (boxPlace == 0 || boxPlace == 3) {
-            if (fromPlace == 5 || fromPlace == 6) Vue.set(this.gameMap[this.playerY], this.playerX, 6)
-            else Vue.set(this.gameMap[this.playerY], this.playerX, 2)
+        case 0: return
+        // 空地
+        case 1: break
+        // 碰地刺/火
+        case 5:
+        case 6: {
+          this.life--
+          if (this.life == 0) {
+            this.$notify({ type: 'danger', message: 'you dead!' })
+            this.onReset()
             return
-          }
-          // 如果箱子能移动
-          if (boxPlace == 4) {
-            // 如果箱子抵达终点
-            Vue.set(this.gameMap[setBoxY], setBoxX, 5)
-            setTimeout(() => {
-              if (document.querySelectorAll('.box.end').length == this.endCounter) {
-                alert('you win!')
-                if (this.$route.params.type == 'created') {
-                  this.popShow = true
-                } else this.changeLevel(1)
-              }
-            }, 0)
-          } else Vue.set(this.gameMap[setBoxY], setBoxX, 3)
-          // 如果目标点是箱子抵达终点或人物在终点上
-          if (toPlace == 5 || toPlace == 6) {
-            isDefault = false
-            Vue.set(this.gameMap[setY], setX, 6)
           }
           break
         }
-        // 碰终点
-        case 4: {
-          isDefault = false
-          Vue.set(this.gameMap[setY], setX, 6)
+        // 碰毒蘑菇
+        case 8: {
+          this.status.poisoning = true
+          Vue.set(this.staticMap[setY], setX, 1)  // 消除蘑菇
+          break
+        }
+        // 碰弹簧
+        case 9: {
+          this.move(direction, step * 3)
+          return
+        }
+        // 传送门入口
+        case 10: {
+          // 随机指定传送出口
+          const exit = this.singlePortalExit[Math.floor(Math.random() * this.singlePortalExit.length)]
+          // 修改目标点
+          setY = +exit.y
+          setX = +exit.x
+          // 修改玩家坐标
+          Vue.set(this.activeMap[this.playerY], this.playerX, 1)
+          this.playerY = +exit.y
+          this.playerX = +exit.x
+          // 非正常移动，移动步数清零
+          step = 0
           break
         }
       }
-      // 设定移动后的玩家位置
-      if (direction == 'x') this.playerX = +this.playerX + step
-      else this.playerY = +this.playerY + step
 
-      if (isDefault == true) Vue.set(this.gameMap[setY], setX, 2)
-      return
+      // 判断活动层目标点
+      switch (activeTarget) {
+        // 空地
+        case 1: break
+        // 碰箱子
+        case 3:
+        case 7: {
+          staticBoxTarget = this.staticMap[setBoxY][setBoxX] // 获取静止层箱子目标点
+          activeBoxTarget = this.activeMap[setBoxY][setBoxX] // 获取活动层箱子目标点
+          let isDefault = true // 是否默认移动方法
+
+          // 判断静止层箱子目标点
+          switch (staticBoxTarget) {
+            // 碰墙
+            case 0: return
+            // 碰终点
+            case 4: {
+              setTimeout(() => {
+                if (document.querySelectorAll('.end.box').length == this.endCounter) {
+                  setTimeout(() => {
+                    this.$notify({ type: 'success', message: 'you win!'})
+                    switch (this.$route.query.type) {
+                      case 'level': {
+                        this.changeLevel(1)
+                        break
+                      }
+                      case 'created': {
+                        this.$refs.saveMap.show()
+                        break
+                      }
+                      case 'workshop': {
+                        this.$router.push('/workshop')
+                        break
+                      }
+                    }
+                  })
+                }
+              })
+              break
+            }
+            // 碰火
+            case 6: {
+              // 如果是冰箱子，灭火
+              if (staticTarget == 7) {
+                Vue.set(this.staticMap[setBoxY], setBoxX, 1)  // 灭火
+                Vue.set(this.activeMap[setBoxY], setBoxX, 3)  // 变为普通箱子
+                isDefault = false
+              }
+              // 烧毁普通箱子
+              else Vue.set(this.activeMap[setBoxY], setBoxX, 1)
+            }
+          }
+
+          // 判断活动层箱子目标点
+          switch (activeBoxTarget) {
+            // 碰箱子
+            case 3: return
+          }
+          // 箱子可以正常移动
+          if (isDefault) Vue.set(this.activeMap[setBoxY], setBoxX, activeTarget)
+        }
+      }
+      
+      // 玩家可以正常移动
+      Vue.set(this.activeMap[this.playerY], this.playerX, 1)
+      Vue.set(this.activeMap[setY], setX, 2)
+      this.step++
+
+      // 设定移动后的玩家坐标
+      this.playerX = setX
+      this.playerY = setY
+      
+      // 大图追踪视角
+      if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
+        if (direction == 'x') {
+          if (this.playerX * 30 >= 180) {
+            this.$nextTick(() => {
+              this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, behavior: 'smooth' })
+            })
+          }
+        } else {
+          if (this.playerY * 30 >= 180) {
+            this.$nextTick(() => {
+              this.$refs.game.$el.scrollTo({ top: this.playerY * 30 - 165, behavior: 'smooth' })
+            })
+          }
+        }
+      }
+
+      // 记录移动后地图数据
+      this.staticMapRecord.push(deepClone2Arr(this.staticMap))
+      this.activeMapRecord.push(deepClone2Arr(this.activeMap))
+      this.lifeRecord.push(this.life)
+      this.statusRecord.push(deepCloneObj(this.status))
     },
-    // 悔棋（可以连续悔棋置第一步）
+    // 松开按键时，停止移动
+    stopMove() {
+      clearTimeout(this.keepMove)
+    },
+    // 撤回（可以连续撤回置第一步）
     onRegret() {
-
+      this.step--
+      // 向子组件赋值，并重新浅拷贝
+      this.$refs.game.staticMap = deepClone2Arr(this.staticMapRecord[this.step]) // 静止层
+      this.$refs.game.activeMap = deepClone2Arr(this.activeMapRecord[this.step]) // 活动层
+      this.staticMap = this.$refs.game.staticMap
+      this.activeMap = this.$refs.game.activeMap
+      this.staticMapRecord.pop()
+      this.activeMapRecord.pop()
+      // 读取记录中生命值
+      this.life = this.lifeRecord[this.step]
+      this.lifeRecord.pop()
+      // 读取人物状态记录
+      this.status = deepCloneObj(this.statusRecord[this.step])
+      this.statusRecord.pop()
+      // 撤回后重新获取玩家坐标
+      for (let y in this.activeMap) {
+        for (let x in this.activeMap[y]) {
+          if (this.activeMap[y][x] == 2) {
+            this.playerX = +x
+            this.playerY = +y
+            break
+          }
+        }
+      }
     },
     // 重置当前关卡
     onReset() {
-      const { level } = this.$route.query;
-      const deepBase = deepClone(this.cloneBaseData);
-      this.gameMap = deepBase[level];
-      this.init(this.gameMap)
+      this.init()
     },
     // 切换关卡
     changeLevel(value) {
-      // 待看
-      // console.log(this.mark)
-      // let [t, m] = this.mark.split('-');
-      // if (value === -1 && this.level === 0 && t === 'T') {
-      //   this.$router.push({ path: 'game', query: { level: m+=value } })
-      //   this.$notify({type: 'danger', message:'当前关卡，不能进行此操作哦，宝~'})
-      //   return;
-      // }
-      // this.mark = 'F-0';
-      this.level += value;
-      this.gameMap = [];
-      // 修改关卡，修改路由参数
-      this.$router.push({ path: 'game', query: { level: this.level } })
-      this.$nextTick(() => {
-        this.gameMap = official[this.level];
-        this.init(this.gameMap)
-      })
+      this.level += value
+      // 判断地图包
+      switch (this.$route.query.pack) {
+        case 'basic': {
+          this.gameMap = deepClone2Arr(basic[this.level])
+          break
+        }
+        case 'expand': {
+          this.gameMap = deepClone2Arr(expand[this.level].gameMap)
+          this.initLife = expand[this.level].life
+          break
+        }
+      }
+      this.init()
     },
     // 将地图存在本地
     saveLocal() {
       for (let i = 0; i < 99; i++) {
         if (!window.localStorage.getItem('map' + i)) {
-          window.localStorage.setItem('map' + i, this.gameMap)
+          window.localStorage.setItem('map' + i, JSON.stringify({
+            creator: this.uploadMap.creator,
+            mapName: this.uploadMap.mapName,
+            mapData: this.gameMap,
+            life: this.initLife,
+            time: new Date()
+          }))
+          this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
           break
         }
+        if (i == 99) {
+          this.$notify({ type: 'error', message: '本地存储已达上限' })
+          return
+        }
       }
+      this.$refs.saveMap.show()
+      setTimeout(() => {
+        this.$router.push('/index')
+      }, 3000)
     },
     // 将地图上传云端
     saveServe() {
-      const mapData = this.gameMap
       request({
         url: 'map/add',
         method: 'POST',
         data: {
-          creator: '',
-          mapName: '',
-          mapData,
-        },
+          creator: this.uploadMap.creator,
+          mapName: this.uploadMap.mapName,
+          mapData: this.gameMap,
+          playerHP: this.initLife
+        }
       })
-        .then((res) => {
-          console.log(res)
-          this.$notify({type: 'success', message:'上传成功'})
+        .then(res => {
+          if (res.code == 0) {
+            this.$notify({ type: 'success', message: '上传成功，3秒后将返回首页' })
+            this.$refs.saveMap.show()
+            setTimeout(() => {
+              this.$router.push('/index')
+            }, 3000)
+          }
         })
-        .catch((err) => {
-          this.$notify({type: 'danger', message:'上传失败，错误：' + err})
-        })
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -269,19 +504,7 @@ export default {
   height: 100vh;
 }
 
-.operation {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 30px;
-  .regret {
-    margin-left: 15px;
-  }
-  .reset {
-    margin-right: 15px;
-  }
-}
-
+// 虚拟手柄
 .analog-handle {
   display: flex;
   flex-flow: column nowrap;
@@ -292,42 +515,56 @@ export default {
   width: 200px;
   height: 200px;
   margin: 0 auto;
-  // margin-top: 30px;
-}
-
-.analog-handle div {
-  height: 33%;
-  width: 100%;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.analog-handle i {
   font-size: 60px;
   color: #fff;
+  div {
+    height: 33%;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .center {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
-.analog-handle .center {
-  display: flex;
-  justify-content: space-between;
-}
-
-.test-pop {
+// 测试地图弹窗
+.test-map-pop {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
+  span {
+    margin-bottom: 8px;
+  }
 }
 
-.test-pop span {
-  margin-bottom: 8px;
-}
-
-.checkpoint {
+.check-point {
   display: flex;
   justify-content: space-around;
   margin-top: 30px;
+}
+
+// 人物生命值
+.life,
+.step {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  padding: 0 30px;
+  color: #fff;
+  height: 30px;
+  .life-show-type {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    i {
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
 }
 </style>

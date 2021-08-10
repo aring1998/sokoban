@@ -1,0 +1,105 @@
+.theme-abstract {
+  --mainColor: #ddd;
+  --deepMainColor: #333;
+}
+
+.theme-abstract .game-container .game-table {
+  background-image: url('~@/assets/img/theme/abstract/floor.png');
+}
+
+.theme-abstract .floor {
+  background-image: url('~@/assets/img/theme/abstract/floor.png');
+}
+
+.theme-abstract .spikeweed {
+  background-image: url('~@/assets/img/theme/abstract/spikeweed.png');
+}
+
+.theme-abstract .box {
+  background-image: url('~@/assets/img/theme/abstract/box.png');
+}
+
+.theme-abstract .ice-box {
+  background-image: url('~@/assets/img/theme/abstract/ice-box.png');
+}
+
+.theme-abstract .wall {
+  background-image: url('~@/assets/img/theme/abstract/wall.png');
+}
+
+.theme-abstract .end {
+  background-image: url('~@/assets/img/theme/abstract/end.png');
+}
+
+.theme-abstract .fire {
+  background-image: url('~@/assets/img/theme/abstract/fire.png');
+}
+
+.theme-abstract .player {
+  background-image: url('~@/assets/img/theme/abstract/player.png');
+}
+
+.theme-abstract .box.end {
+  background-image: url('~@/assets/img/theme/abstract/end-box.png');
+}
+
+.theme-forest {
+  --mainColor: #95d52f;
+  --deepMainColor: #339933;
+}
+
+.theme-forest .game-container .game-table {
+  background-image: url('~@/assets/img/theme/forest/floor.png');
+}
+
+.theme-forest .floor {
+  background-image: url('~@/assets/img/theme/forest/floor.png');
+}
+
+.theme-forest .spikeweed {
+  background-image: url('~@/assets/img/theme/forest/spikeweed.png');
+}
+
+.theme-forest .box {
+  background-image: url('~@/assets/img/theme/forest/box.png');
+}
+
+.theme-forest .ice-box {
+  background-image: url('~@/assets/img/theme/forest/ice-box.png');
+}
+
+.theme-forest .wall {
+  background-image: url('~@/assets/img/theme/forest/wall.png');
+}
+
+.theme-forest .end {
+  background-image: url('~@/assets/img/theme/forest/end.png');
+}
+
+.theme-forest .fire {
+  background-image: url('~@/assets/img/theme/forest/fire.png');
+}
+
+.theme-forest .toadstool {
+  background-image: url('~@/assets/img/theme/forest/toadstool.png');
+}
+
+.theme-forest .spring {
+  background-image: url('~@/assets/img/theme/forest/spring.png');
+}
+
+.theme-forest .single-portal-entry {
+  background-image: url('~@/assets/img/theme/forest/single-portal-entry.png');
+}
+
+.theme-forest .single-portal-exit {
+  background-image: url('~@/assets/img/theme/forest/single-portal-exit.png');
+}
+
+.theme-forest .player {
+  background-image: url('~@/assets/img/theme/forest/player.png');
+}
+
+.theme-forest .box.end {
+  background-image: url('~@/assets/img/theme/forest/end-box.png');
+}

@@ -1,8 +1,8 @@
 <!-- 弹出框 -->
 <template>
   <transition name="van-fade">
-    <div class="popover-shade" v-show="isShow">
-      <div class="popover">
+    <div class="white-popover-shade" v-show="isShow">
+      <div class="white-popover">
         <div class="closes">
           <van-icon name="cross" @click="show()" />
         </div>
@@ -28,36 +28,35 @@ export default {
 </script>
 
 <style>
-.popover-shade {
+.white-popover-shade {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   width: 100vw;
-  background-color: rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 100;
 }
 
-.popover-shade .popover {
+.white-popover-shade .white-popover {
   width: 350px;
+  min-height: 90vh;
   padding: 20px;
-  background-color: var(--mainColor);
-  border: var(--deepMainColor) 4px solid;
+  background-color: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
 }
 
-.popover-shade .closes {
+.white-popover-shade .closes {
   width: 100%;
   text-align: right;
   margin-bottom: 10px;
 }
 
-.popover-shade .closes i {
+.white-popover-shade .closes i {
   font-weight: 600;
-  color: #fff;
+  color: #777;
   font-size: 20px;
 }
 </style>
