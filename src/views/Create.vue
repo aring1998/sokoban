@@ -71,13 +71,13 @@
     </van-row>
     <van-row type="flex" justify="space-around" align="center" style="margin: 10px 0">
       <van-col span="6" align="center">
-        <van-button type="primary" size="small" @click="addRow" :disabled="gameMap.length == 12">添加一行</van-button>
+        <van-button type="primary" size="small" @click="addRow" :disabled="gameMap.length == 40">添加一行</van-button>
       </van-col>
       <van-col span="6" align="center">
         <van-button type="danger" size="small" @click="delRow" :disabled="gameMap.length == 1">删除一行</van-button>
       </van-col>
       <van-col span="6" align="center">
-        <van-button type="primary" size="small" @click="addColumn" :disabled="gameMap[0].length == 12">添加一列</van-button>
+        <van-button type="primary" size="small" @click="addColumn" :disabled="gameMap[0].length == 40">添加一列</van-button>
       </van-col>
       <van-col span="6" align="center">
         <van-button type="danger" size="small" @click="delColumn" :disabled="gameMap[0].length == 1">删除一列</van-button>
@@ -257,44 +257,38 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .create {
   background-color: var(--mainColor);
   height: 100vh;
 }
 
-.game-container td {
-  border: 1px gray solid;
-}
-
 .map-el-container {
   background-color: rgba(255, 255, 255, 0.6);
-}
-
-.map-el-container ul {
-  display: flex;
-  flex-flow: row wrap;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.map-el-container ul li {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  padding: 10px;
-  margin: 10px 0;
-  width: 20%;
-}
-
-.map-el-container ul li.active {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-}
-
-.map-el-container ul li .map-el-img {
-  height: 30px;
-  width: 30px;
-  background-size: 100% 100%;
+  height: 170px;
+  overflow: auto;
+  ul {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: flex-start;
+    li {
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      padding: 10px;
+      margin: 10px 0;
+      width: 20%;
+      .map-el-img {
+        height: 30px;
+        width: 30px;
+        background-size: 100% 100%;
+      }
+    }
+    li.active {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+  }
 }
 </style>
