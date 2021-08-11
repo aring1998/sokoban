@@ -87,8 +87,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
-
 import { mapEl } from '@/assets/js/map-el/index'
 
 import TopBar from '@/components/TopBar'
@@ -161,7 +159,7 @@ export default {
     },
     // 更改单元格
     changeCell() {
-      Vue.set(this.gameMap[this.choiceRow], this.choiceColumn, this.clickCellType)
+      this.$set(this.gameMap[this.choiceRow], this.choiceColumn, this.clickCellType)
     },
     // 检测地图
     checkMap() {

@@ -18,12 +18,13 @@
     <!-- 步数 -->
     <div class="step">
       <span>当前步数：{{ step }}</span>
+      <span>最优步数：{{ bestStep }}</span>
     </div>
     <!-- 行为控制 -->
     <div class="check-point">
       <van-button @click="onRegret" type="primary" size="mini" :disabled="this.activeMapRecord.length == 1">撤回</van-button>
+      <van-button @click="tipsShow = true" type="primary" size="mini" v-if="$route.query.type != 'created'">提示</van-button>
       <van-button @click="onReset" type="primary" size="mini">重置</van-button>
-      <van-button @click="tipsShow = true" type="primary" size="mini">提示</van-button>
     </div>
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
@@ -80,9 +81,9 @@
       :style="{ height: '50%' }"
     >
       <div class="tips">
-        <div class="tips-container" v-if="basicTips[level]">
+        <div class="tips-container" v-if="tips">
           <span 
-            v-for="(item, index) of basicTips[level]" 
+            v-for="(item, index) of tips" 
             :key="index"
             :class="processRecord[index] ? processRecord[index] == item ? 'right' : 'wrong' : ''"
           >
@@ -90,7 +91,7 @@
           </span>
         </div>
         <span v-else>
-          暂时还没有有人通过哦~
+          暂时还没有有人过关哦~
         </span>
       </div>
     </van-popup>
@@ -98,11 +99,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import store from '@/store'
 
 import { basic, expand } from '@/assets/js/level/index'
-import { basicTips } from '@/assets/js/level-tips/index'
+import { basicTips, expendTips } from '@/assets/js/level-tips/index'
 import { request } from '@/network/request'
 import { deepCloneObj, deepClone2Arr, isEmptyObject } from '@/utils/index'
 
@@ -121,6 +121,7 @@ export default {
       staticMapRecord: [], // 静止层每步地图记录
       activeMapRecord: [], // 活动层每步地图记录
       step: 0, // 步数
+      bestStep: 0, // 最优步数
       endCounter: 0, // 终点个数
       initLife: 0, // 初始生命
       life: 0, // 人物生命
@@ -139,7 +140,7 @@ export default {
       statusRecord: [], // 人物状态记录
       singlePortalExit: [], // 单向传送门出口
       tipsShow: false, // 提示弹出层
-      basicTips, // 基础关提示
+      tips: [], // 提示
       processRecord: [] // 过程记录
     }
   },
@@ -164,19 +165,36 @@ export default {
           case 'basic': {
             this.gameMap = deepClone2Arr(basic[this.level])
             this.levelCounter = basic.length - 1
+            this.tips = basicTips[this.level]
+            this.bestStep = basicTips[this.level] ? basicTips[this.level].length : '暂无'
             break
           }
           case 'expand': {
             this.gameMap = deepClone2Arr(expand[this.level].gameMap)
             this.initLife = expand[this.level].life
             this.levelCounter = expand.length - 1
+            this.tips = expendTips[this.level]
+            this.bestStep = expendTips[this.level] ? expendTips[this.level].length : '暂无'
             break
           }
         }
         break
       }
-      // 由测试地图/创意工坊进入
-      case 'workshop':
+      // 由创意工坊进入
+      case 'workshop': {
+        if (this.$route.params.id) this.getMapData(this.$route.params.id)
+        else {
+          console.log(this.$route.params.localId, JSON.parse(window.localStorage.getItem('map' + this.$route.params.localId)));
+          const mapData = JSON.parse(window.localStorage.getItem('map' + this.$route.params.localId))
+          this.gameMap = mapData.mapData
+          this.initLife = mapData.life || 0
+          this.tips = mapData.processData
+          this.bestStep = mapData.stepsPas
+          this.init()
+        }
+        break
+      }
+      // 由测试地图进入
       case 'created': {
         this.gameMap = this.$route.params.gameMap
         this.initLife = +this.$route.params.life || 0
@@ -185,7 +203,7 @@ export default {
     }
 
     // 游戏初始化
-    this.init()
+    if (this.$route.query.type != 'workshop') this.init()
   },
   methods: {
     // 初始化
@@ -237,6 +255,25 @@ export default {
       this.lifeRecord = [this.initLife]
       this.statusRecord = [deepCloneObj(this.status)]
     },
+    // 创意工坊进入获取游戏地图数据
+    getMapData(id) {
+      this.$toast.loading({ message: '加载中', forbidClick: true })
+      request({
+        url: `map/${id}`,
+        method: 'GET',
+      })
+        .then(res => {
+          this.$toast.clear()
+          if (res.code == 0) {
+            console.log(res);
+            this.gameMap = res.data.mapData
+            this.initLife = res.data.playerHP
+            this.tips = res.data.processData
+            this.bestStep = res.data.stepsPas
+            this.init()
+          }
+        })
+    },
     // 玩家移动
     move(direction, step) {
       /**
@@ -247,10 +284,10 @@ export default {
        * @activeTarget: 活动层目标点
        * @staticBoxTarget: 静止层箱子目标点
        * @activeBoxTarget: 活动层箱子目标点
-       * @setY: 目标点Vue.set中object的index值
-       * @setX: 目标点Vue.set中key值
-       * @setBoxY: 箱子移动点Vue.set中object的index值
-       * @setBoxX: 箱子移动点Vue.set中key值
+       * @setY: 目标点Y轴坐标
+       * @setX: 目标点X轴坐标
+       * @setBoxY: 箱子移动点Y轴坐标
+       * @setBoxX: 箱子移动点X轴坐标
        */
 
       // 长按持续移动
@@ -308,7 +345,7 @@ export default {
         // 碰毒蘑菇
         case 8: {
           this.status.poisoning = true
-          Vue.set(this.staticMap[setY], setX, 1)  // 消除蘑菇
+          this.$set(this.staticMap[setY], setX, 1)  // 消除蘑菇
           break
         }
         // 碰弹簧
@@ -324,7 +361,7 @@ export default {
           setY = +exit.y
           setX = +exit.x
           // 修改玩家坐标
-          Vue.set(this.activeMap[this.playerY], this.playerX, 1)
+          this.$set(this.activeMap[this.playerY], this.playerX, 1)
           this.playerY = +exit.y
           this.playerX = +exit.x
           // 非正常移动，移动步数清零
@@ -364,6 +401,7 @@ export default {
                         break
                       }
                       case 'workshop': {
+                        if (this.step < this.bestStep) this.passProcess()
                         this.$router.push('/workshop')
                         break
                       }
@@ -377,12 +415,12 @@ export default {
             case 6: {
               // 如果是冰箱子，灭火
               if (staticTarget == 7) {
-                Vue.set(this.staticMap[setBoxY], setBoxX, 1)  // 灭火
-                Vue.set(this.activeMap[setBoxY], setBoxX, 3)  // 变为普通箱子
+                this.$set(this.staticMap[setBoxY], setBoxX, 1)  // 灭火
+                this.$set(this.activeMap[setBoxY], setBoxX, 3)  // 变为普通箱子
                 isDefault = false
               }
               // 烧毁普通箱子
-              else Vue.set(this.activeMap[setBoxY], setBoxX, 1)
+              else this.$set(this.activeMap[setBoxY], setBoxX, 1)
             }
           }
 
@@ -392,13 +430,13 @@ export default {
             case 3: return
           }
           // 箱子可以正常移动
-          if (isDefault) Vue.set(this.activeMap[setBoxY], setBoxX, activeTarget)
+          if (isDefault) this.$set(this.activeMap[setBoxY], setBoxX, activeTarget)
         }
       }
       
       // 玩家可以正常移动
-      Vue.set(this.activeMap[this.playerY], this.playerX, 1)
-      Vue.set(this.activeMap[setY], setX, 2)
+      this.$set(this.activeMap[this.playerY], this.playerX, 1)
+      this.$set(this.activeMap[setY], setX, 2)
       this.step++
 
       // 设定移动后的玩家坐标
@@ -471,6 +509,8 @@ export default {
       switch (this.$route.query.pack) {
         case 'basic': {
           this.gameMap = deepClone2Arr(basic[this.level])
+          this.tips = basicTips[this.level]
+          this.bestStep = basicTips[this.level] ? basicTips[this.level].length : '暂无'
           break
         }
         case 'expand': {
@@ -486,11 +526,14 @@ export default {
       for (let i = 0; i < 99; i++) {
         if (!window.localStorage.getItem('map' + i)) {
           window.localStorage.setItem('map' + i, JSON.stringify({
-            creator: this.uploadMap.creator,
-            mapName: this.uploadMap.mapName,
+            localId: i,
+            creator: this.uploadMap.creator || '匿名',
+            mapName: this.uploadMap.mapName || '未命名',
             mapData: this.gameMap,
             life: this.initLife,
-            time: new Date()
+            time: new Date(),
+            stepsPas: this.step,
+            processData: this.processRecord
           }))
           this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
           break
@@ -514,7 +557,9 @@ export default {
           creator: this.uploadMap.creator,
           mapName: this.uploadMap.mapName,
           mapData: this.gameMap,
-          playerHP: this.initLife
+          playerHP: this.initLife,
+          stepsPas: this.step,
+          processData: this.processRecord
         }
       })
         .then(res => {
@@ -524,6 +569,23 @@ export default {
             setTimeout(() => {
               this.$router.push('/index')
             }, 3000)
+          }
+        })
+    },
+    // 上传通关过程
+    passProcess() {
+      request({
+        url: '/map/steps_pas',
+        method: 'POST',
+        data: {
+          mapId: this.$route.params.id,
+          stepsPas: this.step,
+          processData: this.processRecord
+        }
+      })
+        .then(res => {
+          if (res.code == 0) {
+            this.$notify({ type: 'success', message: '您达成了新的最优步数，已将您的通关过程上传至云端' })
           }
         })
     }
@@ -578,7 +640,7 @@ export default {
 .check-point {
   display: flex;
   justify-content: space-around;
-  margin-top: 30px;
+  margin: 20px 0;
 }
 
 // 人物生命值
@@ -599,6 +661,10 @@ export default {
       font-weight: 600;
     }
   }
+}
+
+.step {
+  justify-content: space-between;
 }
 
 // 提示弹窗

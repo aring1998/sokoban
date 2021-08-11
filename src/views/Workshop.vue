@@ -25,7 +25,7 @@
           @click="
             $router.push({
               name: 'game',
-              params: { gameMap: item.mapData, life: item.playerHP },
+              params: { id: item.id, localId: item.localId },
               query: { type: 'workshop' }
             })
           "

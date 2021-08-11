@@ -1,7 +1,7 @@
 <!-- 游戏地图 -->
 <template>
   <div class="game-container">
-    <div class="game-table" :class="{'table-border': gameMap.length > 12 || gameMap[0].length > 12}">
+    <div class="game-table" :class="{'table-border': gameMap.length > 12 || gameMap[0] ? gameMap[0].length > 12 ? true : false : false}">
       <div class="game-row" v-for="(item, yIndex) of gameMap" :key="yIndex" @click="getRowIndex(yIndex)">
         <div
           v-for="(item, xIndex) of gameMap[yIndex]"
