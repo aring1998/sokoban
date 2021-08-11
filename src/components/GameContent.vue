@@ -90,7 +90,7 @@ export default {
           break
         }
         case 12: {
-          res += 'bear'
+          res += 'beer'
           break
         }
       }
