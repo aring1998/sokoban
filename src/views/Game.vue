@@ -135,6 +135,7 @@ export default {
       keepMove: null, // 持续移动定时器
       initStatus: { // 初始人物状态
         poisoning: false, // 是否中毒
+        drunk: 0 // 是否醉酒
       },
       status: null, // 人物当前状态
       statusRecord: [], // 人物状态记录
@@ -184,7 +185,7 @@ export default {
       case 'workshop': {
         if (this.$route.params.id) this.getMapData(this.$route.params.id)
         else {
-          console.log(this.$route.params.localId, JSON.parse(window.localStorage.getItem('map' + this.$route.params.localId)));
+          // 获取缓存中的地图数据
           const mapData = JSON.parse(window.localStorage.getItem('map' + this.$route.params.localId))
           this.gameMap = mapData.mapData
           this.initLife = mapData.life || 0
@@ -265,7 +266,6 @@ export default {
         .then(res => {
           this.$toast.clear()
           if (res.code == 0) {
-            console.log(res);
             this.gameMap = res.data.mapData
             this.initLife = res.data.playerHP
             this.tips = res.data.processData
@@ -301,6 +301,20 @@ export default {
 
       // 判断是否中毒
       if (this.status.poisoning) step = -step
+      // 判断是否醉酒，根据判断奇偶来决定是否进行醉酒移动
+      if (this.status.drunk % 2 !== 0) {
+        this.status.drunk++ // 为接下来的move方法不触发醉酒移动
+        // 随机再进行0~2次移动
+        for (let i = 0; i < Math.floor(Math.random() * 2); i++) {
+          this.$nextTick(() => {
+            this.move(direction, step)
+          })
+        }
+        // 结束循环后，恢复醉酒移动
+        this.$nextTick(() => {
+          this.status.drunk++
+        })
+      }
 
       // 判断方向
       if (direction == 'x') {
@@ -366,6 +380,12 @@ export default {
           this.playerX = +exit.x
           // 非正常移动，移动步数清零
           step = 0
+          break
+        }
+        // 啤酒
+        case 12: {
+          this.status.drunk++
+          this.$set(this.staticMap[setY], setX, 1)  // 消除啤酒
           break
         }
       }
@@ -516,6 +536,8 @@ export default {
         case 'expand': {
           this.gameMap = deepClone2Arr(expand[this.level].gameMap)
           this.initLife = expand[this.level].life
+          this.tips = expendTips[this.level]
+          this.bestStep = expendTips[this.level] ? expendTips[this.level].length : '暂无'
           break
         }
       }
@@ -597,86 +619,80 @@ export default {
 .sokoban {
   background-color: var(--mainColor);
   height: 100vh;
-}
-
-// 虚拟手柄
-.analog-handle {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 50%;
-  border: 5px rgba(0, 0, 0, 0.4) solid;
-  width: 200px;
-  height: 200px;
-  margin: 0 auto;
-  font-size: 60px;
-  color: #fff;
-  div {
-    height: 33%;
-    width: 100%;
-    text-align: center;
+  // 虚拟手柄
+  .analog-handle {
     display: flex;
+    flex-flow: column nowrap;
     align-items: center;
-    justify-content: center;
-  }
-  .center {
-    display: flex;
-    justify-content: space-between;
-  }
-}
-
-// 测试地图弹窗
-.test-map-pop {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  justify-content: center;
-  span {
-    margin-bottom: 8px;
-  }
-}
-
-.check-point {
-  display: flex;
-  justify-content: space-around;
-  margin: 20px 0;
-}
-
-// 人物生命值
-.life,
-.step {
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-  padding: 0 30px;
-  color: #fff;
-  height: 30px;
-  .life-show-type {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    i {
-      font-size: 18px;
-      font-weight: 600;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    border: 5px rgba(0, 0, 0, 0.4) solid;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    font-size: 60px;
+    color: #fff;
+    div {
+      height: 33%;
+      width: 100%;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .center {
+      display: flex;
+      justify-content: space-between;
     }
   }
-}
-
-.step {
-  justify-content: space-between;
-}
-
-// 提示弹窗
-.tips {
-  padding: 50px 20px;
-  font-size: 30px;
-  font-weight: 900;
-  .right {
-    color: #07c160;
+  // 测试地图弹窗
+  .test-map-pop {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    span {
+      margin-bottom: 8px;
+    }
   }
-  .wrong {
-    color: #ee0a24;
+  .check-point {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  // 人物生命值
+  .life,
+  .step {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    padding: 0 30px;
+    color: #fff;
+    height: 30px;
+    .life-show-type {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      i {
+        font-size: 18px;
+        font-weight: 600;
+      }
+    }
+  }
+  .step {
+    justify-content: space-between;
+  }
+  // 提示弹窗
+  .tips {
+    padding: 50px 20px;
+    font-size: 30px;
+    font-weight: 900;
+    .right {
+      color: #07c160;
+    }
+    .wrong {
+      color: #ee0a24;
+    }
   }
 }
 </style>

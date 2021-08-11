@@ -89,6 +89,10 @@ export default {
           res += 'single-portal-exit'
           break
         }
+        case 12: {
+          res += 'bear'
+          break
+        }
       }
       // 活动层渲染
       switch (this.activeMap[y][x]) {

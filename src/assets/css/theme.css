@@ -96,6 +96,10 @@
   background-image: url('~@/assets/img/theme/forest/single-portal-exit.png');
 }
 
+.theme-forest .bear {
+  background-image: url('~@/assets/img/theme/forest/bear.png');
+}
+
 .theme-forest .player {
   background-image: url('~@/assets/img/theme/forest/player.png');
 }
