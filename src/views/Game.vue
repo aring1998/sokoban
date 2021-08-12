@@ -24,7 +24,7 @@
     <div class="check-point">
       <van-button @click="onRegret" type="primary" size="mini" :disabled="this.activeMapRecord.length == 1">撤回</van-button>
       <van-button @click="tipsShow = true" type="primary" size="mini" v-if="$route.query.type != 'created'">提示</van-button>
-      <van-button @click="onReset" type="primary" size="mini">重置</van-button>
+      <van-button @click="init" type="primary" size="mini">重置</van-button>
     </div>
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
@@ -42,7 +42,7 @@
     <!-- 切关控制：选关进入显示 -->
     <div class="check-point" v-if="$route.query.type == 'level'">
       <van-button @click="changeLevel(-1)" type="primary" size="mini" :disabled="level == 0">上一关</van-button>
-      <van-button @click="changeLevel(1)" type="primary" size="mini" :disabled="level == levelCounter" >下一关</van-button>
+      <van-button @click="changeLevel(1)" type="primary" size="mini" :disabled="level == levelCounter">下一关</van-button>
     </div>
     <!-- 编辑控制：创建地图进入显示 -->
     <div class="check-point" v-if="$route.query.type == 'created'">
@@ -74,20 +74,11 @@
       </div>
     </popover>
     <!-- 提示弹出层 -->
-    <van-popup
-      v-model="tipsShow"
-      closeable
-      position="bottom"
-      :style="{ height: '50%' }"
-    >
+    <van-popup v-model="tipsShow" closeable position="bottom" :style="{ height: '50%' }">
       <div class="tips">
         <div class="tips-container" v-if="tips">
-          <span 
-            v-for="(item, index) of tips" 
-            :key="index"
-            :class="processRecord[index] ? processRecord[index] == item ? 'right' : 'wrong' : ''"
-          >
-            {{ item == 0 ? '↑' : item == 1 ? '→' : i == 2 ? '↓' : item == 3 ? '←' : ''}}
+          <span v-for="(item, index) of tips" :key="index" :class="processRecord[index] ? (processRecord[index] == item ? 'right' : 'wrong') : ''">
+            {{ item == 0 ? '↑' : item == 1 ? '→' : i == 2 ? '↓' : item == 3 ? '←' : '' }}
           </span>
         </div>
         <span v-else>
@@ -152,37 +143,18 @@ export default {
   },
   mounted() {
     // 页面刷新，返回首页
-    if (isEmptyObject(this.$route.params)) {
-      this.$router.push('/index')
-      return
-    }
+    if (isEmptyObject(this.$route.params)) return this.$router.push('/index')
     // 判断入口
-    switch (this.$route.query.type) {
+    const checkEntry = {
       // 由选关进入
-      case 'level': {
+      level: () => {
         this.level = this.$route.params.level
         // 判断地图包
-        switch (this.$route.query.pack) {
-          case 'basic': {
-            this.gameMap = deepClone2Arr(basic[this.level])
-            this.levelCounter = basic.length - 1
-            this.tips = basicTips[this.level]
-            this.bestStep = basicTips[this.level] ? basicTips[this.level].length : '暂无'
-            break
-          }
-          case 'expand': {
-            this.gameMap = deepClone2Arr(expand[this.level].gameMap)
-            this.initLife = expand[this.level].life
-            this.levelCounter = expand.length - 1
-            this.tips = expendTips[this.level]
-            this.bestStep = expendTips[this.level] ? expendTips[this.level].length : '暂无'
-            break
-          }
-        }
-        break
-      }
+        this.checkPack()
+      },
       // 由创意工坊进入
-      case 'workshop': {
+      workshop: () => {
+        // 判断是否是本地地图
         if (this.$route.params.id) this.getMapData(this.$route.params.id)
         else {
           // 获取缓存中的地图数据
@@ -193,15 +165,14 @@ export default {
           this.bestStep = mapData.stepsPas
           this.init()
         }
-        break
-      }
+      },
       // 由测试地图进入
-      case 'created': {
+      created: () => {
         this.gameMap = this.$route.params.gameMap
         this.initLife = +this.$route.params.life || 0
-        break
       }
     }
+    checkEntry[this.$route.query.type]()
 
     // 游戏初始化
     if (this.$route.query.type != 'workshop') this.init()
@@ -233,7 +204,7 @@ export default {
             this.endCounter++
           }
           if (this.gameMap[y][x] === 11) {
-            this.singlePortalExit.push({y, x})
+            this.singlePortalExit.push({ y, x })
           }
         }
       }
@@ -241,12 +212,8 @@ export default {
       // 大图中初始移动到玩家视角
       this.$nextTick(() => {
         if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
-          if (this.playerX * 30 >= 180) {
-            this.$refs.game.$el.scrollLeft = this.playerX * 30 - 165
-          }
-          if (this.playerY * 30 >= 180) {
-            this.$refs.game.$el.scrollTop = this.playerY * 30 - 165
-          }
+          if (this.playerX * 30 >= 180) this.$refs.game.$el.scrollLeft = this.playerX * 30 - 165
+          if (this.playerY * 30 >= 180) this.$refs.game.$el.scrollTop = this.playerY * 30 - 165
         }
       })
 
@@ -261,18 +228,17 @@ export default {
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `map/${id}`,
-        method: 'GET',
+        method: 'GET'
+      }).then(res => {
+        this.$toast.clear()
+        if (res.code == 0) {
+          this.gameMap = res.data.mapData
+          this.initLife = res.data.playerHP
+          this.tips = res.data.processData
+          this.bestStep = res.data.stepsPas
+          this.init()
+        }
       })
-        .then(res => {
-          this.$toast.clear()
-          if (res.code == 0) {
-            this.gameMap = res.data.mapData
-            this.initLife = res.data.playerHP
-            this.tips = res.data.processData
-            this.bestStep = res.data.stepsPas
-            this.init()
-          }
-        })
     },
     // 玩家移动
     move(direction, step) {
@@ -335,7 +301,7 @@ export default {
 
       // 判断是否超出单元格
       if (setY < 0 || setY == this.gameMap[0].length || setX < 0 || setX == this.gameMap[0].length) return
-      
+
       staticTarget = this.staticMap[setY][setX] // 获取静止层目标点的值
       activeTarget = this.activeMap[setY][setX] // 获取活动层目标点的值
 
@@ -351,7 +317,7 @@ export default {
           this.life--
           if (this.life == 0) {
             this.$notify({ type: 'danger', message: 'you dead!' })
-            this.onReset()
+            this.init()
             return
           }
           break
@@ -359,7 +325,7 @@ export default {
         // 碰毒蘑菇
         case 8: {
           this.status.poisoning = true
-          this.$set(this.staticMap[setY], setX, 1)  // 消除蘑菇
+          this.$set(this.staticMap[setY], setX, 1) // 消除蘑菇
           break
         }
         // 碰弹簧
@@ -385,7 +351,7 @@ export default {
         // 啤酒
         case 12: {
           this.status.drunk++
-          this.$set(this.staticMap[setY], setX, 1)  // 消除啤酒
+          this.$set(this.staticMap[setY], setX, 1) // 消除啤酒
           break
         }
       }
@@ -410,7 +376,7 @@ export default {
               setTimeout(() => {
                 if (document.querySelectorAll('.end.box').length == this.endCounter) {
                   setTimeout(() => {
-                    this.$notify({ type: 'success', message: 'you win!'})
+                    this.$notify({ type: 'success', message: 'you win!' })
                     switch (this.$route.query.type) {
                       case 'level': {
                         this.changeLevel(1)
@@ -435,8 +401,8 @@ export default {
             case 6: {
               // 如果是冰箱子，灭火
               if (staticTarget == 7) {
-                this.$set(this.staticMap[setBoxY], setBoxX, 1)  // 灭火
-                this.$set(this.activeMap[setBoxY], setBoxX, 3)  // 变为普通箱子
+                this.$set(this.staticMap[setBoxY], setBoxX, 1) // 灭火
+                this.$set(this.activeMap[setBoxY], setBoxX, 3) // 变为普通箱子
                 isDefault = false
               }
               // 烧毁普通箱子
@@ -453,7 +419,7 @@ export default {
           if (isDefault) this.$set(this.activeMap[setBoxY], setBoxX, activeTarget)
         }
       }
-      
+
       // 玩家可以正常移动
       this.$set(this.activeMap[this.playerY], this.playerX, 1)
       this.$set(this.activeMap[setY], setX, 2)
@@ -462,7 +428,7 @@ export default {
       // 设定移动后的玩家坐标
       this.playerX = setX
       this.playerY = setY
-      
+
       // 大图追踪视角
       if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
         if (direction == 'x') {
@@ -518,29 +484,11 @@ export default {
         }
       }
     },
-    // 重置当前关卡
-    onReset() {
-      this.init()
-    },
     // 切换关卡
     changeLevel(value) {
       this.level += value
       // 判断地图包
-      switch (this.$route.query.pack) {
-        case 'basic': {
-          this.gameMap = deepClone2Arr(basic[this.level])
-          this.tips = basicTips[this.level]
-          this.bestStep = basicTips[this.level] ? basicTips[this.level].length : '暂无'
-          break
-        }
-        case 'expand': {
-          this.gameMap = deepClone2Arr(expand[this.level].gameMap)
-          this.initLife = expand[this.level].life
-          this.tips = expendTips[this.level]
-          this.bestStep = expendTips[this.level] ? expendTips[this.level].length : '暂无'
-          break
-        }
-      }
+      this.checkPack()
       this.init()
     },
     // 将地图存在本地
@@ -583,16 +531,15 @@ export default {
           stepsPas: this.step,
           processData: this.processRecord
         }
+      }).then(res => {
+        if (res.code == 0) {
+          this.$notify({ type: 'success', message: '上传成功，3秒后将返回首页' })
+          this.$refs.saveMap.show()
+          setTimeout(() => {
+            this.$router.push('/index')
+          }, 3000)
+        }
       })
-        .then(res => {
-          if (res.code == 0) {
-            this.$notify({ type: 'success', message: '上传成功，3秒后将返回首页' })
-            this.$refs.saveMap.show()
-            setTimeout(() => {
-              this.$router.push('/index')
-            }, 3000)
-          }
-        })
     },
     // 上传通关过程
     passProcess() {
@@ -604,12 +551,30 @@ export default {
           stepsPas: this.step,
           processData: this.processRecord
         }
+      }).then(res => {
+        if (res.code == 0) {
+          this.$notify({ type: 'success', message: '您达成了新的最优步数，已将您的通关过程上传至云端' })
+        }
       })
-        .then(res => {
-          if (res.code == 0) {
-            this.$notify({ type: 'success', message: '您达成了新的最优步数，已将您的通关过程上传至云端' })
-          }
-        })
+    },
+    // 判断地图包
+    checkPack() {
+      const packAction = {
+        basic: () => {
+          this.gameMap = deepClone2Arr(basic[this.level])
+          this.levelCounter = basic.length - 1
+          this.tips = basicTips[this.level]
+          this.bestStep = basicTips[this.level] ? basicTips[this.level].length : '暂无'
+        },
+        expand: () => {
+          this.gameMap = deepClone2Arr(expand[this.level].gameMap)
+          this.initLife = expand[this.level].life
+          this.levelCounter = expand.length - 1
+          this.tips = expendTips[this.level]
+          this.bestStep = expendTips[this.level] ? expendTips[this.level].length : '暂无'
+        }
+      }
+      packAction[this.$route.query.pack]()
     }
   }
 }

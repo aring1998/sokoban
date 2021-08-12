@@ -152,9 +152,7 @@ export default {
       registerForm: {
         username: '',
         password: '',
-        checkPassWord: '',
-        userNameMsg: '',
-        passWordMsg: ''
+        checkPassWord: ''
       },
       forgetForm: {
         oldPassword: '',

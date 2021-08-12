@@ -52,63 +52,52 @@ export default {
       if (this.staticMap.length == 0) return
       let res = ''
       // 静止层渲染
-      switch (this.staticMap[y][x]) {
-        case 0: {
+      const staticMapRander = {
+        0: () => {
           res += 'wall'
-          break
-        }
-        case 1: {
+        },
+        1: () => {
           res += ''
-          break
-        }
-        case 4: {
+        },
+        4: () => {
           res += 'end'
-          break
-        }
-        case 5: {
+        },
+        5: () => {
           res += 'spikeweed'
-          break
-        }
-        case 6: {
+        },
+        6: () => {
           res += 'fire'
-          break
-        }
-        case 8: {
+        },
+        8: () => {
           res += 'toadstool'
-          break
-        }
-        case 9: {
+        },
+        9: () => {
           res += 'spring'
-          break
-        }
-        case 10: {
+        },
+        10: () => {
           res += 'single-portal-entry'
-          break
-        }
-        case 11: {
+        },
+        11: () => {
           res += 'single-portal-exit'
-          break
-        }
-        case 12: {
+        },
+        12: () => {
           res += 'beer'
-          break
-        }
+        },
       }
+      if (staticMapRander[this.staticMap[y][x]]) staticMapRander[this.staticMap[y][x]]()
       // 活动层渲染
-      switch (this.activeMap[y][x]) {
-        case 2: {
+      const acitveMapRander = {
+        2: () => {
           res += ' player'
-          break
-        }
-        case 3: {
+        },
+        3: () => {
           res += ' box'
-          break
-        }
-        case 7: {
+        },
+        7: () => {
           res += ' ice-box'
-          break
         }
       }
+      if (acitveMapRander[this.activeMap[y][x]]) acitveMapRander[this.activeMap[y][x]]()
       return res
     }
   }
