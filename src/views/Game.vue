@@ -128,6 +128,7 @@ export default {
         poisoning: false, // 是否中毒
         drunk: 0 // 是否醉酒
       },
+      drunkStep: 0, // 醉酒后移动的步数
       status: null, // 人物当前状态
       statusRecord: [], // 人物状态记录
       singlePortalExit: [], // 单向传送门出口
@@ -271,7 +272,8 @@ export default {
       if (this.status.drunk % 2 !== 0) {
         this.status.drunk++ // 为接下来的move方法不触发醉酒移动
         // 随机再进行0~2次移动
-        for (let i = 0; i < Math.floor(Math.random() * 2); i++) {
+        this.drunkStep = Math.floor(Math.random() * 2)
+        for (let i = 0; i < this.drunkStep; i++) {
           this.$nextTick(() => {
             this.move(direction, step)
           })
@@ -481,6 +483,7 @@ export default {
       // 读取人物状态记录
       this.status = deepCloneObj(this.statusRecord[this.step])
       this.statusRecord.pop()
+      // 删除最末条流程记录
       this.processRecord.pop()
       // 撤回后重新获取玩家坐标
       for (let y in this.activeMap) {
@@ -491,6 +494,11 @@ export default {
             break
           }
         }
+      }
+      // 醉酒状态下的撤回
+      if (this.drunkStep > 0) {
+        this.drunkStep--
+        this.onRegret()
       }
     },
     // 切换关卡
@@ -552,6 +560,8 @@ export default {
     },
     // 上传通关过程
     passProcess() {
+      // 本地地图不上传
+      if (this.$route.params.localId) return
       request({
         url: '/map/steps_pas',
         method: 'POST',
