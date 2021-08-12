@@ -84,7 +84,7 @@
           </van-form>
         </van-tab>
       </van-tabs>
-       <van-tabs v-model="tabIndex" color="var(--mainColor)" v-else swipeable>
+      <van-tabs v-model="tabIndex" color="var(--mainColor)" v-else swipeable>
         <van-tab title="个人信息">
           <span>用户名：{{ $store.state.username }}</span>
         </van-tab>
@@ -126,7 +126,7 @@
 
 <script>
 import { request } from '@/network/request'
-import md5 from'js-md5';
+import md5 from 'js-md5'
 
 import Popover from '@/components/Popover'
 
@@ -142,7 +142,7 @@ export default {
         {
           class: 'theme-forest',
           text: '森林'
-        },
+        }
       ],
       tabIndex: 0,
       loginForm: {
@@ -182,18 +182,16 @@ export default {
           name: this.loginForm.username,
           password: md5(this.loginForm.password)
         }
+      }).then(res => {
+        if (res.code == 0) {
+          this.$store.state.username = res.data.username
+          window.localStorage.setItem('token', res.data.token)
+          this.$notify({ type: 'success', message: '登录成功' })
+          this.$refs.login.show()
+        } else {
+          this.$notify({ type: 'danger', message: res.msg })
+        }
       })
-        .then(res => {
-          if (res.code == 0) {
-            this.$store.state.username = res.data.username
-            window.localStorage.setItem('token', res.data.token)
-            this.$notify({ type: 'success', message: '登录成功' })
-            this.$refs.login.show()
-          }
-          else {
-            this.$notify({ type: 'danger', message: res.msg })
-          }
-        })
     },
     // 注册
     register() {
@@ -204,18 +202,16 @@ export default {
           name: this.registerForm.username,
           password: md5(this.registerForm.password)
         }
+      }).then(res => {
+        if (res.code == 0) {
+          this.$notify({ type: 'success', message: '注册成功' })
+          this.loginForm.username = this.registerForm.username
+          this.loginForm.password = md5(this.registerForm.password)
+          this.login()
+        } else {
+          this.$notify({ type: 'danger', message: res.msg })
+        }
       })
-        .then(res => {
-          if (res.code == 0) {
-            this.$notify({ type: 'success', message: '注册成功' })
-            this.loginForm.username = this.registerForm.username
-            this.loginForm.password = md5(this.registerForm.password)
-            this.login()
-          }
-          else {
-            this.$notify({ type: 'danger', message: res.msg })
-          }
-        })
     },
     // 忘记密码
     forget() {
@@ -248,7 +244,7 @@ export default {
       font-weight: 600;
       color: #fff;
       font-size: 22px;
-      background-color: rgba(0, 0, 0, .3);
+      background-color: rgba(0, 0, 0, 0.3);
       border-radius: 50%;
       padding: 5px;
       margin-left: 8px;
@@ -258,7 +254,7 @@ export default {
 
 .login {
   .van-tabs__line {
-    transform: translateX(75.5px) translateX(-50%)
+    transform: translateX(75.5px) translateX(-50%);
   }
 }
 </style>

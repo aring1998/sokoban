@@ -375,23 +375,32 @@ export default {
             case 4: {
               setTimeout(() => {
                 if (document.querySelectorAll('.end.box').length == this.endCounter) {
-                  setTimeout(() => {
-                    this.$notify({ type: 'success', message: 'you win!' })
-                    switch (this.$route.query.type) {
-                      case 'level': {
-                        this.changeLevel(1)
-                        break
-                      }
-                      case 'created': {
-                        this.$refs.saveMap.show()
-                        break
-                      }
-                      case 'workshop': {
-                        if (this.step < this.bestStep) this.passProcess()
-                        this.$router.push('/workshop')
-                        break
+                  // 防作弊
+                  let onEnd = 0;
+                  for (let y in this.activeMap) {
+                    for (let x in this.activeMap[y]) {
+                      if (this.activeMap[y][x] == 3 && this.staticMap[y][x] == 4) {
+                        onEnd++
                       }
                     }
+                  }
+                  if (onEnd != this.endCounter) return
+                  setTimeout(() => {
+                    this.$notify({ type: 'success', message: 'you win!' })
+                    // 判断入口
+                    const checkEntry = {
+                      level: () => {
+                        this.changeLevel(1)
+                      },
+                      created: () => {
+                        this.$refs.saveMap.show()
+                      },
+                      workshop: () => {
+                        if (this.step < this.bestStep) this.passProcess()
+                        this.$router.push('/workshop')
+                      }
+                    }
+                    checkEntry[this.$route.query.type]()
                   })
                 }
               })

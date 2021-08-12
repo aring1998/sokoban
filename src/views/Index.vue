@@ -6,15 +6,11 @@
     <div class="choosebox">
       <p class="choosebox-title">PUSH THE BOX!</p>
       <button class="choosebtn" @click="$refs.level.show()">选择关卡</button>
-      <button class="choosebtn" @click="$router.push('/workshop')">
-        创意工坊
-      </button>
-      <button class="choosebtn" @click="$router.push('/create')">
-        创建地图
-      </button>
+      <button class="choosebtn" @click="$router.push('/workshop')">创意工坊</button>
+      <button class="choosebtn" @click="$router.push('/create')">创建地图</button>
     </div>
     <!-- 选关弹窗 -->
-    <white-popover class="choice-level" ref="level">
+    <popover type="white" class="choice-level" ref="level">
       <van-tabs v-model="levelTab" color="var(--mainColor)" swipeable>
         <van-tab title="基础关卡">
           <ul>
@@ -47,9 +43,9 @@
           </ul>
         </van-tab>
       </van-tabs>
-    </white-popover>
+    </popover>
     <!-- 关于游戏弹窗 -->
-    <white-popover class="index-intro" ref="intro">
+    <popover type="white" class="index-intro" ref="intro">
       <van-tabs v-model="aboutGameTab" color="var(--mainColor)" swipeable>
         <van-tab title="游戏玩法" class="index-intro-item">
           <span>
@@ -91,7 +87,7 @@
           <p style="text-align: right;font-weight: 600">aring</p>
         </van-tab>
       </van-tabs>
-    </white-popover>
+    </popover>
   </div>
 </template>
 
@@ -100,7 +96,7 @@ import { basic, expand } from '@/assets/js/level/index'
 import { mapEl } from '@/assets/js/map-el/index'
 
 import TopBar from '@/components/TopBar'
-import WhitePopover from '@/components/WhitePopover'
+import Popover from '@/components/Popover'
 
 export default {
   data() {
@@ -114,7 +110,7 @@ export default {
   },
   components: {
     TopBar,
-    WhitePopover
+    Popover
   }
 }
 </script>
