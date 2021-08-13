@@ -13,14 +13,21 @@
       <div class="menu">
         <van-button @click="$router.push('/index')" v-if="$route.path !== '/index'" size="large">回到主菜单</van-button>
         <van-button @click="showPicker = true" size="large">切换主题</van-button>
-        <van-popup v-model="showPicker" round position="bottom">
-          <van-picker
-            show-toolbar
-            :columns="columns"
-            :default-index="1"
-            @cancel="showPicker = false"
-            @confirm="changeTheme"
-          />
+        <van-popup v-model="showPicker" round position="bottom" :style="{ height: '50%', backgroundColor: 'var(--mainColor)' }">
+          <van-swipe 
+            class="theme-swipe"
+            indicator-color="white"
+            :initial-swipe="
+              $store.theme == 'theme-abstract' ? 0 : $store.theme == 'theme-forest' ? 1 : 1
+            "
+          >
+            <van-swipe-item v-for="(item, index) of theme" :key="index">
+              <div class="title">{{ item.title }}</div>
+              <img :src="require('@/assets/img/theme-intro/' + item.class + '.png')" alt="">
+              <div class="intro">{{ item.intro }}</div>
+              <button @click="changeTheme(item.class)">使用</button>
+            </van-swipe-item>
+          </van-swipe>
         </van-popup>
       </div>
     </popover>
@@ -125,8 +132,8 @@
 </template>
 
 <script>
-import { request } from '@/network/request'
 import md5 from 'js-md5'
+import { request } from '@/network/request'
 
 import Popover from '@/components/Popover'
 
@@ -134,14 +141,16 @@ export default {
   data() {
     return {
       showPicker: false,
-      columns: [
+      theme: [
         {
+          title: '抽象',
           class: 'theme-abstract',
-          text: '抽象'
+          intro: '作者亲笔所画，这波不用爆？'
         },
         {
+          title: '森林',
           class: 'theme-forest',
-          text: '森林'
+          intro: '经典的默认主题'
         }
       ],
       tabIndex: 0,
@@ -167,11 +176,10 @@ export default {
   methods: {
     // 切换主题
     changeTheme(value) {
-      this.value = value.text
-      this.$store.state.theme = value.class
+      this.$store.state.theme = value
       this.showPicker = false
       // 存缓存
-      window.localStorage.setItem('theme', value.class)
+      window.localStorage.setItem('theme', value)
     },
     // 登录
     login() {
@@ -255,6 +263,23 @@ export default {
 .login {
   .van-tabs__line {
     transform: translateX(75.5px) translateX(-50%);
+  }
+}
+
+.theme-swipe {
+  .van-swipe-item {
+    margin-top: 20px;
+    color: #333;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    display: flex;
+    flex-flow: column nowrap;
+    button {
+      display:block;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
   }
 }
 </style>

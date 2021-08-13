@@ -13,9 +13,9 @@
 2. Vant
 
 #### 常用操作
-1.  安装依赖 `npm install`
-2.  运行项目 `npm run dev`
-3.  打包项目 `npm run build`
+1. 安装依赖 `npm install`
+2. 运行项目 `npm run dev`
+3. 打包项目 `npm run build`
 
 #### 注意事项
 1. 需求概述可查阅[Demand](/docs/Demand.md)
@@ -23,7 +23,7 @@
 3. 了解接口及服务请访问[后台仓库](https://gitee.com/funzeros/box-man)
 
 #### 参与贡献
-1.  Fork 本仓库
-2.  新建 feature-xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+1. Fork 本仓库
+2. 新建 feature-xxx 分支
+3. 提交代码
+4. 新建 Pull Request
