@@ -17,11 +17,7 @@
             <li
               v-for="(item, index) in basic"
               :key="index"
-              @click="$router.push({
-                name: 'game',
-                query: { type: 'level', pack: 'basic' },
-                params: { level: index }
-              })"
+              @click="toGame('basic', index)"
             >
             {{ index + 1 }}
             </li>
@@ -32,11 +28,7 @@
             <li
               v-for="(item, index) in expand"
               :key="index"
-              @click="$router.push({
-                name: 'game',
-                query: { type: 'level', pack: 'expand' },
-                params: { level: index }
-              })"
+              @click="toGame('expand', index)"
             >
             {{ index + 1 }}
             </li>
@@ -111,6 +103,16 @@ export default {
   components: {
     TopBar,
     Popover
+  },
+  methods: {
+    // 进入游戏
+    toGame(pack, level) {
+      this.$router.push({
+        name: 'game',
+        query: { type: 'level', pack },
+        params: { level }
+      })
+    }
   }
 }
 </script>

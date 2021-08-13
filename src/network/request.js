@@ -5,7 +5,11 @@ import { Notify } from 'vant'
 export function request(config) {
   // 创建axios实例
   const instance = axios.create({
-    baseURL: 'http://47.103.218.109:10052/api/'
+    baseURL: 'http://47.103.218.109:10052/api/',
+    validateStatus: status => {
+      // 允许返回所有状态码，不会遇到错误就停止
+      return status >= 200 && status <= 600
+    }
   })
 
   // 请求拦截

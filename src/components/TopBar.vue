@@ -177,7 +177,6 @@ export default {
     // 切换主题
     changeTheme(value) {
       this.$store.state.theme = value
-      this.showPicker = false
       // 存缓存
       window.localStorage.setItem('theme', value)
     },
@@ -192,12 +191,10 @@ export default {
         }
       }).then(res => {
         if (res.code == 0) {
-          this.$store.state.username = res.data.username
+          this.$store.state.username = res.data.name
           window.localStorage.setItem('token', res.data.token)
           this.$notify({ type: 'success', message: '登录成功' })
           this.$refs.login.show()
-        } else {
-          this.$notify({ type: 'danger', message: res.msg })
         }
       })
     },
@@ -216,8 +213,6 @@ export default {
           this.loginForm.username = this.registerForm.username
           this.loginForm.password = md5(this.registerForm.password)
           this.login()
-        } else {
-          this.$notify({ type: 'danger', message: res.msg })
         }
       })
     },

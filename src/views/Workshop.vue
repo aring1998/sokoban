@@ -77,9 +77,9 @@
     </div>
     <!-- 分页 -->
     <van-pagination
-      v-model="current"
-      :total-items="total"
-      :items-per-page="size"
+      v-model="searchInfo.current"
+      :total-items="searchInfo.total"
+      :items-per-page="searchInfo.size"
       @change="changePage"
       style="margin: 0 20px"
     />
@@ -95,13 +95,12 @@ export default {
   data() {
     return {
       mapData: [], // 地图数据
-      current: 1, // 页码
-      size: 20, // 每页条数
-      total: '', // 总条数
-      searchInfo: {
-        // 搜索列表
+      searchInfo: { // 搜索列表
         mapName: '', // 地图名
         creator: '', // 作者
+        current: 1, // 页码
+        size: 20, // 每页条数
+        total: 0, // 总条数
         sort: 0, // 排序
         type: '' // 方式
       },
@@ -118,10 +117,12 @@ export default {
     this.getGameMap()
   },
   watch: {
+    // 监听tab页变化以重新加载地图列表
     workshopTab: {
       handler(value) {
         this.searchInfo.sort = 0
         this.searchInfo.type = ''
+        // 本地地图
         if (value === 3) {
           this.mapData = []
           for (let i = 0; i < 99; i++) {
@@ -130,8 +131,15 @@ export default {
             } else return
           }
         }
+        // 最热门
         if (value === 1) this.searchInfo.sort = 1
-        if (value === 2) this.searchInfo.type = 'collect'
+        // 我的收藏
+        if (value === 2) {
+          if (!this.$store.commit('checkLogin')) {
+            return this.mapData = []
+          }
+          this.searchInfo.type = 'collect'
+        }
         this.getGameMap()
       }
     }
@@ -144,12 +152,10 @@ export default {
         url: '/map/page',
         methods: 'GET',
         params: {
-          size: this.size, // 条数
-          current: this.current, // 页码
           ...this.searchInfo // 展开搜索参数
         }
       }).then(res => {
-        this.total = res.data.total // 获取总条数
+        this.searchInfo.total = res.data.total // 获取总条数
         this.mapData = res.data.records // 地图数据赋值
         this.$toast.clear()
       })
@@ -161,6 +167,7 @@ export default {
     },
     // 点赞
     like(index, id) {
+      if (!this.$store.commit('checkLogin')) return
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `like/${id}`,
@@ -177,6 +184,7 @@ export default {
     },
     // 收藏
     collect(index, id) {
+      if (!this.$store.commit('checkLogin')) return
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `collect/${id}`,
