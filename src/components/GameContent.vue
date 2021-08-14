@@ -3,13 +3,16 @@
   <div class="game-container">
     <div class="game-table" :class="{'table-border': gameMap.length > 12 || gameMap[0].length > 12}">
       <div class="game-row" v-for="(item, yIndex) of gameMap" :key="yIndex" @click="getRowIndex(yIndex)">
+        {{gameMap[yIndex]}}
         <div
           v-for="(item, xIndex) of gameMap[yIndex]"
           @click="getColumnIndex(xIndex)"
           :key="xIndex"
           class="game-cell"
           :class="$route.path == '/game' ? randerClass(yIndex, xIndex) : getMapElClass(item)"
-        ></div>
+        >
+        {{yIndex}}-{{xIndex}}
+        </div>
       </div>
     </div>
   </div>
@@ -49,6 +52,7 @@ export default {
     },
     // 渲染地图
     randerClass(y, x) {
+      console.log(11)
       if (this.staticMap.length == 0) return
       let res = ''
       // 静止层渲染

@@ -211,6 +211,7 @@ export default {
     },
     // 玩家移动
     move(direction, step) {
+      console.log('move')
       /**
        * 变量名
        * @direction: 轴方向
@@ -395,9 +396,11 @@ export default {
       this.activeMapRecord.push(deepClone2Arr(this.activeMap))
       this.lifeRecord.push(this.life)
       this.statusRecord.push(deepCloneObj(this.status))
+      console.log(this.gameMap, this.activeMap)
     },
     // 松开按键时，停止移动
     stopMove() {
+      console.log('stop')
       clearTimeout(this.keepMove)
     },
     // 撤回（可以连续撤回置第一步）
