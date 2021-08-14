@@ -319,8 +319,7 @@ export default {
           this.life--
           if (this.life == 0) {
             this.$notify({ type: 'danger', message: 'you dead!' })
-            this.init()
-            return
+            return this.init()
           }
           break
         }
@@ -332,8 +331,7 @@ export default {
         }
         // 碰弹簧
         case 9: {
-          this.move(direction, step * 3)
-          return
+          return this.move(direction, step * 3)
         }
         // 传送门入口
         case 10: {
@@ -525,10 +523,7 @@ export default {
           this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
           break
         }
-        if (i == 99) {
-          this.$notify({ type: 'error', message: '本地存储已达上限' })
-          return
-        }
+        if (i == 99) return this.$notify({ type: 'danger', message: '本地存储已达上限' })
       }
       this.$refs.saveMap.show()
       setTimeout(() => {

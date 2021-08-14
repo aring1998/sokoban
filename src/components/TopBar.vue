@@ -18,7 +18,7 @@
             class="theme-swipe"
             indicator-color="white"
             :initial-swipe="
-              $store.theme == 'theme-abstract' ? 0 : $store.theme == 'theme-forest' ? 1 : 1
+              $store.state.theme == 'theme-abstract' ? 0 : $store.theme == 'theme-forest' ? 1 : 1
             "
           >
             <van-swipe-item v-for="(item, index) of theme" :key="index">
@@ -222,9 +222,7 @@ export default {
     },
     // 密码匹配验证
     checkPassWord(value) {
-      if (value !== this.registerForm.password || value !== this.forgetForm.newPassword) {
-        return false
-      }
+      if (value !== this.registerForm.password || value !== this.forgetForm.newPassword) return false
       return true
     }
   }

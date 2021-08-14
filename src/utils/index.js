@@ -5,15 +5,15 @@ export const deepCloneObj = obj => {
 
 // 深拷贝二维数组
 export const deepClone2Arr = arr => {
-  let out = []
+  let res = []
   for (let i = 0; i < arr.length; i++) {
     if (arr[i] instanceof Array) {
-      out[i] = deepClone2Arr(arr[i])
+      res[i] = deepClone2Arr(arr[i])
     } else {
-      out[i] = arr[i]
+      res[i] = arr[i]
     }
   }
-  return out
+  return res
 }
 
 // 判断是否为空对象

@@ -17,7 +17,8 @@
             <li
               v-for="(item, index) in basic"
               :key="index"
-              @click="toGame('basic', index)"
+              :disabled="index + 1 > basicComplete"
+              @click="toGame('basic', index, index + 1 > basicComplete)"
             >
             {{ index + 1 }}
             </li>
@@ -28,7 +29,8 @@
             <li
               v-for="(item, index) in expand"
               :key="index"
-              @click="toGame('expand', index)"
+              :disabled="index + 1 > expandComplete"
+              @click="toGame('expand', index, index + 1 > expandComplete)"
             >
             {{ index + 1 }}
             </li>
@@ -93,11 +95,13 @@ import Popover from '@/components/Popover'
 export default {
   data() {
     return {
-      basic: basic,
-      expand: expand,
+      basic,
+      expand,
       aboutGameTab: 0,
       levelTab: 0,
-      mapManual: mapEl
+      mapManual: mapEl,
+      basicComplete: 99,
+      expandComplete: 99
     }
   },
   components: {
@@ -106,7 +110,8 @@ export default {
   },
   methods: {
     // 进入游戏
-    toGame(pack, level) {
+    toGame(pack, level, isComplete) {
+      if (isComplete) return this.$notify({ type: 'danger', message: '请先挑战前面的关卡哦~' })
       this.$router.push({
         name: 'game',
         query: { type: 'level', pack },
@@ -239,6 +244,9 @@ export default {
       font-weight: 900;
       font-size: 20px;
       text-align: center;
+    }
+    li[disabled] {
+      background-color: var(--lightMainColor);
     }
     li.active {
       background-color: var(--deepMainColor);

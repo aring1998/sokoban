@@ -1,6 +1,7 @@
 .theme-abstract {
-  --mainColor: #ddd;
+  --mainColor: #ccc;
   --deepMainColor: #333;
+  --lightMainColor: #cccccc80;
 }
 
 .theme-abstract .game-container .game-table {
@@ -46,6 +47,7 @@
 .theme-forest {
   --mainColor: #95d52f;
   --deepMainColor: #339933;
+  --lightMainColor: #95d52f80;
 }
 
 .theme-forest .game-container .game-table {
