@@ -331,6 +331,10 @@ export default {
         }
         // 碰弹簧
         case 9: {
+          // 提前判断活动层目标点，若为箱子，取消弹跳
+          if (direction == 'x') setX = this.playerX + step * 3
+          else setY = this.playerY + step * 3
+          if (this.activeMap[setY][setX] == 3 || this.activeMap[setY][setX] == 7) return
           return this.move(direction, step * 3)
         }
         // 传送门入口

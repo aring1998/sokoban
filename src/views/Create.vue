@@ -194,6 +194,7 @@ export default {
                 this.$refs.advancedOptions.show()
                 return false
               }
+              break
             }
             case 10: {
               singlePortalEntry++
