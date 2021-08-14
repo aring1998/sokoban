@@ -409,7 +409,7 @@ export default {
             // 碰火
             case 6: {
               // 如果是冰箱子，灭火
-              if (staticTarget == 7) {
+              if (activeTarget == 7) {
                 this.$set(this.staticMap[setBoxY], setBoxX, 1) // 灭火
                 this.$set(this.activeMap[setBoxY], setBoxX, 3) // 变为普通箱子
                 isDefault = false
