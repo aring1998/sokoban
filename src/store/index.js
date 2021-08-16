@@ -1,9 +1,9 @@
-import Vue from "vue"
-import Vuex from "vuex"
+import Vue from 'vue'
+import Vuex from 'vuex'
 import mutations from '@/store/mutations'
 import getters from '@/store/getters'
 import actions from '@/store/actions'
-
+import versionConfig from '@/assets/config/version.json'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -11,14 +11,12 @@ const store = new Vuex.Store({
     username: '',
     token: window.localStorage.getItem('token') || '',
     theme: window.localStorage.getItem('theme') || 'theme-forest',
-    version: '0.1'
+    version: versionConfig.version,
   },
   mutations,
   getters,
   actions,
-  mudules: {
-
-  }
+  mudules: {},
 })
 
 // 导出
