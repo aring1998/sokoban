@@ -1,13 +1,16 @@
 <template>
-  <div class="mainpage">
+  <div class="index">
     <top-bar>
       <van-icon name="question-o" @click="$refs.intro.show()" />
     </top-bar>
-    <div class="choosebox">
-      <p class="choosebox-title">PUSH THE BOX!</p>
-      <button class="choosebtn" @click="$refs.level.show()">选择关卡</button>
-      <button class="choosebtn" @click="$router.push('/workshop')">创意工坊</button>
-      <button class="choosebtn" @click="$router.push('/create')">创建地图</button>
+    <!-- 主界面 -->
+    <div class="main">
+      <img src="~@/assets/img/index/game-name.png" alt="">
+      <van-button icon="flag-o" type="primary" size="large" plain round @click="$refs.level.show()">开始游戏</van-button>
+      <van-button icon="shop-collect" type="primary" size="large" plain round @click="$router.push('/workshop')">创意工坊</van-button>
+      <van-button icon="edit" type="primary" size="large" plain round @click="$router.push('/create')">创建地图</van-button>
+      <!-- 版本 -->
+      <span class="version">v {{ $store.state.version }}</span>
     </div>
     <!-- 选关弹窗 -->
     <popover type="white" class="choice-level" ref="level">
@@ -125,73 +128,42 @@ export default {
 <style lang="scss">
 @import '../assets/css/animation.css';
 /*首页*/
-.mainpage {
+.index {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   position: relative;
   background-color: var(--mainColor);
-}
-.choosebox {
-  width: 100vw;
-  height: 100vh;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.5s;
-}
-.choosebtn,
-.choosebox-title {
-  width: 50%;
-  height: 50px;
-  text-align: center;
-  margin-top: 10px;
-}
-.choosebtn {
-  border-radius: 10px;
-  cursor: pointer;
-  border: 1px solid rgb(2, 20, 31);
-}
-.show {
-  transform: translate(0, -100vh);
-  transition: all 1s;
-}
-/*弹窗 */
-.out {
-  width: 100vw;
-  height: 100vh;
-  background: var(--mainColor);
-  transition: all 0.5s;
-  padding-top: 50px;
-}
-.level-content {
-  width: 80%;
-  height: 50vh;
-  margin: 0 auto 5px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-content: flex-start;
-}
-.level-btn {
-  width: 80%;
-  display: flex;
-  justify-content: center;
-  margin: 0 auto 10px;
+  .main {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    img {
+      width: 355px;
+      background-size: 100% 100%;
+      margin: 60px 0;
+    }
+    button {
+      width: 220px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      font-size: 20px;
+      height: 60px;
+      color: var(--deepMainColor);
+      border-right: 2px var(--deepMainColor) solid;
+      border-bottom: 4px var(--deepMainColor) solid;
+    }
+    .version {
+      font-weight: 600;
+      color: #fff;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+    }
+  }
 }
 
-.van-tab__text--ellipsis {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.van-tabs--line {
-  border-radius: 10px;
-  overflow: hidden;
-}
-
+// 游戏介绍
 .index-intro {
   img {
     height: 25px;
@@ -224,13 +196,13 @@ export default {
   }
 }
 
+// 选择关卡
 .choice-level {
   ul {
     display: flex;
     flex-flow: row wrap;
     background-color: #fff;
     align-content: flex-start;
-    // justify-content: space-around;
     height: calc(90vh - 150px);
     padding: 10px;
     li {
@@ -251,15 +223,18 @@ export default {
     li.active {
       background-color: var(--deepMainColor);
     }
-    .level-btn {
-      display: flex;
-      align-items: center;
-      height: 40px;
-      justify-content: space-around;
-    }
   }
   .van-tabs__line {
     transform: translateX(77.5px) translateX(-50%)
   }
+}
+
+.van-tab__text--ellipsis {
+  font-size: 16px;
+  font-weight: 600;
+}
+.van-tabs--line {
+  border-radius: 10px;
+  overflow: hidden;
 }
 </style>

@@ -1,25 +1,30 @@
 <template>
-  <div class="sokoban" v-cloak>
+  <div class="game" v-cloak>
     <!-- 顶部导航栏 -->
     <top-bar></top-bar>
-    <!-- 人物生命值 -->
-    <div class="life" v-if="initLife > 0">
-      <span>当前生命：</span>
-      <span v-if="life < 12">
-        <van-icon name="like" color="red" v-for="(item, index) in life" :key="index" />
-      </span>
-      <span v-else>
-        <van-icon name="like" color="red" />
-        <span>&ensp;× {{ life }}</span>
-      </span>
+    <!-- 游戏信息 -->
+    <div class="game-info">
+      <!-- 步数 -->
+      <div class="step">
+        <span v-if="$route.query.type == 'level'">关卡: {{ $route.query.pack == 'basic' ? '基础关' : '拓展关' }}--{{ level + 1 }}</span>
+        <span v-else class="map-name">地图名: {{ mapName }}</span>
+        <span>当前步数：{{ step }}</span>
+        <span>最优步数：{{ bestStep }}</span>
+      </div>
+      <!-- 人物生命值 -->
+      <div class="life" v-if="initLife > 0">
+        <span>生命值：</span>
+        <span v-if="life < 12">
+          <van-icon name="like" color="red" v-for="(item, index) in life" :key="index" />
+        </span>
+        <span v-else>
+          <van-icon name="like" color="red" />
+          <span>&ensp;× {{ life }}</span>
+        </span>
+      </div>
     </div>
     <!-- 游戏内容 -->
     <game-content :game-map="gameMap" ref="game"></game-content>
-    <!-- 步数 -->
-    <div class="step">
-      <span>当前步数：{{ step }}</span>
-      <span>最优步数：{{ bestStep }}</span>
-    </div>
     <!-- 行为控制 -->
     <div class="check-point">
       <van-button @click="onRegret" type="primary" size="mini" :disabled="this.activeMapRecord.length == 1">撤回</van-button>
@@ -49,6 +54,7 @@
       <van-button @click="$router.push({ name: 'create', params: { gameMap, life: initLife } })" type="info" size="mini">返回编辑</van-button>
       <van-button @click="$router.push('/index')" type="danger" size="mini">放弃编辑</van-button>
     </div>
+    <!-- 保存地图弹出框 -->
     <popover ref="saveMap" v-if="this.$route.query.type == 'created'">
       <div class="test-map-pop">
         <span>您已完成该地图的测试</span>
@@ -107,6 +113,7 @@ export default {
       level: 0, // 关卡级数
       levelCounter: 0, // 关卡总量
       gameMap: [], // 游戏地图
+      mapName: '', // 地图名
       staticMap: [], // 静止层地图
       activeMap: [], // 活动层地图
       staticMapRecord: [], // 静止层每步地图记录
@@ -234,6 +241,7 @@ export default {
         this.$toast.clear()
         if (res.code == 0) {
           this.gameMap = res.data.mapData
+          this.mapName = res.data.mapName
           this.initLife = res.data.playerHP
           this.tips = res.data.processData
           this.bestStep = res.data.stepsPas
@@ -599,11 +607,14 @@ export default {
 </script>
 
 <style lang="scss">
-.sokoban {
+.game {
   background-color: var(--mainColor);
   height: 100vh;
   // 虚拟手柄
   .analog-handle {
+    position: fixed;
+    bottom: 60px;
+    left: 87.5px;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
@@ -612,7 +623,6 @@ export default {
     border: 5px rgba(0, 0, 0, 0.4) solid;
     width: 200px;
     height: 200px;
-    margin: 0 auto;
     font-size: 60px;
     color: #fff;
     div {
@@ -641,30 +651,33 @@ export default {
   .check-point {
     display: flex;
     justify-content: space-around;
-    margin: 20px 0;
+    margin: 10px 0;
   }
-  // 人物生命值
-  .life,
-  .step {
-    display: flex;
-    align-items: center;
-    font-weight: 600;
-    padding: 0 30px;
-    color: #fff;
-    height: 30px;
-    .life-show-type {
+  // 游戏信息
+  .game-info {
+    margin-bottom: 20px;
+    .life,
+    .step {
       display: flex;
-      flex-flow: row nowrap;
       align-items: center;
-      i {
-        font-size: 18px;
-        font-weight: 600;
+      font-weight: 600;
+      padding: 0 15px;
+      color: #333;
+      height: 25px;
+      font-size: 14px;
+      background-color: rgba(255, 255, 255, 0.6);
+    }
+    .step {
+      justify-content: space-between;
+      .map-name {
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
-  .step {
-    justify-content: space-between;
-  }
+  
   // 提示弹窗
   .tips {
     padding: 50px 20px;

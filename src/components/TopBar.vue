@@ -1,9 +1,11 @@
 <!-- 顶部导航栏 -->
 <template>
   <div class="top-bar">
-    <div class="top-bar-item">
+    <audio :src="require('@/assets/audio/bgm.mp3')" class="media-audio" loop autoplay ref="bgm"></audio>
+    <div class="top-bar-item">  
       <slot><van-icon name="revoke" @click="$router.go(-1)" /></slot>
       <div>
+        <van-icon name="music-o" :class="{ turn: bgmPlay }" @click="musicControl"/>
         <van-icon name="user-o" @click="$refs.login.show()" />
         <van-icon name="bars" @click="$refs.menu.show()" />
       </div>
@@ -140,6 +142,7 @@ import Popover from '@/components/Popover'
 export default {
   data() {
     return {
+      bgmPlay: true,
       showPicker: false,
       theme: [
         {
@@ -173,7 +176,24 @@ export default {
   components: {
     Popover
   },
+  mounted() {
+    this.bgmPlay = JSON.parse(window.localStorage.getItem('bgmPlay'))
+    if (!this.bgmPlay) this.$refs.bgm.pause()
+  },
   methods: {
+    // 开关bgm
+    musicControl() {
+      if (this.bgmPlay) {
+        this.$refs.bgm.pause()
+        this.bgmPlay = false
+        window.localStorage.setItem('bgmPlay', false)
+      }
+      else {
+        this.$refs.bgm.play()
+        this.bgmPlay = true
+        window.localStorage.setItem('bgmPlay', true)
+      }
+    },
     // 切换主题
     changeTheme(value) {
       this.$store.state.theme = value
@@ -273,6 +293,19 @@ export default {
       margin: 0 auto;
       margin-bottom: 20px;
     }
+  }
+}
+
+.turn {
+  animation: iconTurn 5s infinite linear;
+}
+
+@keyframes iconTurn {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>

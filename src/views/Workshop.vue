@@ -1,12 +1,18 @@
 <template>
   <div class="workshop">
     <top-bar></top-bar>
-    <p class="workshop-title out-title">创意工坊</p>
+    <div class="page-title">创意工坊</div>
     <!-- 搜索框 -->
-    <div class="workshop-searchMap">
-      <van-field v-model="searchInfo.mapName" label="地图名称" placeholder="请输入地图名称" />
-      <van-field v-model="searchInfo.creator" label="作者名称" placeholder="请输入作者名称" />
-      <van-button type="primary" @click="getGameMap">搜索</van-button>
+    <div class="search">
+      <div>
+        <label for="mapName">地图名 </label>
+        <input type="text" v-model="searchInfo.mapName" id="mapName">
+      </div>
+      <div>
+        <label for="creator">作者 </label>
+        <input type="text" v-model="searchInfo.creator" id="creator">
+      </div>
+      <van-button type="primary" @click="getGameMap" size="small" round>搜索</van-button>
     </div>
     <!-- tab标签 -->
     <van-tabs v-model="workshopTab" color="var(--mainColor)" class="workshop-tab">
@@ -81,8 +87,15 @@
       :total-items="searchInfo.total"
       :items-per-page="searchInfo.size"
       @change="changePage"
-      style="margin: 0 20px"
-    />
+      style="margin: 0 15px"
+    >
+      <template #prev-text>
+        <van-icon name="arrow-left" />
+      </template>
+      <template #next-text>
+        <van-icon name="arrow" />
+      </template>
+    </van-pagination>
   </div>
 </template>
 
@@ -216,33 +229,44 @@ export default {
   height: 100vh;
   background: var(--mainColor);
   overflow: hidden;
-  .workshop-searchMap {
-    background: var(--mainColor);
-    .van-field {
-      width: 80%;
-      margin: 0 auto;
-      margin-top: 10px;
+  // 搜索框
+  .search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 30px;
+    padding: 0 10px;
+    div {
+      display: flex;
+      align-items: center;
     }
-    .van-button {
-      width: 20%;
-      margin-top: 10px;
-      margin-left: 70%;
+    label {
+      color: #333;
+      margin-right: 4px;
+    }
+    input {
+      width: 95px;
+      font-size: 12px;
+      height: 25px;
+      border: 2px var(--deepMainColor) solid;
+      border-radius: 999px;
+      padding: 0 10px;
     }
   }
   .workshop-tab {
     border-bottom-left-radius: unset;
     border-bottom-right-radius: unset;
-    margin: 10px 20px 0 20px;
+    margin: 10px 15px 0 15px;
   }
   .workshop-content {
-    margin: -1px 20px 0 20px;
+    margin: -1px 15px 0 15px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     .workshop-map {
       display: flex;
       flex-flow: column nowrap;
-      height: calc(100vh - 400px);
+      height: calc(100vh - 270px);
       overflow: scroll;
       padding: 10px;
       background-color: #fff;
@@ -308,7 +332,10 @@ export default {
     }
   }
 }
-.van-pagination__item .van-pagination__item--active .van-pagination__page .van-hairline {
-  background-color: var(--mainColor);
+
+.van-pagination {
+  overflow: hidden;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 </style>

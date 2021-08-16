@@ -2,16 +2,17 @@
 <template>
   <div class="create">
     <top-bar></top-bar>
+    <div class="page-title">创建地图</div>
     <!-- 弹出层选择初始游戏地图布局 -->
     <popover ref="gameMapLayout">
-      <van-form>
+      <van-form @submit="changeTableLayout">
         <van-field
           v-model="gameMapForm.row"
           type="digit"
           maxlength="2"
           label="地图行数"
           placeholder="可选范围：5~40"
-          :rules="[{ pattern: /^(5|40|[1-3][0-9])$/, required: true, message: '可选范围：5~40' }]"
+          :rules="[{ pattern: /^([5-9]|[1,2][0-9]|30)$/, required: true, message: '可选范围：5~30' }]"
         />
         <van-field
           v-model="gameMapForm.column"
@@ -19,10 +20,10 @@
           maxlength="2"
           label="地图列数"
           placeholder="可选范围：5~40"
-          :rules="[{ pattern: /^(5|40|[1-3][0-9])$/, required: true, message: '可选范围：5~40' }]"
+          :rules="[{ pattern: /^([5-9]|[1,2][0-9]|30)$/, required: true, message: '可选范围：5~30' }]"
         />
         <div style="margin: 16px;">
-          <van-button round block type="info" @click="changeTableLayout">确定</van-button>
+          <van-button round block type="info">确定</van-button>
         </div>
       </van-form>
     </popover>
@@ -261,6 +262,7 @@ export default {
     background-color: rgba(255, 255, 255, 0.6);
     height: 170px;
     overflow: auto;
+    margin-top: 20px;
     ul {
       display: flex;
       flex-flow: row wrap;

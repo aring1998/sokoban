@@ -10,7 +10,8 @@ const store = new Vuex.Store({
   state: {
     username: '',
     token: window.localStorage.getItem('token') || '',
-    theme: window.localStorage.getItem('theme') || 'theme-forest'
+    theme: window.localStorage.getItem('theme') || 'theme-forest',
+    version: '0.1'
   },
   mutations,
   getters,

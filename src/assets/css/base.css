@@ -14,3 +14,11 @@
 [v-cloak] {
   display: none;
 }
+
+.page-title {
+  font-size: 25px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--deepMainColor);
+  margin-bottom: 20px;
+}
