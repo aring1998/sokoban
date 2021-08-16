@@ -11,7 +11,7 @@
           type="digit"
           maxlength="2"
           label="地图行数"
-          placeholder="可选范围：5~40"
+          placeholder="可选范围：5~30"
           :rules="[{ pattern: /^([5-9]|[1,2][0-9]|30)$/, required: true, message: '可选范围：5~30' }]"
         />
         <van-field
@@ -19,7 +19,7 @@
           type="digit"
           maxlength="2"
           label="地图列数"
-          placeholder="可选范围：5~40"
+          placeholder="可选范围：5~30"
           :rules="[{ pattern: /^([5-9]|[1,2][0-9]|30)$/, required: true, message: '可选范围：5~30' }]"
         />
         <div style="margin: 16px;">
@@ -72,13 +72,13 @@
     </van-row>
     <van-row type="flex" justify="space-around" align="center" style="margin: 10px 0">
       <van-col span="6" align="center">
-        <van-button type="primary" size="small" @click="addRow" :disabled="gameMap.length == 40">添加一行</van-button>
+        <van-button type="primary" size="small" @click="addRow" :disabled="gameMap.length == 30">添加一行</van-button>
       </van-col>
       <van-col span="6" align="center">
         <van-button type="danger" size="small" @click="delRow" :disabled="gameMap.length == 1">删除一行</van-button>
       </van-col>
       <van-col span="6" align="center">
-        <van-button type="primary" size="small" @click="addColumn" :disabled="gameMap[0].length == 40">添加一列</van-button>
+        <van-button type="primary" size="small" @click="addColumn" :disabled="gameMap[0].length == 30">添加一列</van-button>
       </van-col>
       <van-col span="6" align="center">
         <van-button type="danger" size="small" @click="delColumn" :disabled="gameMap[0].length == 1">删除一列</van-button>
