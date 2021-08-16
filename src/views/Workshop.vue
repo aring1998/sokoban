@@ -45,36 +45,15 @@
             <span class="creator">{{ item.creator }}</span>
             <!-- 点赞/收藏/分享 -->
             <div class="tool-bar">
-              <van-icon
-                name="good-job"
-                v-show="item.hasPraise"
-                @click.stop="like(index, item.id)"
-              />
-              <van-icon
-                name="good-job-o"
-                v-show="!item.hasPraise"
-                @click.stop="like(index, item.id)"
-              />
-              <van-icon
-                name="star"
-                v-show="item.hasCollect"
-                @click.stop="collect(index, item.id)"
-              />
-              <van-icon
-                name="star-o"
-                v-show="!item.hasCollect"
-                @click.stop="collect(index, item.id)"
-              />
-              <van-icon
-                name="share"
-                v-show="index == shareIndex"
-                @click.stop="share(index, item.mapName)"
-              />
-              <van-icon
-                name="share-o"
-                v-show="index != shareIndex"
-                @click.stop="share(index, item.mapName)"
-              />
+              <div v-show="workshopTab != 3">
+                <van-icon name="good-job" v-show="item.hasPraise" @click.stop="like(index, item.id)" />
+                <van-icon name="good-job-o" v-show="!item.hasPraise" @click.stop="like(index, item.id)" />
+                <van-icon name="star" v-show="item.hasCollect" @click.stop="collect(index, item.id)" />
+                <van-icon name="star-o" v-show="!item.hasCollect" @click.stop="collect(index, item.id)" />
+                <van-icon name="share" v-show="index == shareIndex" @click.stop="share(index, item.mapName)" />
+                <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(index, item.mapName)" />
+              </div>
+              <van-icon name="close" v-show="workshopTab == 3" @click.stop="delLocalMap(item.localId, item.mapName)"/>
               <span class="date">{{ item.time | formatDate }}</span>
             </div>
           </div>
@@ -87,7 +66,7 @@
       :total-items="searchInfo.total"
       :items-per-page="searchInfo.size"
       @change="changePage"
-      style="margin: 0 15px"
+      style="margin: 0 10px"
     >
       <template #prev-text>
         <van-icon name="arrow-left" />
@@ -137,12 +116,7 @@ export default {
         this.searchInfo.type = ''
         // 本地地图
         if (value === 3) {
-          this.mapData = []
-          for (let i = 0; i < 99; i++) {
-            if (window.localStorage.getItem('map' + i)) {
-              this.mapData.push(JSON.parse(window.localStorage.getItem('map' + i)))
-            } else return
-          }
+          return this.getLocalMap()
         }
         // 最热门
         if (value === 1) this.searchInfo.sort = 1
@@ -173,6 +147,15 @@ export default {
         this.$toast.clear()
       })
     },
+    // 获取本地地图
+    getLocalMap() {
+      this.mapData = []
+      for (let i = 0; i < 99; i++) {
+        if (window.localStorage.getItem('map' + i)) {
+          this.mapData.push(JSON.parse(window.localStorage.getItem('map' + i)))
+        }
+      }
+    },
     // 分页页码改变时触发
     changePage(value) {
       this.current = value
@@ -180,7 +163,7 @@ export default {
     },
     // 点赞
     like(index, id) {
-      if (!this.$store.commit('checkLogin')) return
+      if (this.$store.commit('checkLogin')) return
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `like/${id}`,
@@ -197,7 +180,7 @@ export default {
     },
     // 收藏
     collect(index, id) {
-      if (!this.$store.commit('checkLogin')) return
+      if (this.$store.commit('checkLogin')) return
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `collect/${id}`,
@@ -217,6 +200,16 @@ export default {
       this.shareIndex = index
       this.$copyText(window.location.href + '?mapName=' + name)
       this.$notify({ type: 'success', message: '已复制地图链接到剪贴板，快去分享给好友吧！' })
+    },
+    // 删除本地地图
+    delLocalMap(id, name) {
+      this.$dialog.confirm({
+        message: `确定删除 "${name}" 吗？`
+      }).then(() => {
+        this.$toast.success({ message: '删除成功', duration: 500 })
+        window.localStorage.removeItem('map' + id)
+        this.getLocalMap()
+      })
     }
   }
 }
@@ -256,17 +249,17 @@ export default {
   .workshop-tab {
     border-bottom-left-radius: unset;
     border-bottom-right-radius: unset;
-    margin: 10px 15px 0 15px;
+    margin: 10px 10px 0 10px;
   }
   .workshop-content {
-    margin: -1px 15px 0 15px;
+    margin: -1px 10px 0 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     .workshop-map {
       display: flex;
       flex-flow: column nowrap;
-      height: calc(100vh - 270px);
+      height: calc(100vh - 240px);
       overflow: scroll;
       padding: 10px;
       background-color: #fff;
@@ -317,12 +310,13 @@ export default {
           display: flex;
           flex-flow: row nowrap;
           align-items: center;
+          justify-content: space-between;
           font-size: 20px;
           font-weight: 600;
           color: #fff;
           margin-top: 5px;
           i {
-            margin-right: 8px;
+            margin-right: 4px;
             background-color: rgba(0, 0, 0, 0.3);
             border-radius: 50%;
             padding: 4px;

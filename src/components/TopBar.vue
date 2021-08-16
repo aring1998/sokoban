@@ -254,7 +254,7 @@ export default {
   .top-bar-item {
     display: flex;
     align-items: center;
-    height: 80px;
+    height: 60px;
     padding: 20px 15px;
     justify-content: space-between;
     img {

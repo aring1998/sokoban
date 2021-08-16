@@ -27,9 +27,35 @@
     <game-content :game-map="gameMap" ref="game"></game-content>
     <!-- 行为控制 -->
     <div class="check-point">
+      <van-button @click="init" type="primary" size="mini">重置</van-button>
       <van-button @click="onRegret" type="primary" size="mini" :disabled="this.activeMapRecord.length == 1">撤回</van-button>
       <van-button @click="tipsShow = true" type="primary" size="mini" v-if="$route.query.type != 'created'">提示</van-button>
-      <van-button @click="init" type="primary" size="mini">重置</van-button>
+      <van-button
+        @click="changeLevel(-1)"
+        type="primary" size="mini"
+        :disabled="level == 0"
+        v-if="$route.query.type == 'level'"
+      >
+        上一关
+      </van-button>
+      <van-button
+        @click="changeLevel(1)"
+        type="primary"
+        size="mini"
+        :disabled="level == levelCounter"
+        v-if="$route.query.type == 'level'"
+      >
+        下一关
+      </van-button>
+      <van-button
+        @click="$router.push({ name: 'create', params: { gameMap, life: initLife } })"
+        type="info"
+        size="mini"
+        v-if="$route.query.type == 'created'"
+      >
+        返回编辑
+      </van-button>
+      <van-button @click="$router.push('/index')" type="danger" size="mini"  v-if="$route.query.type == 'created'">放弃编辑</van-button>
     </div>
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
@@ -43,16 +69,6 @@
       <div class="bottom">
         <van-icon name="arrow-down" @touchstart.prevent="move('y', 1)" @touchend.prevent="stopMove()" />
       </div>
-    </div>
-    <!-- 切关控制：选关进入显示 -->
-    <div class="check-point" v-if="$route.query.type == 'level'">
-      <van-button @click="changeLevel(-1)" type="primary" size="mini" :disabled="level == 0">上一关</van-button>
-      <van-button @click="changeLevel(1)" type="primary" size="mini" :disabled="level == levelCounter">下一关</van-button>
-    </div>
-    <!-- 编辑控制：创建地图进入显示 -->
-    <div class="check-point" v-if="$route.query.type == 'created'">
-      <van-button @click="$router.push({ name: 'create', params: { gameMap, life: initLife } })" type="info" size="mini">返回编辑</van-button>
-      <van-button @click="$router.push('/index')" type="danger" size="mini">放弃编辑</van-button>
     </div>
     <!-- 保存地图弹出框 -->
     <popover ref="saveMap" v-if="this.$route.query.type == 'created'">
@@ -168,6 +184,7 @@ export default {
           // 获取缓存中的地图数据
           const mapData = JSON.parse(window.localStorage.getItem('map' + this.$route.params.localId))
           this.gameMap = mapData.mapData
+          this.mapName = mapData.mapName
           this.initLife = mapData.life || 0
           this.tips = mapData.processData
           this.bestStep = mapData.stepsPas
@@ -613,7 +630,7 @@ export default {
   // 虚拟手柄
   .analog-handle {
     position: fixed;
-    bottom: 60px;
+    bottom: 10px;
     left: 87.5px;
     display: flex;
     flex-flow: column nowrap;
@@ -655,7 +672,7 @@ export default {
   }
   // 游戏信息
   .game-info {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     .life,
     .step {
       display: flex;
@@ -677,7 +694,6 @@ export default {
       }
     }
   }
-  
   // 提示弹窗
   .tips {
     padding: 50px 20px;
