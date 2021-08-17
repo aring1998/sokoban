@@ -52,7 +52,7 @@
                 <van-icon name="star-o" v-show="!item.hasCollect" @click.stop="collect(index, item.id)" />
                 <van-icon name="share" v-show="index == shareIndex" @click.stop="share(index, item.mapName)" />
                 <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(index, item.mapName)" />
-                <van-icon name="close" v-show="$store.state.username == 'aring'" @click.stop="del(item.id)" />
+                <van-icon name="close" v-show="$store.state.username == 'aring'" @click.stop="del(item.id, item.mapName, index)" />
               </div>
               <van-icon name="close" v-show="workshopTab == 3" @click.stop="delLocalMap(item.localId, item.mapName)"/>
               <span class="date">{{ item.time | formatDate }}</span>
@@ -138,7 +138,7 @@ export default {
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: '/map/page',
-        methods: 'GET',
+        method: 'GET',
         params: {
           ...this.searchInfo // 展开搜索参数
         }
@@ -168,7 +168,7 @@ export default {
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `like/${id}`,
-        methods: 'GET'
+        method: 'GET'
       }).then(res => {
         this.$toast.clear()
         if (res.code == 0) {
@@ -185,7 +185,7 @@ export default {
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `collect/${id}`,
-        methods: 'GET'
+        method: 'GET'
       }).then(res => {
         this.$toast.clear()
         if (res.code == 0) {
@@ -201,6 +201,24 @@ export default {
       this.shareIndex = index
       this.$copyText(window.location.href + '?mapName=' + name)
       this.$notify({ type: 'success', message: '已复制地图链接到剪贴板，快去分享给好友吧！' })
+    },
+    // 删除地图
+    del(id, name, i) {
+      this.$dialog.confirm({
+        message: `确定删除 "${name}" 吗？`
+      }).then(() => {
+        this.$toast.loading({ message: '加载中', forbidClick: true })
+        request({
+          url: `map/delete/${id}`,
+          method: 'POST'
+        }).then(res => {
+          this.$toast.clear()
+          if (res.code == 0) {
+            this.$toast.success({ message: res.msg, duration: 500 })
+            this.mapData.splice(i, i)
+          }
+        })
+      })
     },
     // 删除本地地图
     delLocalMap(id, name) {

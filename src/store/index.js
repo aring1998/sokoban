@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     token: window.localStorage.getItem('token') || '',
     theme: window.localStorage.getItem('theme') || 'theme-forest',
     version: versionConfig.version,
+    bgmPlay: true
   },
   mutations,
   getters,

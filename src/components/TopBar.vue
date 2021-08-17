@@ -1,11 +1,10 @@
 <!-- 顶部导航栏 -->
 <template>
   <div class="top-bar">
-    <audio :src="require('@/assets/audio/bgm.mp3')" class="media-audio" loop autoplay ref="bgm"></audio>
     <div class="top-bar-item">  
       <slot><van-icon name="revoke" @click="$router.go(-1)" /></slot>
       <div>
-        <van-icon name="music-o" :class="{ turn: bgmPlay }" @click="musicControl"/>
+        <van-icon name="music-o" :class="{ turn: $store.state.bgmPlay }" @click="musicControl"/>
         <van-icon name="user-o" @click="$refs.login.show()" />
         <van-icon name="bars" @click="$refs.menu.show()" />
       </div>
@@ -142,7 +141,6 @@ import Popover from '@/components/Popover'
 export default {
   data() {
     return {
-      bgmPlay: true,
       showPicker: false,
       theme: [
         {
@@ -176,21 +174,17 @@ export default {
   components: {
     Popover
   },
-  mounted() {
-    this.bgmPlay = JSON.parse(window.localStorage.getItem('bgmPlay'))
-    if (!this.bgmPlay) this.$refs.bgm.pause()
-  },
   methods: {
     // 开关bgm
     musicControl() {
-      if (this.bgmPlay) {
-        this.$refs.bgm.pause()
-        this.bgmPlay = false
+      if (this.$store.state.bgmPlay) {
+        this.$parent.$parent.$refs.bgm.pause()
+        this.$store.state.bgmPlay = false
         window.localStorage.setItem('bgmPlay', false)
       }
       else {
-        this.$refs.bgm.play()
-        this.bgmPlay = true
+        this.$parent.$parent.$refs.bgm.play()
+        this.$store.state.bgmPlay = true
         window.localStorage.setItem('bgmPlay', true)
       }
     },

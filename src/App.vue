@@ -1,5 +1,7 @@
 <template>
   <div id="app" :class="$store.state.theme">
+    <!-- 背景音乐 -->
+    <audio :src="require('@/assets/audio/bgm.mp3')" class="media-audio" loop autoplay ref="bgm"></audio>
     <router-view />
   </div>
 </template>
@@ -12,6 +14,12 @@ export default {
   created() {
     this.token()
     this.getVersion()
+  },
+  mounted() {
+    // 根据缓存决定bgm是否播放
+    this.$store.state.bgmPlay = JSON.parse(window.localStorage.getItem('bgmPlay'))
+    if (this.$store.state.bgmPlay == null || this.$store.state.bgmPlay) this.$refs.bgm.play()
+    else this.$refs.bgm.pause()
   },
   methods: {
     // 验证token
@@ -32,7 +40,6 @@ export default {
         url: 'version/latest',
         method: 'GET'
       }).then(res => {
-        console.log(res.code);
         if (res.code == 0) {
           if (res.data.versionId > this.$store.state.version) {
             this.$dialog.confirm({
