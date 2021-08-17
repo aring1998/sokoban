@@ -20,8 +20,14 @@ export default {
   mounted() {
     // 根据缓存决定bgm是否播放
     this.$store.state.bgmPlay = JSON.parse(window.localStorage.getItem('bgmPlay'))
-    if (this.$store.state.bgmPlay == null || this.$store.state.bgmPlay) this.$refs.bgm.play()
-    else this.$refs.bgm.pause()
+    if (this.$store.state.bgmPlay == null || this.$store.state.bgmPlay) {
+      this.$store.state.bgmPlay = true
+      this.$refs.bgm.play()
+    }
+    else {
+      this.$store.state.bgmPlay = false
+      this.$refs.bgm.pause()
+    }
   },
   methods: {
     // 验证token
