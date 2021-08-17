@@ -52,6 +52,7 @@
                 <van-icon name="star-o" v-show="!item.hasCollect" @click.stop="collect(index, item.id)" />
                 <van-icon name="share" v-show="index == shareIndex" @click.stop="share(index, item.mapName)" />
                 <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(index, item.mapName)" />
+                <van-icon name="close" v-show="$store.state.username == 'aring'" @click.stop="del(item.id)" />
               </div>
               <van-icon name="close" v-show="workshopTab == 3" @click.stop="delLocalMap(item.localId, item.mapName)"/>
               <span class="date">{{ item.time | formatDate }}</span>
@@ -316,7 +317,6 @@ export default {
           color: #fff;
           margin-top: 5px;
           i {
-            margin-right: 4px;
             background-color: rgba(0, 0, 0, 0.3);
             border-radius: 50%;
             padding: 4px;

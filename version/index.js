@@ -5,8 +5,8 @@
     const md5 = require('js-md5')
     const baseURL = 'http://47.103.218.109:10052/api/'
     const authData = {
-      name: 'admin',
-      password: md5('123456')
+      name: '用户名',
+      password: md5('密码')
     }
     let token = 'Bearer '
     {
