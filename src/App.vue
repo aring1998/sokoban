@@ -2,7 +2,9 @@
   <div id="app" :class="$store.state.theme">
     <!-- 背景音乐 -->
     <audio :src="require('@/assets/audio/bgm.mp3')" class="media-audio" loop autoplay ref="bgm"></audio>
-    <router-view />
+    <keep-alive include="workshop">
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 

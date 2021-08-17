@@ -15,52 +15,54 @@
       <van-button type="primary" @click="getGameMap" size="small" round>搜索</van-button>
     </div>
     <!-- tab标签 -->
-    <van-tabs v-model="workshopTab" color="var(--mainColor)" class="workshop-tab">
+    <van-tabs v-model="workshopTab" color="var(--mainColor)" class="workshop-tab" swipeable>
       <van-tab title="最新"></van-tab>
       <van-tab title="最热门"></van-tab>
       <van-tab title="我的收藏"></van-tab>
       <van-tab title="本地地图"></van-tab>
-    </van-tabs>
-    <!-- 创意工坊列表 -->
-    <div class="workshop-content">
-      <ul class="workshop-map">
-        <li
-          class="workshop-map-item"
-          v-for="(item, index) in mapData"
-          :key="index"
-          @click="
-            $router.push({
-              name: 'game',
-              params: { id: item.id, localId: item.localId },
-              query: { type: 'workshop' }
-            })
-          "
-        >
-          <!-- 地图缩略图 -->
-          <div class="map-thumbnail">
-            <game-content :gameMap="item.mapData"></game-content>
-          </div>
-          <div class="map-intro">
-            <span class="name">{{ item.mapName }}</span>
-            <span class="creator">{{ item.creator }}</span>
-            <!-- 点赞/收藏/分享 -->
-            <div class="tool-bar">
-              <div v-show="workshopTab != 3">
-                <van-icon name="good-job" v-show="item.hasPraise" @click.stop="like(index, item.id)" />
-                <van-icon name="good-job-o" v-show="!item.hasPraise" @click.stop="like(index, item.id)" />
-                <van-icon name="star" v-show="item.hasCollect" @click.stop="collect(index, item.id)" />
-                <van-icon name="star-o" v-show="!item.hasCollect" @click.stop="collect(index, item.id)" />
-                <van-icon name="share" v-show="index == shareIndex" @click.stop="share(index, item.mapName)" />
-                <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(index, item.mapName)" />
-                <van-icon name="close" v-show="$store.state.username == 'aring'" @click.stop="del(item.id, item.mapName, index)" />
+      <!-- 创意工坊列表 -->
+      <van-pull-refresh v-model="isRefresh" success-text="刷新成功" @refresh="getGameMap()">
+        <div class="workshop-content">
+          <ul class="workshop-map">
+            <li
+              class="workshop-map-item"
+              v-for="(item, index) in mapData"
+              :key="index"
+              @click="
+                $router.push({
+                  name: 'game',
+                  params: { id: item.id, localId: item.localId },
+                  query: { type: 'workshop' }
+                })
+              "
+            >
+              <!-- 地图缩略图 -->
+              <div class="map-thumbnail">
+                <game-content :gameMap="item.mapData"></game-content>
               </div>
-              <van-icon name="close" v-show="workshopTab == 3" @click.stop="delLocalMap(item.localId, item.mapName)"/>
-              <span class="date">{{ item.time | formatDate }}</span>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
+              <div class="map-intro">
+                <span class="name">{{ item.mapName }}</span>
+                <span class="creator">{{ item.creator }}</span>
+                <!-- 点赞/收藏/分享 -->
+                <div class="tool-bar">
+                  <div v-show="workshopTab != 3">
+                    <van-icon name="good-job" v-show="item.hasPraise" @click.stop="like(index, item.id)" />
+                    <van-icon name="good-job-o" v-show="!item.hasPraise" @click.stop="like(index, item.id)" />
+                    <van-icon name="star" v-show="item.hasCollect" @click.stop="collect(index, item.id)" />
+                    <van-icon name="star-o" v-show="!item.hasCollect" @click.stop="collect(index, item.id)" />
+                    <van-icon name="share" v-show="index == shareIndex" @click.stop="share(index, item.mapName)" />
+                    <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(index, item.mapName)" />
+                    <van-icon name="close" v-show="$store.state.username == 'aring'" @click.stop="del(item.id, item.mapName, index)" />
+                  </div>
+                  <van-icon name="close" v-show="workshopTab == 3" @click.stop="delLocalMap(item.localId, item.mapName)"/>
+                  <span class="date">{{ item.time | formatDate }}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </van-pull-refresh>
+    </van-tabs>
     <!-- 分页 -->
     <van-pagination
       v-model="searchInfo.current"
@@ -85,6 +87,7 @@ import TopBar from '@/components/TopBar'
 import GameContent from '@/components/GameContent'
 
 export default {
+  name: 'workshop',
   data() {
     return {
       mapData: [], // 地图数据
@@ -98,6 +101,7 @@ export default {
         type: '' // 方式
       },
       workshopTab: 0,
+      isRefresh: false,
       shareIndex: null
     }
   },
@@ -146,6 +150,7 @@ export default {
         this.searchInfo.total = res.data.total // 获取总条数
         this.mapData = res.data.records // 地图数据赋值
         this.$toast.clear()
+        this.isRefresh = false
       })
     },
     // 获取本地地图
@@ -269,9 +274,9 @@ export default {
     border-bottom-left-radius: unset;
     border-bottom-right-radius: unset;
     margin: 10px 10px 0 10px;
+    background-color: #fff;
   }
   .workshop-content {
-    margin: -1px 10px 0 10px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -281,7 +286,6 @@ export default {
       height: calc(100vh - 240px);
       overflow: scroll;
       padding: 10px;
-      background-color: #fff;
       .workshop-map-item {
         display: flex;
         flex-flow: row nowrap;

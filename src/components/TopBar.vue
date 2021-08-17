@@ -102,17 +102,17 @@
               v-model="forgetForm.oldPassword"
               type="oldPassword"
               label="原密码"
-              placeholder="请输入用户名"
+              placeholder="请输入原密码"
               maxlength="16"
-              :rules="[{ pattern: /^[a-zA-Z0-9_-]{4,16}$/, required: true, message: '请输入字母和数字组合，4~16位' }]"
+              :rules="[{ pattern: /^.{6,16}$/, required: true, message: '请填写原密码，6~16位' }]"
             />
             <van-field
               v-model="forgetForm.newPassword"
               type="password"
-              label="密码"
-              placeholder="请输入密码"
+              label="新密码"
+              placeholder="请输入新密码"
               maxlength="16"
-              :rules="[{ pattern: /^.{6,16}$/, required: true, message: '请填写密码，6~16位' }]"
+              :rules="[{ pattern: /^.{6,16}$/, required: true, message: '请填写新密码，6~16位' }]"
             />
             <van-field
               v-model="forgetForm.checkPassWord"
