@@ -102,6 +102,10 @@
   background-image: url('~@/assets/img/theme/forest/beer.png');
 }
 
+.theme-forest .nectar {
+  background-image: url('~@/assets/img/theme/forest/nectar.png');
+}
+
 .theme-forest .player {
   background-image: url('~@/assets/img/theme/forest/player.png');
 }

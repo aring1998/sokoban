@@ -83,6 +83,9 @@ export default {
         12: () => {
           res += 'beer'
         },
+        13: () => {
+          res += 'nectar'
+        },
       }
       if (staticMapRander[this.staticMap[y][x]]) staticMapRander[this.staticMap[y][x]]()
       // 活动层渲染

@@ -115,7 +115,16 @@ export const mapEl= [
       '触碰后，进入醉酒状态',
       '醉酒状态下，每次移动随机移动1~3步'
     ]
-  }
+  },
+  {
+    name: '甘露',
+    value: 13,
+    class: 'nectar',
+    intro: [
+      '触碰时消失',
+      '触碰后，清除所有异常状态'
+    ]
+  },
 ]
 
 export const mapElClass = (value) => {

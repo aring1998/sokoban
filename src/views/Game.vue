@@ -23,8 +23,6 @@
         </span>
       </div>
     </div>
-    <!-- 游戏内容 -->
-    <game-content :game-map="gameMap" ref="game"></game-content>
     <!-- 行为控制 -->
     <div class="check-point">
       <van-button @click="init" type="primary" size="mini">重置</van-button>
@@ -57,6 +55,8 @@
       </van-button>
       <van-button @click="$router.push('/index')" type="danger" size="mini"  v-if="$route.query.type == 'created'">放弃编辑</van-button>
     </div>
+    <!-- 游戏内容 -->
+    <game-content :game-map="gameMap" ref="game"></game-content>
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
       <div class="top">
@@ -149,9 +149,9 @@ export default {
       keepMove: null, // 持续移动定时器
       initStatus: { // 初始人物状态
         poisoning: false, // 是否中毒
-        drunk: 0 // 是否醉酒
+        drunk: 0, // 是否醉酒
+        drunkStep: 0 // 醉酒后移动的步数
       },
-      drunkStep: 0, // 醉酒后移动的步数
       status: null, // 人物当前状态
       statusRecord: [], // 人物状态记录
       singlePortalExit: [], // 单向传送门出口
@@ -297,8 +297,8 @@ export default {
       if (this.status.drunk % 2 !== 0) {
         this.status.drunk++ // 为接下来的move方法不触发醉酒移动
         // 随机再进行0~2次移动
-        this.drunkStep = Math.floor(Math.random() * 2)
-        for (let i = 0; i < this.drunkStep; i++) {
+        this.status.drunkStep = Math.floor(Math.random() * 2)
+        for (let i = 0; i < this.status.drunkStep; i++) {
           this.$nextTick(() => {
             this.move(direction, step)
           })
@@ -382,6 +382,13 @@ export default {
           this.status.drunk++
           this.$set(this.staticMap[setY], setX, 1) // 消除啤酒
           break
+        }
+        // 甘露
+        case 13: {
+          this.$nextTick(() => {
+            this.status = deepCloneObj(this.initStatus)
+          });
+          this.$set(this.staticMap[setY], setX, 1) // 消除甘露
         }
       }
 
@@ -523,8 +530,8 @@ export default {
         }
       }
       // 醉酒状态下的撤回
-      if (this.drunkStep > 0) {
-        this.drunkStep--
+      if (this.status.drunkStep > 0) {
+        this.status.drunkStep--
         this.onRegret()
       }
     },
@@ -630,8 +637,9 @@ export default {
   // 虚拟手柄
   .analog-handle {
     position: fixed;
-    bottom: 10px;
+    bottom: 60px;
     left: 87.5px;
+    z-index: 100;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
