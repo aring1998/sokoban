@@ -14,8 +14,8 @@ import { request } from '@/network/request'
 export default {
   name: 'App',
   created() {
-    this.token()
     this.getVersion()
+    this.token()
   },
   mounted() {
     // 根据缓存决定bgm是否播放
@@ -30,6 +30,36 @@ export default {
     }
   },
   methods: {
+    // 获取最新版本
+    getVersion() {
+      request({
+        url: 'version/latest',
+        method: 'GET'
+      }).then(res => {
+        console.log(res);
+        if (res.code == 0) {
+          if (res.data.versionId > this.$store.state.version) {
+            // 判断是否强制更新
+            if (res.data.isForce) {
+              this.$dialog.alert({
+                title: '有重大更新！',
+                message: '点击[确定]按钮前往下载最新版本'
+              }).then(() => {
+                window.location.href
+              })
+            } 
+            else {
+              this.$dialog.confirm({
+                title: '有新版本啦！',
+                message: '点击[确定]按钮前往下载最新版本'
+              }).then(() => {
+                window.location.href
+              })
+            }
+          }
+        }
+      })
+    },
     // 验证token
     token() {
       request({
@@ -39,24 +69,6 @@ export default {
         if (res.code == 0) {
           this.$store.state.username = res.data.name
           this.$notify({ type: 'success', message: '欢迎回来，' + res.data.name })
-        }
-      })
-    },
-    // 获取最新版本
-    getVersion() {
-      request({
-        url: 'version/latest',
-        method: 'GET'
-      }).then(res => {
-        if (res.code == 0) {
-          if (res.data.versionId > this.$store.state.version) {
-            this.$dialog.confirm({
-              title: '有新版本啦！',
-              message: '点击[确定]按钮前往下载最新版本'
-            }).then(() => {
-              window.location.href
-            })
-          }
         }
       })
     }

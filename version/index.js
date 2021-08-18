@@ -1,9 +1,10 @@
 ;(async () => {
   try {
     const { default: axios } = require('axios')
-    const { version: versionId } = require('../src/assets/config/version.json')
+    const { version: versionId, isForce } = require('../src/assets/config/version.json')
     const md5 = require('js-md5')
-    const baseURL = 'http://47.103.218.109:10052/api/'
+    const baseURL = 'http://47.103.218.109:10052/api/' // 正式环境
+    // const baseURL = 'http://127.0.0.1:10052/api/' // 测试环境
     const authData = {
       name: '用户名',
       password: md5('密码')
@@ -27,7 +28,7 @@
         headers: { Authorization: token },
         url: `${baseURL}version/add`,
         method: 'POST',
-        data: { versionId }
+        data: { versionId, isForce }
       })
       if (code) throw Error('你没有权限发布版本')
       console.log('\x1B[32m%s\x1B[39m', `最新版本号v${versionId}发布成功`)
