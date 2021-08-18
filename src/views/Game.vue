@@ -104,7 +104,7 @@
           </span>
         </div>
         <span v-else>
-          暂时还没有有人过关哦~
+          暂时还没有人过关哦~
         </span>
       </div>
     </van-popup>
@@ -453,6 +453,10 @@ export default {
               // 烧毁普通箱子
               else this.$set(this.activeMap[setBoxY], setBoxX, 1)
             }
+            // 弹簧/传送门
+            case 9:
+            case 10:
+            case 11: return
           }
 
           // 判断活动层箱子目标点

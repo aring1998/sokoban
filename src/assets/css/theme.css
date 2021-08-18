@@ -16,14 +16,6 @@
   background-image: url('~@/assets/img/theme/abstract/spikeweed.png');
 }
 
-.theme-abstract .box {
-  background-image: url('~@/assets/img/theme/abstract/box.png');
-}
-
-.theme-abstract .ice-box {
-  background-image: url('~@/assets/img/theme/abstract/ice-box.png');
-}
-
 .theme-abstract .wall {
   background-image: url('~@/assets/img/theme/abstract/wall.png');
 }
@@ -38,6 +30,14 @@
 
 .theme-abstract .player {
   background-image: url('~@/assets/img/theme/abstract/player.png');
+}
+
+.theme-abstract .box {
+  background-image: url('~@/assets/img/theme/abstract/box.png');
+}
+
+.theme-abstract .ice-box {
+  background-image: url('~@/assets/img/theme/abstract/ice-box.png');
 }
 
 .theme-abstract .box.end {
@@ -60,14 +60,6 @@
 
 .theme-forest .spikeweed {
   background-image: url('~@/assets/img/theme/forest/spikeweed.png');
-}
-
-.theme-forest .box {
-  background-image: url('~@/assets/img/theme/forest/box.png');
-}
-
-.theme-forest .ice-box {
-  background-image: url('~@/assets/img/theme/forest/ice-box.png');
 }
 
 .theme-forest .wall {
@@ -108,6 +100,14 @@
 
 .theme-forest .player {
   background-image: url('~@/assets/img/theme/forest/player.png');
+}
+
+.theme-forest .box {
+  background-image: url('~@/assets/img/theme/forest/box.png');
+}
+
+.theme-forest .ice-box {
+  background-image: url('~@/assets/img/theme/forest/ice-box.png');
 }
 
 .theme-forest .box.end {
