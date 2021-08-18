@@ -79,12 +79,12 @@
               :rules="[{ pattern: /^.{6,16}$/, required: true, message: '请填写密码，6~16位' }]"
             />
             <van-field
-              v-model="registerForm.checkPassWord"
+              v-model="registerForm.checkPassword"
               type="password"
               label="确认密码"
               placeholder="请再次输入密码"
               maxlength="16"
-              :rules="[{ validator: checkPassWord, required: true, message: '密码不匹配' }]"
+              :rules="[{ validator: checkPassword, required: true, message: '密码不匹配' }]"
             />
             <div style="margin: 16px;">
               <van-button round block type="info" native-type="submit">注册</van-button>
@@ -97,17 +97,17 @@
           <span>用户名：{{ $store.state.username }}</span>
         </van-tab>
         <van-tab title="修改密码">
-          <van-form @submit="forget">
+          <van-form @submit="changePsw">
             <van-field
-              v-model="forgetForm.oldPassword"
-              type="oldPassword"
+              v-model="changePswForm.oldPassword"
+              type="password"
               label="原密码"
               placeholder="请输入原密码"
               maxlength="16"
               :rules="[{ pattern: /^.{6,16}$/, required: true, message: '请填写原密码，6~16位' }]"
             />
             <van-field
-              v-model="forgetForm.newPassword"
+              v-model="changePswForm.password"
               type="password"
               label="新密码"
               placeholder="请输入新密码"
@@ -115,12 +115,12 @@
               :rules="[{ pattern: /^.{6,16}$/, required: true, message: '请填写新密码，6~16位' }]"
             />
             <van-field
-              v-model="forgetForm.checkPassWord"
+              v-model="changePswForm.checkPassword"
               type="password"
               label="确认密码"
               placeholder="请再次输入密码"
               maxlength="16"
-              :rules="[{ validator: checkPassWord, required: true, message: '密码不匹配' }]"
+              :rules="[{ validator: checkPassword, required: true, message: '密码不匹配' }]"
             />
             <div style="margin: 16px;">
               <van-button round block type="info" native-type="submit">确认修改</van-button>
@@ -162,12 +162,12 @@ export default {
       registerForm: {
         username: '',
         password: '',
-        checkPassWord: ''
+        checkPassword: ''
       },
-      forgetForm: {
+      changePswForm: {
         oldPassword: '',
-        newPassword: '',
-        checkPassWord: ''
+        password: '',
+        checkPassword: ''
       }
     }
   },
@@ -230,13 +230,32 @@ export default {
         }
       })
     },
-    // 忘记密码
-    forget() {
-
+    // 修改密码
+    changePsw() {
+      request({
+        url: 'user/changePsw',
+        method: 'POST',
+        data: {
+          oldPassword: md5(this.changePswForm.oldPassword),
+          password: md5(this.changePswForm.password)
+        }
+      }).then(res => {
+        if (res.code == 0) {
+          this.$notify({ type: 'success', message: '修改密码成功' })
+          this.$refs.login.show()
+          this.$store.state.username = ''
+          window.localStorage.removeItem('token')
+          setTimeout(() => {
+            this.$notify({ type: 'success', message: '请重新登陆' })
+            this.tabIndex = 
+            this.$refs.login.show()
+          }, 500);
+        }
+      })
     },
     // 密码匹配验证
-    checkPassWord(value) {
-      if (value !== this.registerForm.password || value !== this.forgetForm.newPassword) return false
+    checkPassword(value) {
+      if (value !== this.changePswForm.password) return false
       return true
     }
   }
