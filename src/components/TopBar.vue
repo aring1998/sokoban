@@ -206,6 +206,7 @@ export default {
       }).then(res => {
         if (res.code == 0) {
           this.$store.state.username = res.data.name
+          this.$store.state.token = res.data.token
           window.localStorage.setItem('token', res.data.token)
           this.$notify({ type: 'success', message: '登录成功' })
           this.$refs.login.show()
