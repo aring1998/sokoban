@@ -574,7 +574,7 @@ export default {
     // 将地图上传云端
     saveServe() {
       if (!this.$store.state.userInfo.name)
-        return this.$notify({ type: 'danger', message: '上传云端需要先登录哦，可以选择暂存本地地图~' })
+        return this.$notify({ type: 'danger', message: '上传云端需要先登录，可以选择暂存本地哦~' })
       request({
         url: 'map/add',
         method: 'POST',

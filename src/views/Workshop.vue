@@ -54,7 +54,10 @@
                     <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(index, item.mapName)" />
                     <van-icon name="close" v-show="$store.state.userInfo.name == 'aring'" @click.stop="del(item.id, item.mapName, index)" />
                   </div>
-                  <van-icon name="close" v-show="workshopTab == 3" @click.stop="delLocalMap(item.localId, item.mapName)"/>
+                  <div v-show="workshopTab == 3">
+                    <van-icon name="close" @click.stop="delLocalMap(item.localId, item.mapName)"/>
+                    <van-icon name="upgrade" @click.stop="uploadLocalMap(item.localId, item.mapName)"/>
+                  </div>
                   <span class="date">{{ item.time | formatDate }}</span>
                 </div>
               </div>
@@ -234,6 +237,27 @@ export default {
         this.$toast.success({ message: '删除成功', duration: 500 })
         window.localStorage.removeItem('map' + id)
         this.getLocalMap()
+      })
+    },
+    // 上传本地地图
+    uploadLocalMap(id, name) {
+      const mapData = JSON.parse(window.localStorage.getItem('map' + id))
+      if (mapData.mapName === '未命名') mapData.mapName = ''
+      console.log(mapData);
+      this.$dialog.confirm({
+        message: `确定上传 "${name}" 吗？`
+      }).then(() => {
+        if (!this.$store.state.userInfo.name)
+          return this.$notify({ type: 'danger', message: '上传云端需要先登录，可以选择暂存本地哦~' })
+        request({
+          url: 'map/add',
+          method: 'POST',
+          data: mapData
+        }).then(res => {
+          if (res.code == 0) {
+            this.$notify({ type: 'success', message: '上传成功' })
+          }
+        })
       })
     }
   }
