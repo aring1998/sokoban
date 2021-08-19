@@ -36,7 +36,6 @@ export default {
         url: 'version/latest',
         method: 'GET'
       }).then(res => {
-        console.log(res);
         if (res.code == 0) {
           if (res.data.versionId > this.$store.state.version) {
             // 判断是否强制更新

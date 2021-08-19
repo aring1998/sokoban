@@ -211,6 +211,7 @@ export default {
       this.step = 0
       this.status = deepCloneObj(this.initStatus) // 对象深拷贝
       this.processRecord = []
+      this.singlePortalExit = []
       // 调用子组件分离地图方法
       this.$refs.game.separateMap(this.gameMap)
       // 从子组件浅拷贝数据
@@ -572,6 +573,8 @@ export default {
     },
     // 将地图上传云端
     saveServe() {
+      if (!this.$store.state.username)
+        return this.$notify({ type: 'danger', message: '上传云端需要先登录哦，可以选择暂存本地地图~' })
       request({
         url: 'map/add',
         method: 'POST',

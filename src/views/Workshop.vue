@@ -220,7 +220,8 @@ export default {
           this.$toast.clear()
           if (res.code == 0) {
             this.$toast.success({ message: res.msg, duration: 500 })
-            this.mapData.splice(i, i)
+            if (i == 0) this.mapData.splice(0, 1)
+            else this.mapData.splice(i, i)
           }
         })
       })
