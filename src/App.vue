@@ -66,7 +66,7 @@ export default {
         method: 'POST'
       }).then(res => {
         if (res.code == 0) {
-          this.$store.state.username = res.data.name
+          this.$store.state.userInfo = res.data
           this.$notify({ type: 'success', message: '欢迎回来，' + res.data.name })
         }
       })

@@ -8,7 +8,13 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    username: '',
+    userInfo: {
+      id: '',
+      name: '',
+      emaile: '',
+      coin: '',
+      nickname: ''
+    },
     token: window.localStorage.getItem('token') || '',
     theme: window.localStorage.getItem('theme') || 'theme-forest',
     version: versionConfig.version,

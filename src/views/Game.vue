@@ -144,7 +144,7 @@ export default {
       playerY: 0, // 人物y轴坐标
       uploadMap: { // 上传地图表单
         mapName: '',
-        creator: store.state.username || ''
+        creator: store.state.userInfo.auth ? store.state.userInfo.auth : store.state.userInfo.name
       },
       keepMove: null, // 持续移动定时器
       initStatus: { // 初始人物状态
@@ -573,7 +573,7 @@ export default {
     },
     // 将地图上传云端
     saveServe() {
-      if (!this.$store.state.username)
+      if (!this.$store.state.userInfo.name)
         return this.$notify({ type: 'danger', message: '上传云端需要先登录哦，可以选择暂存本地地图~' })
       request({
         url: 'map/add',

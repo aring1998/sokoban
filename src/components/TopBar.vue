@@ -34,11 +34,11 @@
     </popover>
     <!-- 登录弹窗 -->
     <popover ref="login" class="login">
-      <van-tabs v-model="tabIndex" color="var(--mainColor)" v-if="$store.state.username == ''" swipeable>
+      <van-tabs v-model="tabIndex" color="var(--mainColor)" v-if="$store.state.userInfo.name == ''" swipeable>
         <van-tab title="登录">
           <van-form @submit="login">
             <van-field
-              v-model="loginForm.username"
+              v-model="loginForm.name"
               name="name"
               label="用户名"
               placeholder="请填写用户名"
@@ -62,17 +62,22 @@
         <van-tab title="注册">
           <van-form @submit="register">
             <van-field
-              v-model="registerForm.username"
-              name="name"
+              v-model="registerForm.name"
               label="用户名"
               placeholder="请输入用户名"
               maxlength="16"
               :rules="[{ pattern: /^[a-zA-Z0-9_-]{4,16}$/, required: true, message: '请输入字母和数字组合，4~16位' }]"
             />
             <van-field
+              v-model="registerForm.email"
+              label="邮箱"
+              placeholder="请输入邮箱"
+              maxlength="32"
+              :rules="[{ pattern: /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/, required: true, message: '请输入正确的邮箱' }]"
+            />
+            <van-field
               v-model="registerForm.password"
               type="password"
-              name="password"
               label="密码"
               placeholder="请输入密码"
               maxlength="16"
@@ -94,7 +99,30 @@
       </van-tabs>
       <van-tabs v-model="tabIndex" color="var(--mainColor)" v-else swipeable>
         <van-tab title="个人信息">
-          <span>用户名：{{ $store.state.username }}</span>
+          <van-field
+            v-model="$store.state.userInfo.id"
+            label="uid"
+            readonly
+          />
+          <van-field
+            v-model="$store.state.userInfo.name"
+            label="用户名"
+            readonly
+          />
+          <van-field
+            v-model="$store.state.userInfo.email"
+            label="邮箱"
+            readonly
+          />
+          <van-field
+            v-model="$store.state.userInfo.nickname"
+            label="昵称"
+            maxlength="10"
+          >
+            <template #button>
+              <van-button size="small" type="primary" @click="changeNickname">修改</van-button>
+            </template>
+          </van-field>
         </van-tab>
         <van-tab title="修改密码">
           <van-form @submit="changePsw">
@@ -156,11 +184,12 @@ export default {
       ],
       tabIndex: 0,
       loginForm: {
-        username: '',
+        name: '',
         password: ''
       },
       registerForm: {
-        username: '',
+        name: '',
+        email: '',
         password: '',
         checkPassword: ''
       },
@@ -200,12 +229,12 @@ export default {
         url: 'user/login',
         method: 'POST',
         data: {
-          name: this.loginForm.username,
+          name: this.loginForm.name,
           password: md5(this.loginForm.password)
         }
       }).then(res => {
         if (res.code == 0) {
-          this.$store.state.username = res.data.name
+          this.$store.state.userInfo.name = res.data.name
           this.$store.state.token = res.data.token
           window.localStorage.setItem('token', res.data.token)
           this.$notify({ type: 'success', message: '登录成功' })
@@ -219,15 +248,29 @@ export default {
         url: 'user/register',
         method: 'POST',
         data: {
-          name: this.registerForm.username,
+          ...this.registerForm,
           password: md5(this.registerForm.password)
         }
       }).then(res => {
         if (res.code == 0) {
           this.$notify({ type: 'success', message: '注册成功' })
-          this.loginForm.username = this.registerForm.username
-          this.loginForm.password = md5(this.registerForm.password)
+          this.loginForm.name = this.registerForm.name
+          this.loginForm.password = this.registerForm.password
           this.login()
+        }
+      })
+    },
+    // 修改昵称
+    changeNickname() {
+      request({
+        url: 'user/update',
+        method: 'POST',
+        data: {
+          nickname: this.$store.state.userInfo.nickname
+        }
+      }).then(res => {
+        if (res.code === 0) {
+          this.$notify({ type: 'success', message: '修改成功' })
         }
       })
     },
@@ -244,7 +287,7 @@ export default {
         if (res.code == 0) {
           this.$notify({ type: 'success', message: '修改密码成功' })
           this.$refs.login.show()
-          this.$store.state.username = ''
+          this.$store.state.userInfo.name = ''
           window.localStorage.removeItem('token')
           setTimeout(() => {
             this.$notify({ type: 'success', message: '请重新登陆' })
@@ -256,7 +299,7 @@ export default {
     },
     // 密码匹配验证
     checkPassword(value) {
-      if (value !== this.changePswForm.password) return false
+      if (value !== this.changePswForm.password && value !== this.registerForm.password) return false
       return true
     }
   }
