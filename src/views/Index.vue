@@ -126,7 +126,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../assets/css/animation.css';
 /*首页*/
 .index {
   width: 100vw;

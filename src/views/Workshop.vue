@@ -265,8 +265,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/css/animation.css';
-
 .workshop {
   height: 100vh;
   background: var(--mainColor);
