@@ -23,6 +23,7 @@ VueClipboard.config.autoSetContainer = true
 
 Vue.config.productionTip = false
 
+// 引入app返回键操作控制
 import '@/utils/appback'
 
 /* eslint-disable no-new */

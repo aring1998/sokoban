@@ -1,7 +1,5 @@
 import { Toast } from 'vant'
-/**
- * 处理hbuilder打包app之后点击手机返回键直接退出app的问题
- */
+// 处理hbuilder打包app之后点击手机返回键直接退出app的问题
 document.addEventListener('plusready', function() {
   var webview = plus.webview.currentWebview()
   plus.key.addEventListener('backbutton', function() {

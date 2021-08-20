@@ -113,3 +113,108 @@
 .theme-forest .box.end {
   background-image: url('~@/assets/img/theme/forest/end-box.png');
 }
+
+.theme-forest .box.spikeweed {
+  animation: box-spikeweed 6s infinite linear;
+}
+
+.theme-forest .box.toadstool {
+  animation: box-toadstool 6s infinite linear;
+}
+
+.theme-forest .box.beer {
+  animation: box-beer 6s infinite linear;
+}
+
+.theme-forest .box.nectar {
+  animation: box-beer 6s infinite linear;
+}
+
+
+@keyframes box-spikeweed {
+  0% {
+    opacity: 0;
+  }
+  25%, 
+  45% {
+    opacity: 1;
+    background-image: url('~@/assets/img/theme/forest/box.png');
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75%,
+  95% {
+    opacity: 1;
+    background-image: url('~@/assets/img/theme/forest/spikeweed.png');
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes box-beer {
+  0% {
+    opacity: 0;
+  }
+  25%, 
+  45% {
+    opacity: 1;
+    background-image: url('~@/assets/img/theme/forest/box.png');
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75%,
+  95% {
+    opacity: 1;
+    background-image: url('~@/assets/img/theme/forest/beer.png');
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes box-toadstool {
+  0% {
+    opacity: 0;
+  }
+  25%, 
+  45% {
+    opacity: 1;
+    background-image: url('~@/assets/img/theme/forest/box.png');
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75%,
+  95% {
+    opacity: 1;
+    background-image: url('~@/assets/img/theme/forest/toadstool.png');
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes box-nectar {
+  0% {
+    opacity: 0;
+  }
+  25%, 
+  45% {
+    opacity: 1;
+    background-image: url('~@/assets/img/theme/forest/box.png');
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75%,
+  95% {
+    opacity: 1;
+    background-image: url('~@/assets/img/theme/forest/nectar.png');
+  }
+  100% {
+    opacity: 0;
+  }
+}

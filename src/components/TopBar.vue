@@ -310,9 +310,9 @@ export default {
 .top-bar {
   .top-bar-item {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     height: 60px;
-    padding: 20px 15px;
+    padding: 0 15px;
     justify-content: space-between;
     img {
       width: 180px;

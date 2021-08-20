@@ -37,7 +37,7 @@ export default {
         method: 'GET'
       }).then(res => {
         if (res.code == 0) {
-          if (res.data.versionId > this.$store.state.version) {
+          if (res.data.versionId !== this.$store.state.version) {
             // 判断是否强制更新
             if (res.data.isForce) {
               this.$dialog.alert({
