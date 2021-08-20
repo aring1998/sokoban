@@ -5,8 +5,8 @@ import { Notify } from 'vant'
 export function request(config) {
   // 创建axios实例
   const instance = axios.create({
-    // baseURL: 'http://47.103.218.109:10052/api/', // 正式环境
-    baseURL: 'http://127.0.0.1:10052/api/', // 测试环境
+    baseURL: 'http://47.103.218.109:10052/api/', // 正式环境
+    // baseURL: 'http://127.0.0.1:10052/api/', // 测试环境
     validateStatus: status => {
       // 允许返回所有状态码，不会遇到错误就停止
       return status >= 200 && status <= 600

@@ -23,6 +23,8 @@ VueClipboard.config.autoSetContainer = true
 
 Vue.config.productionTip = false
 
+import '@/utils/appback'
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
