@@ -135,43 +135,22 @@
   0% {
     opacity: 0;
   }
-  25%, 
-  45% {
+  10%, 
+  40% {
     opacity: 1;
     background-image: url('~@/assets/img/theme/forest/box.png');
   }
   50% {
     opacity: 0.5;
   }
-  75%,
-  95% {
+  60%,
+  90% {
     opacity: 1;
     background-image: url('~@/assets/img/theme/forest/spikeweed.png');
   }
   100% {
     opacity: 0;
-  }
-}
-
-@keyframes box-beer {
-  0% {
-    opacity: 0;
-  }
-  25%, 
-  45% {
-    opacity: 1;
-    background-image: url('~@/assets/img/theme/forest/box.png');
-  }
-  50% {
-    opacity: 0.5;
-  }
-  75%,
-  95% {
-    opacity: 1;
-    background-image: url('~@/assets/img/theme/forest/beer.png');
-  }
-  100% {
-    opacity: 0;
+    background-image: unset;
   }
 }
 
@@ -179,21 +158,45 @@
   0% {
     opacity: 0;
   }
-  25%, 
-  45% {
+  10%, 
+  40% {
     opacity: 1;
     background-image: url('~@/assets/img/theme/forest/box.png');
   }
   50% {
     opacity: 0.5;
   }
-  75%,
-  95% {
+  60%,
+  90% {
     opacity: 1;
     background-image: url('~@/assets/img/theme/forest/toadstool.png');
   }
   100% {
     opacity: 0;
+    background-image: unset;
+  }
+}
+
+@keyframes box-beer {
+  0% {
+    opacity: 0;
+  }
+  10%, 
+  40% {
+    opacity: 1;
+    background-image: url('~@/assets/img/theme/forest/box.png');
+  }
+  50% {
+    opacity: 0.5;
+  }
+  60%,
+  90% {
+    opacity: 1;
+    background-image: url('~@/assets/img/theme/forest/beer.png');
+  }
+  100% {
+    opacity: 0;
+    background-image: unset;
   }
 }
 
@@ -201,20 +204,21 @@
   0% {
     opacity: 0;
   }
-  25%, 
-  45% {
+  10%, 
+  40% {
     opacity: 1;
     background-image: url('~@/assets/img/theme/forest/box.png');
   }
   50% {
     opacity: 0.5;
   }
-  75%,
-  95% {
+  60%,
+  90% {
     opacity: 1;
     background-image: url('~@/assets/img/theme/forest/nectar.png');
   }
   100% {
     opacity: 0;
+    background-image: unset;
   }
 }
