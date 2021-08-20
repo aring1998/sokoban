@@ -2,7 +2,7 @@
 <template>
   <transition name="van-fade">
     <div :class="popType()" v-show="isShow" @click="show()">
-      <div class="popover" @click.stop="">
+      <div class="popover" @click.stop>
         <div class="closes" v-if="isClosed">
           <van-icon name="cross" @click="show()" />
         </div>

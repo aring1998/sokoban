@@ -311,8 +311,9 @@ export default {
   .top-bar-item {
     display: flex;
     align-items: flex-end;
-    height: 60px;
+    height: 50px;
     padding: 0 15px;
+    margin-bottom: 10px;
     justify-content: space-between;
     img {
       width: 180px;

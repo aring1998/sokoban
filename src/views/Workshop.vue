@@ -21,9 +21,9 @@
       <van-tab title="我的收藏"></van-tab>
       <van-tab title="本地地图"></van-tab>
       <!-- 创意工坊列表 -->
-      <van-pull-refresh v-model="isRefresh" success-text="刷新成功" @refresh="getGameMap()">
+      <van-pull-refresh v-model="isRefresh" :disabled="refreshDisabled" success-text="刷新成功" @refresh="getGameMap()">
         <div class="workshop-content">
-          <ul class="workshop-map">
+          <ul class="workshop-map" @touchend="controlDisabled" ref="list">
             <li
               class="workshop-map-item"
               v-for="(item, index) in mapData"
@@ -105,7 +105,8 @@ export default {
       },
       workshopTab: 0,
       isRefresh: false,
-      shareIndex: null
+      shareIndex: null,
+      refreshDisabled: false
     }
   },
   components: {
@@ -259,6 +260,12 @@ export default {
           }
         })
       })
+    },
+    // 控制下拉刷新是否禁用
+    controlDisabled() {
+      // 不在列表顶部时，禁用下拉刷新
+      if (this.$refs.list.scrollTop < 10) this.refreshDisabled = false
+      else this.refreshDisabled = true
     }
   }
 }
