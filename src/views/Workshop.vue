@@ -23,7 +23,7 @@
       <!-- 创意工坊列表 -->
       <van-pull-refresh v-model="isRefresh" :disabled="refreshDisabled" success-text="刷新成功" @refresh="getGameMap()">
         <div class="workshop-content">
-          <ul class="workshop-map" @touchend="controlDisabled" ref="list">
+          <ul class="workshop-map" @touchstart="controlDisabled" ref="list">
             <li
               class="workshop-map-item"
               v-for="(item, index) in mapData"
