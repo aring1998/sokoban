@@ -21,8 +21,8 @@
       <van-tab title="我的收藏"></van-tab>
       <van-tab title="本地地图"></van-tab>
       <!-- 创意工坊列表 -->
-      <van-pull-refresh v-model="isRefresh" :disabled="refreshDisabled" success-text="刷新成功" @refresh="getGameMap()">
-        <div class="workshop-content">
+      <van-pull-refresh v-model="isRefresh" :disabled="refreshDisabled" success-text="刷新成功" @refresh="getGameMap()" class="workshop-wrapper">
+        <div class="workshop-content" v-show="mapData.length > 0">
           <ul class="workshop-map" @touchstart="controlDisabled" ref="list">
             <li
               class="workshop-map-item"
@@ -64,6 +64,13 @@
             </li>
           </ul>
         </div>
+        <van-empty
+          class="custom-image"
+          :image="require('@/assets/img/common/empty.png')"
+          image-size="90"
+          description="空空如也~"
+          v-show="mapData.length === 0"
+        />
       </van-pull-refresh>
     </van-tabs>
     <!-- 分页 -->
@@ -306,77 +313,80 @@ export default {
     margin: 10px 10px 0 10px;
     background-color: #fff;
   }
-  .workshop-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    .workshop-map {
+  .workshop-wrapper {
+    height: calc(100vh - 240px);
+    .workshop-content {
       display: flex;
-      flex-flow: column nowrap;
-      height: calc(100vh - 240px);
-      overflow: scroll;
-      padding: 10px;
-      .workshop-map-item {
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
-        padding: 0 10px;
-        background-color: var(--deepMainColor);
-        min-height: 100px;
-        border-radius: 5px;
-        margin: 5px 0;
-      }
-      .map-thumbnail {
-        height: 80px;
-        width: 80px;
-        border-radius: 5px;
-        overflow: hidden;
-        background-color: rgba(255, 255, 255, 0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 15px;
-      }
-      .map-intro {
+      flex-direction: column;
+      justify-content: space-around;
+      .workshop-map {
         display: flex;
         flex-flow: column nowrap;
-        justify-content: space-evenly;
-        span {
-          color: #fff;
-        }
-        .name {
-          font-weight: 600;
-          font-size: 20px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          width: 210px;
-        }
-        .creator {
-          font-size: 16px;
-        }
-        .date {
-          font-size: 14px;
-          margin-left: auto;
-        }
-        .tool-bar {
+        overflow: scroll;
+        padding: 10px;
+        .workshop-map-item {
           display: flex;
           flex-flow: row nowrap;
           align-items: center;
-          justify-content: space-between;
-          font-size: 20px;
-          font-weight: 600;
-          color: #fff;
-          margin-top: 5px;
-          i {
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 50%;
-            padding: 4px;
+          padding: 0 10px;
+          background-color: var(--deepMainColor);
+          min-height: 100px;
+          border-radius: 5px;
+          margin: 5px 0;
+        }
+        .map-thumbnail {
+          height: 80px;
+          width: 80px;
+          border-radius: 5px;
+          overflow: hidden;
+          background-color: rgba(255, 255, 255, 0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 15px;
+        }
+        .map-intro {
+          display: flex;
+          flex-flow: column nowrap;
+          justify-content: space-evenly;
+          span {
+            color: #fff;
+          }
+          .name {
+            font-weight: 600;
+            font-size: 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 210px;
+          }
+          .creator {
+            font-size: 16px;
+          }
+          .date {
+            font-size: 14px;
+            margin-left: auto;
+          }
+          .tool-bar {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            margin-top: 5px;
+            i {
+              background-color: rgba(0, 0, 0, 0.3);
+              border-radius: 50%;
+              padding: 4px;
+            }
           }
         }
       }
     }
   }
+  
 }
 
 .van-pagination {
