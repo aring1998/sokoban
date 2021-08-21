@@ -21,9 +21,17 @@
       <van-tab title="我的收藏"></van-tab>
       <van-tab title="本地地图"></van-tab>
       <!-- 创意工坊列表 -->
-      <van-pull-refresh v-model="isRefresh" :disabled="refreshDisabled" success-text="刷新成功" @refresh="getGameMap()" class="workshop-wrapper">
+      <van-pull-refresh
+        class="workshop-wrapper"
+        v-model="isRefresh"
+        :disabled="refreshDisabled"
+        success-text="刷新成功"
+        @refresh="getGameMap()"
+        @touchstart="controlDisabled"
+        ref="list"
+      >
         <div class="workshop-content" v-show="mapData.length > 0">
-          <ul class="workshop-map" @touchstart="controlDisabled" ref="list">
+          <ul class="workshop-map">
             <li
               class="workshop-map-item"
               v-for="(item, index) in mapData"
@@ -46,12 +54,9 @@
                 <!-- 点赞/收藏/分享 -->
                 <div class="tool-bar">
                   <div v-show="workshopTab != 3">
-                    <van-icon name="good-job" v-show="item.hasPraise" @click.stop="like(index, item.id)" />
-                    <van-icon name="good-job-o" v-show="!item.hasPraise" @click.stop="like(index, item.id)" />
-                    <van-icon name="star" v-show="item.hasCollect" @click.stop="collect(index, item.id)" />
-                    <van-icon name="star-o" v-show="!item.hasCollect" @click.stop="collect(index, item.id)" />
-                    <van-icon name="share" v-show="index == shareIndex" @click.stop="share(index, item.mapName)" />
-                    <van-icon name="share-o" v-show="index != shareIndex" @click.stop="share(index, item.mapName)" />
+                    <van-icon :name="item.hasPraise ? 'good-job' : 'good-job-o'" @click.stop="like(index, item.id)" />
+                    <van-icon :name="item.hasCollect ? 'star' : 'star-o'" @click.stop="collect(index, item.id)" />
+                    <van-icon :name="shareIndex === index ? 'share' : 'share-o'" @click.stop="share(index, item.mapName)" />
                     <van-icon name="close" v-show="$store.state.userInfo.name == 'aring'" @click.stop="del(item.id, item.mapName, index)" />
                   </div>
                   <div v-show="workshopTab == 3">
@@ -315,6 +320,7 @@ export default {
   }
   .workshop-wrapper {
     height: calc(100vh - 240px);
+    overflow: auto;
     .workshop-content {
       display: flex;
       flex-direction: column;
@@ -322,7 +328,6 @@ export default {
       .workshop-map {
         display: flex;
         flex-flow: column nowrap;
-        overflow: scroll;
         padding: 10px;
         .workshop-map-item {
           display: flex;
