@@ -7,7 +7,19 @@
       <!-- 步数 -->
       <div class="step">
         <span v-if="$route.query.type == 'level'">关卡: {{ $route.query.pack == 'basic' ? '基础关' : '拓展关' }}--{{ level + 1 }}</span>
-        <span v-else class="map-name">地图名: {{ mapName }}</span>
+        <van-popover
+          v-model="showMapName"
+          theme="dark"
+          trigger="click"
+          class="map-name"
+          :placement="mapName.length > 20 ? 'right-end' : 'bottom'"
+          v-else
+        >
+          <span style="word-break: break-all">{{ mapName }}</span>
+          <template #reference>
+            <span>地图名: {{ mapName }}</span>
+          </template>
+        </van-popover>
         <span>当前步数：{{ step }}</span>
         <span>最优步数：{{ bestStep }}</span>
       </div>
@@ -144,7 +156,7 @@ export default {
       playerY: 0, // 人物y轴坐标
       uploadMap: { // 上传地图表单
         mapName: '',
-        creator: store.state.userInfo.auth ? store.state.userInfo.auth : store.state.userInfo.name
+        creator: store.state.userInfo.nickname ? store.state.userInfo.nickname : store.state.userInfo.name
       },
       keepMove: null, // 持续移动定时器
       initStatus: { // 初始人物状态
@@ -157,7 +169,8 @@ export default {
       singlePortalExit: [], // 单向传送门出口
       tipsShow: false, // 提示弹出层
       tips: [], // 提示
-      processRecord: [] // 过程记录
+      processRecord: [], // 过程记录
+      showMapName: false // 展示完整地图名
     }
   },
   components: {
