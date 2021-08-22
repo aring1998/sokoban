@@ -103,7 +103,7 @@ export default {
       aboutGameTab: 0,
       levelTab: 0,
       mapManual: mapEl,
-      basicComplete: 99,
+      basicComplete: 100,
       expandComplete: 99
     }
   },
@@ -203,6 +203,7 @@ export default {
     background-color: #fff;
     align-content: flex-start;
     height: calc(90vh - 150px);
+    overflow: auto;
     padding: 10px;
     li {
       background-color: var(--mainColor);
