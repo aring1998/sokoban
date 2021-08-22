@@ -123,6 +123,9 @@
               <van-button size="small" type="primary" @click="changeNickname">修改</van-button>
             </template>
           </van-field>
+          <div style="margin: 16px;">
+            <van-button round block type="info" native-type="submit" @click="logOut">退出登录</van-button>
+          </div>
         </van-tab>
         <van-tab title="修改密码">
           <van-form @submit="changePsw">
@@ -220,8 +223,7 @@ export default {
     // 切换主题
     changeTheme(value) {
       this.$store.state.theme = value
-      // 存缓存
-      window.localStorage.setItem('theme', value)
+      window.localStorage.setItem('theme', value) // 存缓存
     },
     // 登录
     login() {
@@ -234,9 +236,9 @@ export default {
         }
       }).then(res => {
         if (res.code == 0) {
-          this.$store.state.userInfo.name = res.data.name
           this.$store.state.token = res.data.token
           window.localStorage.setItem('token', res.data.token)
+          this.$store.commit('token')
           this.$notify({ type: 'success', message: '登录成功' })
           this.$refs.login.show()
         }
@@ -273,6 +275,13 @@ export default {
           this.$notify({ type: 'success', message: '修改成功' })
         }
       })
+    },
+    // 退出登录
+    logOut() {
+      this.$store.state.userInfo.name = ''
+      window.localStorage.removeItem('token')
+      this.$refs.login.show()
+      this.$notify({ type: 'success', message: '退出登录成功' })
     },
     // 修改密码
     changePsw() {

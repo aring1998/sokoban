@@ -15,7 +15,7 @@ export default {
   name: 'App',
   created() {
     this.getVersion()
-    this.token()
+    this.$store.commit('token') 
   },
   mounted() {
     // 根据缓存决定bgm是否播放
@@ -56,18 +56,6 @@ export default {
               })
             }
           }
-        }
-      })
-    },
-    // 验证token
-    token() {
-      request({
-        url: 'user/token',
-        method: 'POST'
-      }).then(res => {
-        if (res.code == 0) {
-          this.$store.state.userInfo = res.data
-          this.$notify({ type: 'success', message: '欢迎回来，' + res.data.name })
         }
       })
     }

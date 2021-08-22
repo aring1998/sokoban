@@ -224,6 +224,7 @@ export default {
     },
     // 测试地图
     testMap() {
+      console.log(this.gameMap);
       if (this.checkMap())
         this.$router.push({ name: 'game', params: { gameMap: this.gameMap, life: this.advancedForm.life } , query: { type: 'created' } })
     },
