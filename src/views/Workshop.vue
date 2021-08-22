@@ -143,9 +143,7 @@ export default {
         if (value === 1) this.searchInfo.sort = 1
         // 我的收藏
         if (value === 2) {
-          if (!this.$store.commit('checkLogin')) {
-            return this.mapData = []
-          }
+          if (!this.$store.commit('checkLogin')) return this.mapData = []
           this.searchInfo.type = 'collect'
         }
         this.getGameMap()

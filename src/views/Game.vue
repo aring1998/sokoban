@@ -500,11 +500,19 @@ export default {
             this.$nextTick(() => {
               this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, behavior: 'smooth' })
             })
+          } else {
+            this.$nextTick(() => {
+              this.$refs.game.$el.scrollTo({ left: 0, behavior: 'smooth' })
+            })
           }
         } else {
           if (this.playerY * 30 >= 180) {
             this.$nextTick(() => {
               this.$refs.game.$el.scrollTo({ top: this.playerY * 30 - 165, behavior: 'smooth' })
+            })
+          } else {
+            this.$nextTick(() => {
+              this.$refs.game.$el.scrollTo({ top: 0, behavior: 'smooth' })
             })
           }
         }
