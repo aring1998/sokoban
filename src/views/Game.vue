@@ -111,8 +111,8 @@
     <van-popup v-model="tipsShow" closeable position="bottom" :style="{ height: '50%' }">
       <div class="tips">
         <div class="tips-container" v-if="tips">
-          <span v-for="(item, index) of tips" :key="index" :class="processRecord[index] ? (processRecord[index] == item ? 'right' : 'wrong') : ''">
-            {{ item == 0 ? '↑' : item == 1 ? '→' : i == 2 ? '↓' : item == 3 ? '←' : '' }}
+          <span v-for="(item, index) of tips" :key="index" :class="processRecord[index] >= 0 ? (processRecord[index] == item ? 'right' : 'wrong') : ''">
+            {{ item == 0 ? '↑' : item == 1 ? '→' : item == 2 ? '↓' : item == 3 ? '←' : '' }}
           </span>
         </div>
         <span v-else>
@@ -336,8 +336,8 @@ export default {
         setX = this.playerX
         setBoxY = setY + step
         setBoxX = setX
-        if (step > 0) this.processRecord.push(0)
-        else this.processRecord.push(2)
+        if (step > 0) this.processRecord.push(2)
+        else this.processRecord.push(0)
       }
 
       // 判断是否超出单元格
