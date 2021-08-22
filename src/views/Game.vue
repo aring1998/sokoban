@@ -235,7 +235,7 @@ export default {
       for (let y in this.gameMap) {
         for (let x in this.gameMap[y]) {
           if (this.gameMap[y][x] === 2) {
-            console.log('找到玩家的坐标：', x, y)
+            // 找到玩家坐标
             this.playerX = +x
             this.playerY = +y
           }
@@ -341,7 +341,7 @@ export default {
       }
 
       // 判断是否超出单元格
-      if (setY < 0 || setY == this.gameMap[0].length || setX < 0 || setX == this.gameMap[0].length) return
+      if (setY < 0 || setY == this.gameMap.length || setX < 0 || setX == this.gameMap[0].length) return
 
       staticTarget = this.staticMap[setY][setX] // 获取静止层目标点的值
       activeTarget = this.activeMap[setY][setX] // 获取活动层目标点的值
