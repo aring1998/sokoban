@@ -143,7 +143,7 @@ export default {
         if (value === 1) this.searchInfo.sort = 1
         // 我的收藏
         if (value === 2) {
-          if (!this.$store.commit('checkLogin')) return this.mapData = []
+          if (this.$store.commit('checkLogin')) return this.mapData = []
           this.searchInfo.type = 'collect'
         }
         this.getGameMap()
@@ -153,6 +153,7 @@ export default {
   methods: {
     // 获取地图数据
     getGameMap() {
+      if (this.workshopTab === 3) return this.isRefresh = false
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: '/map/page',
