@@ -180,7 +180,8 @@ export default {
               }
               break
             }
-            case 3: {
+            case 3:
+            case 7: {
               box++
               break
             }

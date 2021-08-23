@@ -341,7 +341,7 @@ export default {
       }
 
       // 判断是否超出单元格
-      if (setY < 0 || setY == this.gameMap.length || setX < 0 || setX == this.gameMap[0].length) return
+      if (setY < 0 || setY >= this.gameMap.length || setX < 0 || setX >= this.gameMap[0].length) return
 
       staticTarget = this.staticMap[setY][setX] // 获取静止层目标点的值
       activeTarget = this.activeMap[setY][setX] // 获取活动层目标点的值
