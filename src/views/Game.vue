@@ -162,7 +162,6 @@ export default {
       initStatus: { // 初始人物状态
         poisoning: false, // 是否中毒
         drunk: 0, // 是否醉酒
-        drunkStep: 0 // 醉酒后移动的步数
       },
       status: null, // 人物当前状态
       statusRecord: [], // 人物状态记录
@@ -311,15 +310,24 @@ export default {
       if (this.status.drunk % 2 !== 0) {
         this.status.drunk++ // 为接下来的move方法不触发醉酒移动
         // 随机再进行0~2次移动
-        this.status.drunkStep = Math.floor(Math.random() * 2)
-        for (let i = 0; i < this.status.drunkStep; i++) {
+        const drunkStep = Math.floor(Math.random() * 3)
+        for (let i = 0; i < drunkStep; i++) {
           this.$nextTick(() => {
+            // 删除醉酒移动前的记录
+            this.step--
+            this.staticMapRecord.pop()
+            this.activeMapRecord.pop()
+            this.statusRecord.pop()
+            this.lifeRecord.pop()
+            this.processRecord.pop()
             this.move(direction, step)
           })
         }
         // 结束循环后，恢复醉酒移动
         this.$nextTick(() => {
           this.status.drunk++
+          this.statusRecord.pop()
+          this.statusRecord.push(deepCloneObj(this.status))
         })
       }
 
@@ -555,11 +563,6 @@ export default {
             break
           }
         }
-      }
-      // 醉酒状态下的撤回
-      if (this.status.drunkStep > 0) {
-        this.status.drunkStep--
-        this.onRegret()
       }
     },
     // 切换关卡
