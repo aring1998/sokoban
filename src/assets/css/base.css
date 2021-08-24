@@ -11,6 +11,10 @@
   text-decoration: none;
 }
 
+#app {
+  height: 100vh;
+}
+
 [v-cloak] {
   display: none;
 }
