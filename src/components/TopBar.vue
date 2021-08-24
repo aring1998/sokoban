@@ -320,7 +320,7 @@ export default {
   .top-bar-item {
     display: flex;
     align-items: flex-end;
-    height: 50px;
+    height: 60px;
     padding: 0 15px;
     margin-bottom: 10px;
     justify-content: space-between;

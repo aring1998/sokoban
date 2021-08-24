@@ -1,3 +1,4 @@
+import { Notify } from 'vant'
 import { request } from '@/network/request'
 
 export default {
