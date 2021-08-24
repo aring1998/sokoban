@@ -39,6 +39,14 @@
           placeholder="可选范围：0~99"
           :rules="[{ pattern: /^[0-99]$/, message: '可选范围：0~99' }]"
         />
+        <van-field name="radio" label="禁用撤回">
+          <template #input>
+            <van-radio-group v-model="advancedForm.regretDisabled" direction="horizontal">
+              <van-radio name="1">是</van-radio>
+              <van-radio name="0">否</van-radio>
+            </van-radio-group>
+          </template>
+        </van-field>
         <div style="margin: 16px;">
           <van-button round block type="info" @click="$refs.advancedOptions.show()">确定</van-button>
         </div>
@@ -102,7 +110,8 @@ export default {
         column: null
       },
       advancedForm: { // 高级选项表单
-        life: 0
+        life: 0,
+        regretDisabled: '0' // 是否禁用撤回
       },
       gameMap: [
         [0, 0, 0, 0, 0, 0, 0],
@@ -227,7 +236,7 @@ export default {
     testMap() {
       console.log(this.gameMap);
       if (this.checkMap())
-        this.$router.push({ name: 'game', params: { gameMap: this.gameMap, life: this.advancedForm.life } , query: { type: 'created' } })
+        this.$router.push({ name: 'game', params: { gameMap: this.gameMap, advancedForm: this.advancedForm } , query: { type: 'created' } })
     },
     // 增加一行
     addRow() {

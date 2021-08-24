@@ -169,7 +169,8 @@ export default {
       tipsShow: false, // 提示弹出层
       tips: [], // 提示
       processRecord: [], // 过程记录
-      showMapName: false // 展示完整地图名
+      showMapName: false, // 展示完整地图名
+      regretDisabled: 0 // 禁用撤回
     }
   },
   components: {
@@ -200,13 +201,15 @@ export default {
           this.initLife = mapData.life || 0
           this.tips = mapData.processData
           this.bestStep = mapData.stepsPas
+          this.regretDisabled = mapData.regretDisabled || 0
           this.init()
         }
       },
       // 由测试地图进入
       created: () => {
         this.gameMap = this.$route.params.gameMap
-        this.initLife = +this.$route.params.life || 0
+        this.initLife = +this.$route.params.advancedForm.life || 0
+        this.regretDisabled = +this.$route.params.advancedForm.regretDisabled || 0
       }
     }
     checkEntry[this.$route.query.type]()
@@ -275,6 +278,7 @@ export default {
           this.initLife = res.data.playerHP
           this.tips = res.data.processData
           this.bestStep = res.data.stepsPas
+          this.regretDisabled = res.data.regretDisabled
           this.init()
         }
       })
@@ -538,6 +542,7 @@ export default {
     },
     // 撤回（可以连续撤回置第一步）
     onRegret() {
+      if (this.regretDisabled) return this.$notify({ type: 'danger', message: '该图作者已禁用撤回功能' })
       this.step--
       // 向子组件赋值，并重新浅拷贝
       this.$refs.game.staticMap = deepClone2Arr(this.staticMapRecord[this.step]) // 静止层
@@ -584,7 +589,8 @@ export default {
             life: this.initLife,
             time: new Date(),
             stepsPas: this.step,
-            processData: this.processRecord
+            processData: this.processRecord,
+            regretDisabled: this.regretDisabled
           }))
           this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
           break
@@ -609,7 +615,8 @@ export default {
           mapData: this.gameMap,
           playerHP: this.initLife,
           stepsPas: this.step,
-          processData: this.processRecord
+          processData: this.processRecord,
+          regretDisabled: this.regretDisabled
         }
       }).then(res => {
         if (res.code == 0) {
