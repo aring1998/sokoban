@@ -15,7 +15,7 @@ export default {
   name: 'App',
   created() {
     this.getVersion()
-    this.$store.commit('token') 
+    this.$store.dispatch('token') 
   },
   mounted() {
     // 根据缓存决定bgm是否播放

@@ -238,7 +238,7 @@ export default {
         if (res.code == 0) {
           this.$store.state.token = res.data.token
           window.localStorage.setItem('token', res.data.token)
-          this.$store.commit('token')
+          this.$store.dispatch('token')
           this.$notify({ type: 'success', message: '登录成功' })
           this.$refs.login.show()
         }
