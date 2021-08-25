@@ -255,7 +255,6 @@ export default {
     uploadLocalMap(id, name) {
       const mapData = JSON.parse(window.localStorage.getItem('map' + id))
       if (mapData.mapName === '未命名') mapData.mapName = ''
-      console.log(mapData);
       this.$dialog.confirm({
         message: `确定上传 "${name}" 吗？`
       }).then(() => {

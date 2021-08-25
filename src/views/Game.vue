@@ -38,7 +38,7 @@
     <!-- 行为控制 -->
     <div class="check-point">
       <van-button @click="init" type="primary" size="mini">重置</van-button>
-      <van-button @click="onRegret" type="primary" size="mini" :disabled="this.activeMapRecord.length == 1">撤回</van-button>
+      <van-button @click="onRegret" type="primary" size="mini" :disabled="this.record.activeMapRecord.length == 1">撤回</van-button>
       <van-button @click="tipsShow = true" type="primary" size="mini" v-if="$route.query.type != 'created'">提示</van-button>
       <van-button
         @click="changeLevel(-1)"
@@ -144,14 +144,11 @@ export default {
       mapName: '', // 地图名
       staticMap: [], // 静止层地图
       activeMap: [], // 活动层地图
-      staticMapRecord: [], // 静止层每步地图记录
-      activeMapRecord: [], // 活动层每步地图记录
       step: 0, // 步数
       bestStep: 0, // 最优步数
       endCounter: 0, // 终点个数
       initLife: 0, // 初始生命
       life: 0, // 人物生命
-      lifeRecord: [], // 生命记录
       playerX: 0, // 人物x轴坐标
       playerY: 0, // 人物y轴坐标
       uploadMap: { // 上传地图表单
@@ -164,13 +161,18 @@ export default {
         drunk: 0, // 是否醉酒
       },
       status: null, // 人物当前状态
-      statusRecord: [], // 人物状态记录
       singlePortalExit: [], // 单向传送门出口
       tipsShow: false, // 提示弹出层
       tips: [], // 提示
-      processRecord: [], // 过程记录
       showMapName: false, // 展示完整地图名
-      regretDisabled: 0 // 禁用撤回
+      regretDisabled: 0, // 禁用撤回
+      record: { // 操作记录
+        staticMapRecord: [], // 静止层每步地图记录
+        activeMapRecord: [], // 活动层每步地图记录
+        lifeRecord: [], // 生命记录
+        statusRecord: [], // 人物状态记录
+        processRecord: [], // 过程记录
+      }
     }
   },
   components: {
@@ -225,7 +227,7 @@ export default {
       this.endCounter = 0
       this.step = 0
       this.status = deepCloneObj(this.initStatus) // 对象深拷贝
-      this.processRecord = []
+      this.record.processRecord = []
       this.singlePortalExit = []
       // 调用子组件分离地图方法
       this.$refs.game.separateMap(this.gameMap)
@@ -259,10 +261,10 @@ export default {
       })
 
       // 深拷贝初始地图
-      this.staticMapRecord = [deepClone2Arr(this.staticMap)]
-      this.activeMapRecord = [deepClone2Arr(this.activeMap)]
-      this.lifeRecord = [this.initLife]
-      this.statusRecord = [deepCloneObj(this.status)]
+      this.record.staticMapRecord = [deepClone2Arr(this.staticMap)]
+      this.record.activeMapRecord = [deepClone2Arr(this.activeMap)]
+      this.record.lifeRecord = [this.initLife]
+      this.record.statusRecord = [deepCloneObj(this.status)]
     },
     // 创意工坊进入获取游戏地图数据
     getMapData(id) {
@@ -317,21 +319,18 @@ export default {
         const drunkStep = Math.floor(Math.random() * 3)
         for (let i = 0; i < drunkStep; i++) {
           this.$nextTick(() => {
+            if (staticTarget === 13) return // 碰到甘露则停止
             // 删除醉酒移动前的记录
             this.step--
-            this.staticMapRecord.pop()
-            this.activeMapRecord.pop()
-            this.statusRecord.pop()
-            this.lifeRecord.pop()
-            this.processRecord.pop()
+            this.recordPop()
             this.move(direction, step)
           })
         }
         // 结束循环后，恢复醉酒移动
         this.$nextTick(() => {
           this.status.drunk++
-          this.statusRecord.pop()
-          this.statusRecord.push(deepCloneObj(this.status))
+          this.record.statusRecord.pop()
+          this.record.statusRecord.push(deepCloneObj(this.status))
         })
       }
 
@@ -341,15 +340,15 @@ export default {
         setX = this.playerX + step
         setBoxY = setY
         setBoxX = setX + step
-        if (step > 0) this.processRecord.push(1)
-        else this.processRecord.push(3)
+        if (step > 0) this.record.processRecord.push(1)
+        else this.record.processRecord.push(3)
       } else {
         setY = this.playerY + step
         setX = this.playerX
         setBoxY = setY + step
         setBoxX = setX
-        if (step > 0) this.processRecord.push(2)
-        else this.processRecord.push(0)
+        if (step > 0) this.record.processRecord.push(2)
+        else this.record.processRecord.push(0)
       }
 
       // 判断是否超出单元格
@@ -370,7 +369,7 @@ export default {
           this.life--
           if (this.life == 0) {
             this.$notify({ type: 'danger', message: 'you dead!' })
-            return this.init()
+            this.$nextTick(() => { return this.init() })
           }
           break
         }
@@ -413,7 +412,7 @@ export default {
         case 13: {
           this.$nextTick(() => {
             this.status = deepCloneObj(this.initStatus)
-          });
+          })
           this.$set(this.staticMap[setY], setX, 1) // 消除甘露
         }
       }
@@ -438,7 +437,7 @@ export default {
               setTimeout(() => {
                 if (document.querySelectorAll('.end.box').length == this.endCounter) {
                   // 防作弊
-                  let onEnd = 0;
+                  let onEnd = 0
                   for (let y in this.activeMap) {
                     for (let x in this.activeMap[y]) {
                       if (this.activeMap[y][x] == 3 && this.staticMap[y][x] == 4) {
@@ -531,10 +530,10 @@ export default {
       }
 
       // 记录移动后地图数据
-      this.staticMapRecord.push(deepClone2Arr(this.staticMap))
-      this.activeMapRecord.push(deepClone2Arr(this.activeMap))
-      this.lifeRecord.push(this.life)
-      this.statusRecord.push(deepCloneObj(this.status))
+      this.record.staticMapRecord.push(deepClone2Arr(this.staticMap))
+      this.record.activeMapRecord.push(deepClone2Arr(this.activeMap))
+      this.record.lifeRecord.push(this.life)
+      this.record.statusRecord.push(deepCloneObj(this.status))
     },
     // 松开按键时，停止移动
     stopMove() {
@@ -545,20 +544,16 @@ export default {
       if (this.regretDisabled) return this.$notify({ type: 'danger', message: '该图作者已禁用撤回功能' })
       this.step--
       // 向子组件赋值，并重新浅拷贝
-      this.$refs.game.staticMap = deepClone2Arr(this.staticMapRecord[this.step]) // 静止层
-      this.$refs.game.activeMap = deepClone2Arr(this.activeMapRecord[this.step]) // 活动层
+      this.$refs.game.staticMap = deepClone2Arr(this.record.staticMapRecord[this.step]) // 静止层
+      this.$refs.game.activeMap = deepClone2Arr(this.record.activeMapRecord[this.step]) // 活动层
       this.staticMap = this.$refs.game.staticMap
       this.activeMap = this.$refs.game.activeMap
-      this.staticMapRecord.pop()
-      this.activeMapRecord.pop()
       // 读取记录中生命值
-      this.life = this.lifeRecord[this.step]
-      this.lifeRecord.pop()
+      this.life = this.record.lifeRecord[this.step]
       // 读取人物状态记录
-      this.status = deepCloneObj(this.statusRecord[this.step])
-      this.statusRecord.pop()
-      // 删除最末条流程记录
-      this.processRecord.pop()
+      this.status = deepCloneObj(this.record.statusRecord[this.step])
+      // 删除最末条记录
+      this.recordPop()
       // 撤回后重新获取玩家坐标
       for (let y in this.activeMap) {
         for (let x in this.activeMap[y]) {
@@ -589,7 +584,7 @@ export default {
             life: this.initLife,
             time: new Date(),
             stepsPas: this.step,
-            processData: this.processRecord,
+            processData: this.record.processRecord,
             regretDisabled: this.regretDisabled
           }))
           this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
@@ -615,7 +610,7 @@ export default {
           mapData: this.gameMap,
           playerHP: this.initLife,
           stepsPas: this.step,
-          processData: this.processRecord,
+          processData: this.record.processRecord,
           regretDisabled: this.regretDisabled
         }
       }).then(res => {
@@ -638,7 +633,7 @@ export default {
         data: {
           mapId: this.$route.params.id,
           stepsPas: this.step,
-          processData: this.processRecord
+          processData: this.record.processRecord
         }
       }).then(res => {
         if (res.code == 0) {
@@ -664,6 +659,12 @@ export default {
         }
       }
       packAction[this.$route.query.pack]()
+    },
+    // 删除最末条记录
+    recordPop() {
+      for (let i in this.record) {
+        this.record[i].pop()
+      }
     }
   }
 }
