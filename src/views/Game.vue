@@ -72,14 +72,14 @@
     <!-- 虚拟手柄 -->
     <div class="analog-handle">
       <div class="top">
-        <van-icon name="arrow-up" @touchstart.prevent="move('y', -1)" @touchend.prevent="stopMove()" />
+        <van-icon name="play" style="transform: rotate(-90deg)" @touchstart.prevent="move('y', -1)" @touchend.prevent="stopMove()" />
       </div>
       <div class="center">
-        <van-icon name="arrow-left" @touchstart.prevent="move('x', -1)" @touchend.prevent="stopMove()" />
-        <van-icon name="arrow" @touchstart.prevent="move('x', 1)" @touchend.prevent="stopMove()" />
+        <van-icon name="play" style="transform: rotate(180deg)" @touchstart.prevent="move('x', -1)" @touchend.prevent="stopMove()" />
+        <van-icon name="play" @touchstart.prevent="move('x', 1)" @touchend.prevent="stopMove()" />
       </div>
       <div class="bottom">
-        <van-icon name="arrow-down" @touchstart.prevent="move('y', 1)" @touchend.prevent="stopMove()" />
+        <van-icon name="play" style="transform: rotate(90deg)" @touchstart.prevent="move('y', 1)" @touchend.prevent="stopMove()" />
       </div>
     </div>
     <!-- 保存地图弹出框 -->
@@ -678,20 +678,18 @@ export default {
   .analog-handle {
     position: fixed;
     bottom: 60px;
-    left: 87.5px;
+    left: 77.5px;
     z-index: 100;
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    border: 5px rgba(0, 0, 0, 0.4) solid;
-    width: 200px;
-    height: 200px;
-    font-size: 60px;
-    color: #fff;
+    justify-content: space-between;
+    width: 220px;
+    height: 220px;
+    font-size: 65px;
+    color: #e8eaedcc;
+    flex-grow: 1;
     div {
-      height: 33%;
       width: 100%;
       text-align: center;
       display: flex;
@@ -701,6 +699,12 @@ export default {
     .center {
       display: flex;
       justify-content: space-between;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    i {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
     }
   }
   // 测试地图弹窗
