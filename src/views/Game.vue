@@ -111,7 +111,7 @@
     <van-popup v-model="tipsShow" closeable position="bottom" :style="{ height: '50%' }">
       <div class="tips">
         <div class="tips-container" v-if="tips">
-          <span v-for="(item, index) of tips" :key="index" :class="processRecord[index] >= 0 ? (processRecord[index] == item ? 'right' : 'wrong') : ''">
+          <span v-for="(item, index) of tips" :key="index" :class="record.processRecord[index] >= 0 ? (record.processRecord[index] == item ? 'right' : 'wrong') : ''">
             {{ item == 0 ? '↑' : item == 1 ? '→' : item == 2 ? '↓' : item == 3 ? '←' : '' }}
           </span>
         </div>
