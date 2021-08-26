@@ -200,7 +200,7 @@ export default {
           const mapData = JSON.parse(window.localStorage.getItem('map' + this.$route.params.localId))
           this.gameMap = mapData.mapData
           this.mapName = mapData.mapName
-          this.initLife = mapData.life || 0
+          this.initLife = mapData.playerHP || 0
           this.tips = mapData.processData
           this.bestStep = mapData.stepsPas
           this.regretDisabled = mapData.regretDisabled || 0
@@ -581,7 +581,7 @@ export default {
             creator: this.uploadMap.creator || '匿名',
             mapName: this.uploadMap.mapName || '未命名',
             mapData: this.gameMap,
-            life: this.initLife,
+            playerHP: this.initLife,
             time: new Date(),
             stepsPas: this.step,
             processData: this.record.processRecord,
