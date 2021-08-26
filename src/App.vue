@@ -65,5 +65,4 @@ export default {
 
 <style>
 @import url('/assets/css/base.css');
-@import url('/assets/css/theme.css');
 </style>

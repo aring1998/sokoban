@@ -132,7 +132,7 @@ import { request } from '@/network/request'
 import { deepCloneObj, deepClone2Arr, isEmptyObject } from '@/utils/index'
 
 import TopBar from '@/components/TopBar'
-import GameContent from '@/components/GameContent'
+import GameContent from '@/components/game-content/GameContent.vue'
 import Popover from '@/components/Popover'
 
 export default {

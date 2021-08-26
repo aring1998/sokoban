@@ -46,7 +46,7 @@
             >
               <!-- 地图缩略图 -->
               <div class="map-thumbnail">
-                <game-content :gameMap="item.mapData"></game-content>
+                <create-content :gameMap="item.mapData"></create-content>
               </div>
               <div class="map-intro">
                 <span class="name">{{ item.mapName }}</span>
@@ -99,7 +99,7 @@
 <script>
 import { request } from '@/network/request'
 import TopBar from '@/components/TopBar'
-import GameContent from '@/components/GameContent'
+import CreateContent from '@/components/game-content/CreateContent.vue'
 
 export default {
   name: 'workshop',
@@ -123,7 +123,7 @@ export default {
   },
   components: {
     TopBar,
-    GameContent
+    CreateContent
   },
   created() {
     this.searchInfo.mapName = this.$route.query.mapName

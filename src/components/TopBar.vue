@@ -34,6 +34,7 @@
     </popover>
     <!-- 登录弹窗 -->
     <popover ref="login" class="login">
+      <!-- 未登录 -->
       <van-tabs v-model="tabIndex" color="var(--mainColor)" v-if="$store.state.userInfo.name == ''" swipeable>
         <van-tab title="登录">
           <van-form @submit="login">
@@ -97,6 +98,7 @@
           </van-form>
         </van-tab>
       </van-tabs>
+      <!-- 已登录 -->
       <van-tabs v-model="tabIndex" color="var(--mainColor)" v-else swipeable>
         <van-tab title="个人信息">
           <van-field
@@ -295,12 +297,10 @@ export default {
       }).then(res => {
         if (res.code == 0) {
           this.$notify({ type: 'success', message: '修改密码成功' })
-          this.$refs.login.show()
           this.$store.state.userInfo.name = ''
           window.localStorage.removeItem('token')
           setTimeout(() => {
             this.$notify({ type: 'success', message: '请重新登陆' })
-            this.tabIndex = 
             this.$refs.login.show()
           }, 500);
         }

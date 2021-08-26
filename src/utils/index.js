@@ -17,6 +17,6 @@ export const deepClone2Arr = arr => {
 }
 
 // 判断是否为空对象
-export const isEmptyObject = (data) => {
+export const isEmptyObject = data => {
   return JSON.stringify(data) == '{}'
 }

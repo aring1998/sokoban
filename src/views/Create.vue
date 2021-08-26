@@ -54,7 +54,7 @@
     </popover>
 
     <!-- 游戏地图 -->
-    <game-content :game-map="gameMap" :get-column-index="getColumnIndex" :get-row-index="getRowIndex"></game-content>
+    <create-content :game-map="gameMap" :get-column-index="getColumnIndex" :get-row-index="getRowIndex"></create-content>
 
     <!-- 选择地图元素 -->
     <div class="map-el-container">
@@ -99,7 +99,7 @@
 import { mapEl } from '@/assets/js/map-el/index'
 
 import TopBar from '@/components/TopBar'
-import GameContent from '@/components/GameContent'
+import CreateContent from '@/components/game-content/CreateContent.vue'
 import Popover from '@/components/Popover'
 
 export default {
@@ -129,7 +129,7 @@ export default {
   },
   components: {
     TopBar,
-    GameContent,
+    CreateContent,
     Popover
   },
   mounted() {
@@ -155,6 +155,7 @@ export default {
     },
     // 获取列索引
     getColumnIndex(index) {
+      console.log(index);
       this.choiceColumn = index
     },
     // 获取行索引
