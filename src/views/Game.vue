@@ -404,7 +404,7 @@ export default {
         }
         // 啤酒
         case 12: {
-          this.status.drunk++
+          if(this.status.drunk === 0) this.status.drunk++
           this.$set(this.staticMap[setY], setX, 1) // 消除啤酒
           break
         }
