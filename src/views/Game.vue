@@ -58,7 +58,7 @@
         下一关
       </van-button>
       <van-button
-        @click="$router.push({ name: 'create', params: { gameMap, life: initLife } })"
+        @click="$router.push({ name: 'create', params: { gameMap, life: initLife, regretDisabled } })"
         type="info"
         size="mini"
         v-if="$route.query.type == 'created'"
@@ -203,7 +203,7 @@ export default {
           this.initLife = mapData.playerHP || 0
           this.tips = mapData.processData
           this.bestStep = mapData.stepsPas
-          this.regretDisabled = mapData.regretDisabled || 0
+          this.regretDisabled = mapData.regretDisabled
           this.init()
         }
       },
@@ -211,7 +211,7 @@ export default {
       created: () => {
         this.gameMap = this.$route.params.gameMap
         this.initLife = +this.$route.params.advancedForm.life || 0
-        this.regretDisabled = +this.$route.params.advancedForm.regretDisabled || 0
+        this.regretDisabled = +this.$route.params.advancedForm.regretDisabled
       }
     }
     checkEntry[this.$route.query.type]()

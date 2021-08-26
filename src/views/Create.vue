@@ -42,8 +42,8 @@
         <van-field name="radio" label="禁用撤回">
           <template #input>
             <van-radio-group v-model="advancedForm.regretDisabled" direction="horizontal">
-              <van-radio name="1">是</van-radio>
-              <van-radio name="0">否</van-radio>
+              <van-radio :name="1">是</van-radio>
+              <van-radio :name="0">否</van-radio>
             </van-radio-group>
           </template>
         </van-field>
@@ -111,7 +111,7 @@ export default {
       },
       advancedForm: { // 高级选项表单
         life: 0,
-        regretDisabled: '0' // 是否禁用撤回
+        regretDisabled: 0 // 是否禁用撤回
       },
       gameMap: [
         [0, 0, 0, 0, 0, 0, 0],
@@ -137,6 +137,7 @@ export default {
     if (this.$route.params.gameMap) {
       this.gameMap = this.$route.params.gameMap
       this.advancedForm.life = this.$route.params.life
+      this.advancedForm.regretDisabled = this.$route.params.regretDisabled
     } else this.$refs.gameMapLayout.show()
   },
   methods: {
