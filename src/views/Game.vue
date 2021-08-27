@@ -255,8 +255,7 @@ export default {
       // 大图中初始移动到玩家视角
       this.$nextTick(() => {
         if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
-          this.$refs.game.$el.scrollLeft = this.playerX * 30 - 165
-          this.$refs.game.$el.scrollTop = this.playerY * 30 - 165
+          this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, top: this.playerY * 30 - 165 })
         }
       })
 
@@ -503,7 +502,7 @@ export default {
 
       // 大图追踪视角
       if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
-        this.viewTracking(direction)
+        this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, top: this.playerY * 30 - 165, behavior: 'smooth' })
       }
 
       // 记录移动后地图数据
@@ -642,27 +641,6 @@ export default {
       for (let i in this.record) {
         this.record[i].pop()
       }
-    },
-    // 视角追踪
-    viewTracking(direction) {
-      const viewTrackingEvent = {
-        x: () => {
-          this.$nextTick(() => {
-            this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, behavior: 'smooth' })
-          })
-        },
-        y: () => {
-          this.$nextTick(() => {
-            this.$refs.game.$el.scrollTo({ top: this.playerY * 30 - 165, behavior: 'smooth' })
-          })
-        },
-        t: () => {
-          this.$nextTick(() => {
-            this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, top: this.playerY * 30 - 165, behavior: 'smooth' })
-          })
-        }
-      }
-      viewTrackingEvent[direction]()
     }
   }
 }
