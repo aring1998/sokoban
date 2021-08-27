@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="game-cell"
-    :class="randerClass"
-  ></div>
+  <div class="game-cell" :class="randerClass"></div>
 </template>
 
 <script>

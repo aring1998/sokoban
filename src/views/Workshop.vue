@@ -258,8 +258,7 @@ export default {
       this.$dialog.confirm({
         message: `确定上传 "${name}" 吗？`
       }).then(() => {
-        if (!this.$store.state.userInfo.name)
-          return this.$notify({ type: 'danger', message: '上传云端需要先登录，可以选择暂存本地哦~' })
+        if (this.$store.commit('checkLogin')) return
         request({
           url: 'map/add',
           method: 'POST',

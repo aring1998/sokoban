@@ -255,8 +255,8 @@ export default {
       // 大图中初始移动到玩家视角
       this.$nextTick(() => {
         if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
-          if (this.playerX * 30 >= 180) this.$refs.game.$el.scrollLeft = this.playerX * 30 - 165
-          if (this.playerY * 30 >= 180) this.$refs.game.$el.scrollTop = this.playerY * 30 - 165
+          this.$refs.game.$el.scrollLeft = this.playerX * 30 - 165
+          this.$refs.game.$el.scrollTop = this.playerY * 30 - 165
         }
       })
 
@@ -394,11 +394,8 @@ export default {
           // 修改目标点
           setY = +exit.y
           setX = +exit.x
-          // 修改玩家坐标
-          this.$set(this.activeMap[this.playerY], this.playerX, 1)
-          this.playerY = +exit.y
-          this.playerX = +exit.x
           // 非正常移动，移动步数清零
+          direction = 't'
           step = 0
           break
         }
@@ -506,27 +503,7 @@ export default {
 
       // 大图追踪视角
       if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
-        if (direction == 'x') {
-          if (this.playerX * 30 >= 180) {
-            this.$nextTick(() => {
-              this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, behavior: 'smooth' })
-            })
-          } else {
-            this.$nextTick(() => {
-              this.$refs.game.$el.scrollTo({ left: 0, behavior: 'smooth' })
-            })
-          }
-        } else {
-          if (this.playerY * 30 >= 180) {
-            this.$nextTick(() => {
-              this.$refs.game.$el.scrollTo({ top: this.playerY * 30 - 165, behavior: 'smooth' })
-            })
-          } else {
-            this.$nextTick(() => {
-              this.$refs.game.$el.scrollTo({ top: 0, behavior: 'smooth' })
-            })
-          }
-        }
+        this.viewTracking(direction)
       }
 
       // 记录移动后地图数据
@@ -665,6 +642,27 @@ export default {
       for (let i in this.record) {
         this.record[i].pop()
       }
+    },
+    // 视角追踪
+    viewTracking(direction) {
+      const viewTrackingEvent = {
+        x: () => {
+          this.$nextTick(() => {
+            this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, behavior: 'smooth' })
+          })
+        },
+        y: () => {
+          this.$nextTick(() => {
+            this.$refs.game.$el.scrollTo({ top: this.playerY * 30 - 165, behavior: 'smooth' })
+          })
+        },
+        t: () => {
+          this.$nextTick(() => {
+            this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, top: this.playerY * 30 - 165, behavior: 'smooth' })
+          })
+        }
+      }
+      viewTrackingEvent[direction]()
     }
   }
 }
