@@ -197,7 +197,7 @@ export default {
         if (this.$route.params.id) this.getMapData(this.$route.params.id)
         else {
           // 获取缓存中的地图数据
-          const mapData = JSON.parse(window.localStorage.getItem('map' + this.$route.params.localId))
+          const mapData = JSON.parse(window.localStorage.getItem(`map${this.$route.params.localId}`))
           this.gameMap = mapData.mapData
           this.mapName = mapData.mapName
           this.initLife = mapData.playerHP || 0
@@ -394,7 +394,6 @@ export default {
           setY = +exit.y
           setX = +exit.x
           // 非正常移动，移动步数清零
-          direction = 't'
           step = 0
           break
         }
@@ -551,8 +550,8 @@ export default {
     // 将地图存在本地
     saveLocal() {
       for (let i = 0; i < 99; i++) {
-        if (!window.localStorage.getItem('map' + i)) {
-          window.localStorage.setItem('map' + i, JSON.stringify({
+        if (!window.localStorage.getItem(`map${i}`)) {
+          window.localStorage.setItem(`map${i}`, JSON.stringify({
             localId: i,
             creator: this.uploadMap.creator || '匿名',
             mapName: this.uploadMap.mapName || '未命名',
@@ -648,11 +647,13 @@ export default {
 
 <style lang="scss">
 .game {
+  height: 100%;
   background-color: var(--mainColor);
-  height: 100vh;
+  overflow: hidden;
+  position: relative;
   // 虚拟手柄
   .analog-handle {
-    position: fixed;
+    position: absolute;
     bottom: 60px;
     left: 77.5px;
     z-index: 100;

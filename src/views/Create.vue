@@ -269,7 +269,7 @@ export default {
 <style lang="scss" scoped>
 .create {
   background-color: var(--mainColor);
-  height: 100vh;
+  height: 100%;
   .map-el-container {
     background-color: rgba(255, 255, 255, 0.6);
     height: 170px;

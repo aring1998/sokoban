@@ -128,8 +128,7 @@ export default {
 <style lang="scss">
 /*首页*/
 .index {
-  width: 100vw;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   position: relative;
   background-color: var(--mainColor);
@@ -155,7 +154,7 @@ export default {
     .version {
       font-weight: 600;
       color: #fff;
-      position: fixed;
+      position: absolute;
       bottom: 20px;
       right: 20px;
     }

@@ -10,7 +10,7 @@ export default {
     }).then(res => {
       if (res.code == 0) {
         this.state.userInfo = res.data
-        Notify({ type: 'success', message: '欢迎回来，' + res.data.name })
+        Notify({ type: 'success', message: `欢迎回来，${res.data.name}` })
       }
     })
   }

@@ -16,7 +16,7 @@ export function request(config) {
   // 请求拦截
   instance.interceptors.request.use(config => {
     Toast.loading({ message: '加载中', forbidClick: true })
-    config.headers.Authorization = 'Bearer ' + store.state.token
+    config.headers.Authorization = `Bearer ${store.state.token}`
     return config
   }), err => {
     console.log(err);

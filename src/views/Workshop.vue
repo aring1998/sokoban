@@ -170,8 +170,8 @@ export default {
     getLocalMap() {
       this.mapData = []
       for (let i = 0; i < 99; i++) {
-        if (window.localStorage.getItem('map' + i)) {
-          this.mapData.push(JSON.parse(window.localStorage.getItem('map' + i)))
+        if (window.localStorage.getItem(`map${i}`)) {
+          this.mapData.push(JSON.parse(window.localStorage.getItem(`map${i}`)))
         }
       }
     },
@@ -239,13 +239,13 @@ export default {
         message: `确定删除 "${name}" 吗？`
       }).then(() => {
         this.$toast.success({ message: '删除成功', duration: 500 })
-        window.localStorage.removeItem('map' + id)
+        window.localStorage.removeItem(`map${id}`)
         this.getLocalMap()
       })
     },
     // 上传本地地图
     uploadLocalMap(id, name) {
-      const mapData = JSON.parse(window.localStorage.getItem('map' + id))
+      const mapData = JSON.parse(window.localStorage.getItem(`map${id}`))
       if (mapData.mapName === '未命名') mapData.mapName = ''
       this.$dialog.confirm({
         message: `确定上传 "${name}" 吗？`
