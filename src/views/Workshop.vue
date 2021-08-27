@@ -143,7 +143,7 @@ export default {
         if (value === 1) this.searchInfo.sort = 1
         // 我的收藏
         if (value === 2) {
-          if (!this.$store.commit('checkLogin')) return this.mapData = []
+          if (!this.$store.getters.checkLogin) return this.mapData = []
           this.searchInfo.type = 'collect'
         }
         this.getGameMap()
@@ -184,7 +184,7 @@ export default {
     },
     // 点赞
     like(index, id) {
-      if (!this.$store.commit('checkLogin')) return
+      if (!this.$store.getters.checkLogin) return
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `like/${id}`,
@@ -201,7 +201,7 @@ export default {
     },
     // 收藏
     collect(index, id) {
-      if (!this.$store.commit('checkLogin')) return
+      if (!this.$store.getters.checkLogin) return
       this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `collect/${id}`,
@@ -258,7 +258,7 @@ export default {
       this.$dialog.confirm({
         message: `确定上传 "${name}" 吗？`
       }).then(() => {
-        if (!this.$store.commit('checkLogin')) return
+        if (!this.$store.getters.checkLogin) return
         request({
           url: 'map/add',
           method: 'POST',

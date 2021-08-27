@@ -122,8 +122,8 @@ export default {
       ],
       choiceRow: 0, // 选中行
       choiceColumn: 0, // 选中列
-      elIndex: null, // 元素对应索引
-      clickCellType: null, // 点击布置元素类型
+      elIndex: 0, // 元素对应索引
+      clickCellType: 0, // 点击布置元素类型
       mapEl // 地图元素
     }
   },
@@ -156,7 +156,6 @@ export default {
     },
     // 获取列索引
     getColumnIndex(index) {
-      console.log(index);
       this.choiceColumn = index
     },
     // 获取行索引
