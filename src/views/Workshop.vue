@@ -154,7 +154,6 @@ export default {
     // 获取地图数据
     getGameMap() {
       if (this.workshopTab === 3) return this.isRefresh = false
-      this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: '/map/page',
         method: 'GET',
@@ -163,8 +162,7 @@ export default {
         }
       }).then(res => {
         this.searchInfo.total = res.data.total // 获取总条数
-        this.mapData = res.data.records // 地图数据赋值
-        this.$toast.clear()
+        this.mapData = res.data.records // 地图数据赋值=
         this.isRefresh = false
       })
     },
@@ -185,12 +183,10 @@ export default {
     // 点赞
     like(index, id) {
       if (!this.$store.getters.checkLogin) return
-      this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `like/${id}`,
         method: 'GET'
       }).then(res => {
-        this.$toast.clear()
         if (res.code == 0) {
           this.$toast.success({ message: res.msg, duration: 500 })
           // 修改列表数据，以展示不同的点赞图标
@@ -202,12 +198,10 @@ export default {
     // 收藏
     collect(index, id) {
       if (!this.$store.getters.checkLogin) return
-      this.$toast.loading({ message: '加载中', forbidClick: true })
       request({
         url: `collect/${id}`,
         method: 'GET'
       }).then(res => {
-        this.$toast.clear()
         if (res.code == 0) {
           this.$toast.success({ message: res.msg, duration: 500 })
           // 修改列表数据，以展示不同的收藏图标
@@ -227,12 +221,10 @@ export default {
       this.$dialog.confirm({
         message: `确定删除 "${name}" 吗？`
       }).then(() => {
-        this.$toast.loading({ message: '加载中', forbidClick: true })
         request({
           url: `map/delete/${id}`,
           method: 'POST'
         }).then(res => {
-          this.$toast.clear()
           if (res.code == 0) {
             this.$toast.success({ message: res.msg, duration: 500 })
             if (i == 0) this.mapData.splice(0, 1)

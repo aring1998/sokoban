@@ -3,6 +3,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 
+Vue.config.productionTip = false
+
 import Vant from 'vant'
 import 'vant/lib/index.css'
 Vue.use(Vant)
@@ -20,8 +22,6 @@ Vue.filter('formatDate', function(value) {
 import VueClipboard from 'vue-clipboard2'
 Vue.use(VueClipboard);
 VueClipboard.config.autoSetContainer = true
-
-Vue.config.productionTip = false
 
 // 引入app返回键操作控制
 import '@/utils/appback'
