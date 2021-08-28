@@ -471,7 +471,10 @@ export default {
                 isDefault = false
               }
               // 烧毁普通箱子
-              else this.$set(this.activeMap[setBoxY], setBoxX, 1)
+              else {
+                this.$set(this.activeMap[setBoxY], setBoxX, 1)
+                isDefault = false
+              }
               break
             }
             // 弹簧/传送门
