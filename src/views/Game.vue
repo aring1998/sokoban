@@ -322,7 +322,8 @@ export default {
             // 删除醉酒移动前的记录
             this.step--
             this.recordPop()
-            this.move(direction, step)
+            if (this.status.poisoning) this.move(direction, -step)
+            else this.move(direction, step)
           })
         }
         // 结束循环后，恢复醉酒移动

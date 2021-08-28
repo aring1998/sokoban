@@ -20,8 +20,8 @@ export default {
   text-align: center;
   margin: 0 auto;
   overflow: auto;
-  max-height: 360px;
-  max-width: 360px;
+  max-height: 365px;
+  max-width: 365px;
   &::-webkit-scrollbar {
     width: 0 !important;
   }
