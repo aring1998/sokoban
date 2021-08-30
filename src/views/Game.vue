@@ -357,6 +357,7 @@ export default {
       staticTarget = this.staticMap[setY][setX] // 获取静止层目标点的值
       activeTarget = this.activeMap[setY][setX] // 获取活动层目标点的值
 
+      let loseLife = 0
       // 判断静止层目标点
       switch (staticTarget) {
         // 碰墙
@@ -366,11 +367,7 @@ export default {
         // 碰地刺/火
         case 5:
         case 6: {
-          this.life--
-          if (this.life == 0) {
-            this.$notify({ type: 'danger', message: 'you dead!' })
-            this.$nextTick(() => { return this.init() })
-          }
+          loseLife++
           break
         }
         // 碰毒蘑菇
@@ -497,7 +494,14 @@ export default {
       // 玩家可以正常移动
       this.$set(this.activeMap[this.playerY], this.playerX, 1)
       this.$set(this.activeMap[setY], setX, 2)
+      this.life -= loseLife
       this.step++
+
+      // 判断是否死亡
+      if (this.life == 0) {
+        this.$notify({ type: 'danger', message: 'you dead!' })
+        this.$nextTick(() => { return this.init() })
+      }
 
       // 设定移动后的玩家坐标
       this.playerX = setX
