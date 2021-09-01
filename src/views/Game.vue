@@ -340,15 +340,11 @@ export default {
         setX = this.playerX + step
         setBoxY = setY
         setBoxX = setX + step
-        if (step > 0) this.record.processRecord.push(1)
-        else this.record.processRecord.push(3)
       } else {
         setY = this.playerY + step
         setX = this.playerX
         setBoxY = setY + step
         setBoxX = setX
-        if (step > 0) this.record.processRecord.push(2)
-        else this.record.processRecord.push(0)
       }
 
       // 判断是否超出单元格
@@ -498,7 +494,7 @@ export default {
       this.step++
 
       // 判断是否死亡
-      if (this.life == 0) {
+      if (this.life == 0 && this.initLife !== 0) {
         this.$notify({ type: 'danger', message: 'you dead!' })
         this.$nextTick(() => { return this.init() })
       }
@@ -510,6 +506,35 @@ export default {
       // 大图追踪视角
       if (this.gameMap.length > 12 || this.gameMap[0].length > 12) {
         this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, top: this.playerY * 30 - 165, behavior: 'smooth' })
+      }
+
+      if (direction === 'x') {
+        if (step > 0) {
+          this.record.processRecord.push(1)
+          this.$nextTick(() => {
+            document.getElementsByClassName('player')[0].classList.add('move-right')
+          })
+        }
+        else {
+          this.record.processRecord.push(3)
+          this.$nextTick(() => {
+            document.getElementsByClassName('player')[0].classList.add('move-left')
+          })
+        }
+      } else {
+        if (step > 0) {
+          console.log(document.getElementsByClassName('player'));
+          this.record.processRecord.push(2)
+          this.$nextTick(() => {
+            document.getElementsByClassName('player')[0].classList.add('move-top')
+          })
+        }
+        else {
+          this.record.processRecord.push(0)
+          this.$nextTick(() => {
+            document.getElementsByClassName('player')[0].classList.add('move-bottom')
+          })
+        }
       }
 
       // 记录移动后地图数据
@@ -654,6 +679,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('../assets/css/move.css');
 .game {
   height: 100%;
   background-color: var(--mainColor);

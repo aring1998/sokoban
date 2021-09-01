@@ -31,7 +31,6 @@ export default {
     // 处理安卓软键盘挤压页面
     const height = document.documentElement.clientHeight
     window.onresize = () => {
-      console.log(1);
       document.getElementById('app').style.height = `${height}px`
     }
   },

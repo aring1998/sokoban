@@ -1,0 +1,55 @@
+.move-left {
+  position: relative;
+  animation: left .2s linear;
+}
+
+@keyframes left {
+  0% {
+    left: 8vw;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+.move-right {
+  position: relative;
+  animation: right .2s linear;
+}
+
+@keyframes right {
+  0% {
+    left: -8vw;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+.move-top {
+  position: relative;
+  animation: top .2s linear;
+}
+
+@keyframes top {
+  0% {
+    top: -8vw;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+.move-bottom {
+  position: relative;
+  animation: bottom .2s linear;
+}
+
+@keyframes bottom {
+  0% {
+    top: 8vw;
+  }
+  100% {
+    top: 0;
+  }
+}

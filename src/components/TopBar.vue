@@ -280,7 +280,10 @@ export default {
     },
     // 退出登录
     logOut() {
-      this.$store.state.userInfo.name = ''
+      // 清空vuex中用户信息
+      for (let i in this.$store.state.userInfo) {
+        this.$store.state.userInfo[i] = ''
+      }
       window.localStorage.removeItem('token')
       this.$refs.login.show()
       this.$notify({ type: 'success', message: '退出登录成功' })

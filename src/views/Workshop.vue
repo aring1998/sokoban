@@ -162,7 +162,7 @@ export default {
         }
       }).then(res => {
         this.searchInfo.total = res.data.total // 获取总条数
-        this.mapData = res.data.records // 地图数据赋值=
+        this.mapData = res.data.records // 地图数据赋值
         this.isRefresh = false
       })
     },
