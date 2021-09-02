@@ -69,7 +69,7 @@
           </ul>
         </van-tab>
         <van-tab title="意见反馈" class="index-intro-item">
-          <a href="http://wpa.qq.com/msgrd?v=3&uin=1303340995&site=qq&menu=yes">点击这里联系作者</a>
+          <a href="mqqwpa://im/chat?chat_type=wpa&uin=1303340995&version=1&src_type=web&web_src=oicqzone.com">点击这里联系作者</a>
         </van-tab>
         <van-tab title="关于项目" class="index-intro-item">
           <p>&emsp;这是作者在学习前端一年后创建的第一个开源项目，目前项目仍在优化推进阶段，真挚地恳请您提出宝贵意见。</p>

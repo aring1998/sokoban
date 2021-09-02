@@ -508,6 +508,7 @@ export default {
         this.$refs.game.$el.scrollTo({ left: this.playerX * 30 - 165, top: this.playerY * 30 - 165, behavior: 'smooth' })
       }
 
+      // 记录移动数据及移动动画
       if (direction === 'x') {
         if (step > 0) {
           this.record.processRecord.push(1)
@@ -523,7 +524,6 @@ export default {
         }
       } else {
         if (step > 0) {
-          console.log(document.getElementsByClassName('player'));
           this.record.processRecord.push(2)
           this.$nextTick(() => {
             document.getElementsByClassName('player')[0].classList.add('move-top')

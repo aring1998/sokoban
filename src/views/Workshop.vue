@@ -61,7 +61,7 @@
                   </div>
                   <div v-show="workshopTab == 3">
                     <van-icon name="close" @click.stop="delLocalMap(item.localId, item.mapName)"/>
-                    <van-icon name="upgrade" @click.stop="uploadLocalMap(item.localId, item.mapName)"/>
+                    <van-icon name="upgrade" @click.stop="uploadLocalMap(item.localId)"/>
                   </div>
                   <span class="date">{{ item.time | formatDate }}</span>
                 </div>
@@ -93,13 +93,32 @@
         <van-icon name="arrow" />
       </template>
     </van-pagination>
+    <popover ref="saveMap">
+      <van-field
+        v-model="uploadMap.mapName"
+        maxlength="32"
+        label="地图名"
+        placeholder="请为您的地图取个名字，最长32字"
+      />
+      <van-field
+        v-model="uploadMap.creator"
+        maxlength="10"
+        label="作者"
+        placeholder="请输入您的昵称，最长10字"
+      />
+      <div style="margin: 16px;">
+        <van-button round block type="info" @click="upload">上传</van-button>
+      </div>
+    </popover>
   </div>
 </template>
 
 <script>
+import store from '@/store'
 import { request } from '@/network/request'
 import TopBar from '@/components/TopBar'
 import CreateContent from '@/components/game-content/CreateContent.vue'
+import Popover from '@/components/Popover'
 
 export default {
   name: 'workshop',
@@ -118,12 +137,18 @@ export default {
       workshopTab: 0,
       isRefresh: false,
       shareIndex: null,
-      refreshDisabled: false
+      refreshDisabled: false,
+      uploadMapData: null,
+      uploadMap: {
+        creator: store.state.userInfo.nickname ? store.state.userInfo.nickname : store.state.userInfo.name,
+        mapName: ''
+      }
     }
   },
   components: {
     TopBar,
-    CreateContent
+    CreateContent,
+    Popover
   },
   created() {
     this.searchInfo.mapName = this.$route.query.mapName
@@ -244,22 +269,24 @@ export default {
       })
     },
     // 上传本地地图
-    uploadLocalMap(id, name) {
-      const mapData = JSON.parse(window.localStorage.getItem(`map${id}`))
-      if (mapData.mapName === '未命名') mapData.mapName = ''
-      this.$dialog.confirm({
-        message: `确定上传 "${name}" 吗？`
-      }).then(() => {
-        if (!this.$store.getters.checkLogin) return
-        request({
-          url: 'map/add',
-          method: 'POST',
-          data: mapData
-        }).then(res => {
-          if (res.code == 0) {
-            this.$notify({ type: 'success', message: '上传成功' })
-          }
-        })
+    uploadLocalMap(id) {
+      if (!this.$store.getters.checkLogin) return
+      this.uploadMapData = JSON.parse(window.localStorage.getItem(`map${id}`))
+      this.$refs.saveMap.show()
+    },
+    // 执行上传操作
+    upload() {
+      request({
+        url: 'map/add',
+        method: 'POST',
+        data: {
+          ...this.uploadMapData,
+          ...this.uploadMap
+        }
+      }).then(res => {
+        if (res.code == 0) {
+          this.$notify({ type: 'success', message: '上传成功' })
+        }
       })
     },
     // 控制下拉刷新是否禁用
