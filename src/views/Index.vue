@@ -228,7 +228,8 @@ export default {
   }
 }
 
-.van-tab__text--ellipsis {
+.van-tab__text--ellipsis,
+.van-tab__text {
   font-size: 16px;
   font-weight: 600;
 }

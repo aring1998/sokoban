@@ -15,10 +15,11 @@
       <van-button type="primary" @click="getGameMap" size="small" round>搜索</van-button>
     </div>
     <!-- tab标签 -->
-    <van-tabs v-model="workshopTab" color="var(--mainColor)" class="workshop-tab" swipeable>
+    <van-tabs v-model="workshopTab" color="var(--mainColor)" class="workshop-tab" swipeable swipe-threshold="4">
       <van-tab title="最新"></van-tab>
       <van-tab title="最热门"></van-tab>
       <van-tab title="我的收藏"></van-tab>
+      <van-tab title="我创建的"></van-tab>
       <van-tab title="本地地图"></van-tab>
       <!-- 创意工坊列表 -->
       <van-pull-refresh
@@ -160,16 +161,21 @@ export default {
       handler(value) {
         this.searchInfo.sort = 0
         this.searchInfo.type = ''
-        // 本地地图
-        if (value === 3) {
-          return this.getLocalMap()
-        }
         // 最热门
         if (value === 1) this.searchInfo.sort = 1
         // 我的收藏
         if (value === 2) {
           if (!this.$store.getters.checkLogin) return this.mapData = []
           this.searchInfo.type = 'collect'
+        }
+        // 我创建的
+        if (value === 3) {
+          if (!this.$store.getters.checkLogin) return this.mapData = []
+          this.searchInfo.type = 'personal'
+        }
+        // 本地地图
+        if (value === 4) {
+          return this.getLocalMap()
         }
         this.getGameMap()
       }
