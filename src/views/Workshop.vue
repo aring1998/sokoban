@@ -135,12 +135,12 @@ export default {
         sort: 0, // 排序
         type: '' // 方式
       },
-      workshopTab: 0,
-      isRefresh: false,
-      shareIndex: null,
-      refreshDisabled: false,
-      uploadMapData: null,
-      uploadMap: {
+      workshopTab: 0, // tab标签页
+      isRefresh: false, // 是否在刷新
+      shareIndex: null, // 分享索引值
+      refreshDisabled: false, // 禁用下拉刷新
+      uploadMapData: null, // 上传地图数据
+      uploadMap: { // 上传地图表单
         creator: store.state.userInfo.nickname ? store.state.userInfo.nickname : store.state.userInfo.name,
         mapName: ''
       }
@@ -184,7 +184,6 @@ export default {
   methods: {
     // 获取地图数据
     getGameMap() {
-      if (this.workshopTab === 3) return this.isRefresh = false
       request({
         url: '/map/page',
         method: 'GET',
@@ -218,7 +217,7 @@ export default {
         url: `like/${id}`,
         method: 'GET'
       }).then(res => {
-        if (res.code == 0) {
+        if (res.code === 0) {
           this.$toast.success({ message: res.msg, duration: 500 })
           // 修改列表数据，以展示不同的点赞图标
           if (res.data) this.mapData[index].hasPraise = true
@@ -233,7 +232,7 @@ export default {
         url: `collect/${id}`,
         method: 'GET'
       }).then(res => {
-        if (res.code == 0) {
+        if (res.code === 0) {
           this.$toast.success({ message: res.msg, duration: 500 })
           // 修改列表数据，以展示不同的收藏图标
           if (res.data) this.mapData[index].hasCollect = true
@@ -256,9 +255,9 @@ export default {
           url: `map/delete/${id}`,
           method: 'POST'
         }).then(res => {
-          if (res.code == 0) {
+          if (res.code === 0) {
             this.$toast.success({ message: res.msg, duration: 500 })
-            if (i == 0) this.mapData.splice(0, 1)
+            if (i === 0) this.mapData.splice(0, 1)
             else this.mapData.splice(i, i)
           }
         })
@@ -290,7 +289,7 @@ export default {
           ...this.uploadMap
         }
       }).then(res => {
-        if (res.code == 0) {
+        if (res.code === 0) {
           this.$notify({ type: 'success', message: '上传成功' })
         }
       })
@@ -413,7 +412,6 @@ export default {
       }
     }
   }
-  
 }
 
 .van-pagination {

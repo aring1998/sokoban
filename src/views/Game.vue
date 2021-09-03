@@ -451,7 +451,7 @@ export default {
                       }
                     }
                     checkEntry[this.$route.query.type]()
-                  })
+                  }, 200)
                 }
               })
               break
@@ -490,13 +490,15 @@ export default {
       // 玩家可以正常移动
       this.$set(this.activeMap[this.playerY], this.playerX, 1)
       this.$set(this.activeMap[setY], setX, 2)
-      this.life -= loseLife
       this.step++
 
       // 判断是否死亡
-      if (this.life == 0 && this.initLife !== 0) {
-        this.$notify({ type: 'danger', message: 'you dead!' })
-        this.$nextTick(() => { return this.init() })
+      if (loseLife) {
+        this.life -= loseLife
+        if (this.life === 0) {
+          this.$notify({ type: 'danger', message: 'you dead!' })
+          this.$nextTick(() => { return this.init() })
+        }
       }
 
       // 设定移动后的玩家坐标
@@ -509,33 +511,27 @@ export default {
       }
 
       // 记录移动数据及移动动画
-      if (direction === 'x') {
-        if (step > 0) {
-          this.record.processRecord.push(1)
-          this.$nextTick(() => {
+      this.$nextTick(() => {
+        if (direction === 'x') {
+            if (step > 0) {
+            this.record.processRecord.push(1)
             document.getElementsByClassName('player')[0].classList.add('move-right')
-          })
-        }
-        else {
-          this.record.processRecord.push(3)
-          this.$nextTick(() => {
+          }
+          else {
+            this.record.processRecord.push(3)
             document.getElementsByClassName('player')[0].classList.add('move-left')
-          })
-        }
-      } else {
-        if (step > 0) {
-          this.record.processRecord.push(2)
-          this.$nextTick(() => {
+          }
+        } else {
+          if (step > 0) {
+            this.record.processRecord.push(2)
             document.getElementsByClassName('player')[0].classList.add('move-top')
-          })
-        }
-        else {
-          this.record.processRecord.push(0)
-          this.$nextTick(() => {
+          }
+          else {
+            this.record.processRecord.push(0)
             document.getElementsByClassName('player')[0].classList.add('move-bottom')
-          })
+          }
         }
-      }
+      })
 
       // 记录移动后地图数据
       this.record.staticMapRecord.push(deepClone2Arr(this.staticMap))

@@ -27,3 +27,7 @@
   color: var(--deepMainColor);
   margin-bottom: 20px;
 }
+
+.van-popover--dark .van-popover__content {
+  padding: 2px 8px;
+}
