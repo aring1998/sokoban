@@ -11,7 +11,7 @@ document.addEventListener('plusready', function() {
       // 首页返回键处理，1秒内，连续两次按返回键，则退出应用
       if (!first) {
         first = new Date().getTime()
-        Toast('再按一次退出游戏')
+        Toast('😫再按一次退出游戏')
         setTimeout(function() {
           first = null
         }, 1000)

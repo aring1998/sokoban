@@ -20,7 +20,7 @@ export default {
   mounted() {
     // 根据缓存决定bgm是否播放
     this.$store.state.bgmPlay = JSON.parse(window.localStorage.getItem('bgmPlay'))
-    if (this.$store.state.bgmPlay == null || this.$store.state.bgmPlay) {
+    if (this.$store.state.bgmPlay === null || this.$store.state.bgmPlay) {
       this.$store.state.bgmPlay = true
       this.$refs.bgm.play()
     }
@@ -41,7 +41,7 @@ export default {
         url: 'version/latest',
         method: 'GET'
       }).then(res => {
-        if (res.code == 0) {
+        if (res.code === 0) {
           if (res.data.versionId !== this.$store.state.version) {
             // 判断是否强制更新
             if (res.data.isForce) {

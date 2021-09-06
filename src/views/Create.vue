@@ -80,16 +80,16 @@
     </van-row>
     <van-row type="flex" justify="space-around" align="center" style="margin: 10px 0">
       <van-col span="6" align="center">
-        <van-button type="primary" size="small" @click="addRow" :disabled="gameMap.length == 30">添加一行</van-button>
+        <van-button type="primary" size="small" @click="addRow" :disabled="gameMap.length === 30">添加一行</van-button>
       </van-col>
       <van-col span="6" align="center">
-        <van-button type="danger" size="small" @click="delRow" :disabled="gameMap.length == 1">删除一行</van-button>
+        <van-button type="danger" size="small" @click="delRow" :disabled="gameMap.length === 1">删除一行</van-button>
       </van-col>
       <van-col span="6" align="center">
-        <van-button type="primary" size="small" @click="addColumn" :disabled="gameMap[0].length == 30">添加一列</van-button>
+        <van-button type="primary" size="small" @click="addColumn" :disabled="gameMap[0].length === 30">添加一列</van-button>
       </van-col>
       <van-col span="6" align="center">
-        <van-button type="danger" size="small" @click="delColumn" :disabled="gameMap[0].length == 1">删除一列</van-button>
+        <van-button type="danger" size="small" @click="delColumn" :disabled="gameMap[0].length === 1">删除一列</van-button>
       </van-col>
     </van-row>
   </div>

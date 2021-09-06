@@ -237,7 +237,7 @@ export default {
           password: md5(this.loginForm.password)
         }
       }).then(res => {
-        if (res.code == 0) {
+        if (res.code === 0) {
           this.$store.state.token = res.data.token
           window.localStorage.setItem('token', res.data.token)
           this.$store.dispatch('token')
@@ -256,7 +256,7 @@ export default {
           password: md5(this.registerForm.password)
         }
       }).then(res => {
-        if (res.code == 0) {
+        if (res.code === 0) {
           this.$notify({ type: 'success', message: '注册成功' })
           this.loginForm.name = this.registerForm.name
           this.loginForm.password = this.registerForm.password
@@ -298,7 +298,7 @@ export default {
           password: md5(this.changePswForm.password)
         }
       }).then(res => {
-        if (res.code == 0) {
+        if (res.code === 0) {
           this.$notify({ type: 'success', message: '修改密码成功' })
           this.$store.state.userInfo.name = ''
           window.localStorage.removeItem('token')

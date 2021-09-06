@@ -6,7 +6,7 @@
     <div class="game-info">
       <!-- 步数 -->
       <div class="step">
-        <span v-if="$route.query.type == 'level'">关卡: {{ $route.query.pack == 'basic' ? '基础关' : '拓展关' }}--{{ level + 1 }}</span>
+        <span v-if="$route.query.type === 'level'">关卡: {{ $route.query.pack === 'basic' ? '基础关' : '拓展关' }}--{{ level + 1 }}</span>
         <van-popover
           v-model="showMapName"
           theme="dark"
@@ -38,13 +38,13 @@
     <!-- 行为控制 -->
     <div class="check-point">
       <van-button @click="init" type="primary" size="mini">重置</van-button>
-      <van-button @click="onRegret" type="primary" size="mini" :disabled="this.record.activeMapRecord.length == 1">撤回</van-button>
-      <van-button @click="tipsShow = true" type="primary" size="mini" v-if="$route.query.type != 'created'">提示</van-button>
+      <van-button @click="onRegret" type="primary" size="mini" :disabled="this.record.activeMapRecord.length === 1">撤回</van-button>
+      <van-button @click="tipsShow = true" type="primary" size="mini" v-if="$route.query.type !== 'created'">提示</van-button>
       <van-button
         @click="changeLevel(-1)"
         type="primary" size="mini"
-        :disabled="level == 0"
-        v-if="$route.query.type == 'level'"
+        :disabled="level === 0"
+        v-if="$route.query.type === 'level'"
       >
         上一关
       </van-button>
@@ -52,8 +52,8 @@
         @click="changeLevel(1)"
         type="primary"
         size="mini"
-        :disabled="level == levelCounter"
-        v-if="$route.query.type == 'level'"
+        :disabled="level === levelCounter"
+        v-if="$route.query.type === 'level'"
       >
         下一关
       </van-button>
@@ -61,7 +61,7 @@
         @click="$router.push({ name: 'create', params: { gameMap, life: initLife, regretDisabled } })"
         type="info"
         size="mini"
-        v-if="$route.query.type == 'created'"
+        v-if="$route.query.type === 'created'"
       >
         返回编辑
       </van-button>
@@ -111,8 +111,18 @@
     <van-popup v-model="tipsShow" closeable position="bottom" :style="{ height: '50%' }">
       <div class="tips">
         <div class="tips-container" v-if="tips">
-          <span v-for="(item, index) of tips" :key="index" :class="record.processRecord[index] >= 0 ? (record.processRecord[index] == item ? 'right' : 'wrong') : ''">
-            {{ item == 0 ? '↑' : item == 1 ? '→' : item == 2 ? '↓' : item == 3 ? '←' : '' }}
+          <span
+            v-for="(item, index) of tips"
+            :key="index"
+            :class="
+              record.processRecord[index] >= 0
+                ? record.processRecord[index] === item
+                  ? 'right'
+                  : 'wrong'
+                : ''
+            "
+          >
+            {{ item === 0 ? '↑' : item === 1 ? '→' : item === 2 ? '↓' : item === 3 ? '←' : '' }}
           </span>
         </div>
         <span v-else>
@@ -217,7 +227,7 @@ export default {
     checkEntry[this.$route.query.type]()
 
     // 游戏初始化
-    if (this.$route.query.type != 'workshop') this.init()
+    if (this.$route.query.type !== 'workshop') this.init()
   },
   methods: {
     // 初始化
@@ -273,7 +283,7 @@ export default {
         method: 'GET'
       }).then(res => {
         this.$toast.clear()
-        if (res.code == 0) {
+        if (res.code === 0) {
           this.gameMap = res.data.mapData
           this.mapName = res.data.mapName
           this.initLife = res.data.playerHP
@@ -335,7 +345,7 @@ export default {
       }
 
       // 判断方向
-      if (direction == 'x') {
+      if (direction === 'x') {
         setY = this.playerY
         setX = this.playerX + step
         setBoxY = setY
@@ -375,9 +385,9 @@ export default {
         // 碰弹簧
         case 9: {
           // 提前判断活动层目标点，若为箱子，取消弹跳
-          if (direction == 'x') setX = this.playerX + step * 3
+          if (direction === 'x') setX = this.playerX + step * 3
           else setY = this.playerY + step * 3
-          if (this.activeMap[setY][setX] == 3 || this.activeMap[setY][setX] == 7) return
+          if (this.activeMap[setY][setX] === 3 || this.activeMap[setY][setX] === 7) return
           return this.move(direction, step * 3)
         }
         // 传送门入口
@@ -424,17 +434,17 @@ export default {
             // 碰终点
             case 4: {
               setTimeout(() => {
-                if (document.querySelectorAll('.end.box').length == this.endCounter) {
+                if (document.querySelectorAll('.end.box').length === this.endCounter) {
                   // 防作弊
                   let onEnd = 0
                   for (let y in this.activeMap) {
                     for (let x in this.activeMap[y]) {
-                      if (this.activeMap[y][x] == 3 && this.staticMap[y][x] == 4) {
+                      if (this.activeMap[y][x] === 3 && this.staticMap[y][x] === 4) {
                         onEnd++
                       }
                     }
                   }
-                  if (onEnd != this.endCounter) return
+                  if (onEnd !== this.endCounter) return
                   setTimeout(() => {
                     this.$notify({ type: 'success', message: 'you win!' })
                     // 判断入口
@@ -459,7 +469,7 @@ export default {
             // 碰火
             case 6: {
               // 如果是冰箱子，灭火
-              if (activeTarget == 7) {
+              if (activeTarget === 7) {
                 this.$set(this.staticMap[setBoxY], setBoxX, 1) // 灭火
                 this.$set(this.activeMap[setBoxY], setBoxX, 3) // 变为普通箱子
                 isDefault = false
@@ -561,7 +571,7 @@ export default {
       // 撤回后重新获取玩家坐标
       for (let y in this.activeMap) {
         for (let x in this.activeMap[y]) {
-          if (this.activeMap[y][x] == 2) {
+          if (this.activeMap[y][x] === 2) {
             this.playerX = +x
             this.playerY = +y
             break
@@ -594,7 +604,7 @@ export default {
           this.$notify({ type: 'success', message: '存储成功，3秒后将返回首页' })
           break
         }
-        if (i == 99) return this.$notify({ type: 'danger', message: '本地存储已达上限' })
+        if (i === 99) return this.$notify({ type: 'danger', message: '本地存储已达上限' })
       }
       this.$refs.saveMap.show()
       setTimeout(() => {
@@ -618,7 +628,7 @@ export default {
           regretDisabled: this.regretDisabled
         }
       }).then(res => {
-        if (res.code == 0) {
+        if (res.code === 0) {
           this.$notify({ type: 'success', message: '上传成功，3秒后将返回首页' })
           this.$refs.saveMap.show()
           setTimeout(() => {
@@ -640,7 +650,7 @@ export default {
           processData: this.record.processRecord
         }
       }).then(res => {
-        if (res.code == 0) {
+        if (res.code === 0) {
           this.$notify({ type: 'success', message: '您达成了新的最优步数，已将您的通关过程上传至云端' })
         }
       })
