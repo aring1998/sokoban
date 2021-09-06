@@ -524,11 +524,11 @@ export default {
         } else {
           if (step > 0) {
             this.record.processRecord.push(2)
-            document.getElementsByClassName('player')[0].classList.add('move-top')
+            document.getElementsByClassName('player')[0].classList.add('move-bottom')
           }
           else {
             this.record.processRecord.push(0)
-            document.getElementsByClassName('player')[0].classList.add('move-bottom')
+            document.getElementsByClassName('player')[0].classList.add('move-top')
           }
         }
       })

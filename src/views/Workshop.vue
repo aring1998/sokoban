@@ -158,25 +158,9 @@ export default {
   watch: {
     // 监听tab页变化以重新加载地图列表
     workshopTab: {
-      handler(value) {
+      handler() {
         this.searchInfo.sort = 0
         this.searchInfo.type = ''
-        // 最热门
-        if (value === 1) this.searchInfo.sort = 1
-        // 我的收藏
-        if (value === 2) {
-          if (!this.$store.getters.checkLogin) return this.mapData = []
-          this.searchInfo.type = 'collect'
-        }
-        // 我创建的
-        if (value === 3) {
-          if (!this.$store.getters.checkLogin) return this.mapData = []
-          this.searchInfo.type = 'personal'
-        }
-        // 本地地图
-        if (value === 4) {
-          return this.getLocalMap()
-        }
         this.getGameMap()
       }
     }
@@ -184,6 +168,30 @@ export default {
   methods: {
     // 获取地图数据
     getGameMap() {
+      // 判断tab页
+      switch(this.workshopTab) {
+        // 最热门
+        case 1: {
+          this.searchInfo.sort = 1
+          break
+        }
+        // 我的收藏
+        case 2: {
+          if (!this.$store.getters.checkLogin) return this.mapData = []
+          this.searchInfo.type = 'collect'
+          break
+        }
+        // 我创建的
+        case 3: {
+          if (!this.$store.getters.checkLogin) return this.mapData = []
+          this.searchInfo.type = 'personal'
+          break
+        }
+        // 本地地图
+        case 4: {
+          return this.getLocalMap()
+        }
+      }
       request({
         url: '/map/page',
         method: 'GET',
@@ -198,6 +206,7 @@ export default {
     },
     // 获取本地地图
     getLocalMap() {
+      this.isRefresh = false
       this.mapData = []
       for (let i = 0; i < 99; i++) {
         if (window.localStorage.getItem(`map${i}`)) {
