@@ -24,7 +24,7 @@ export function request(config) {
   // 响应拦截
   instance.interceptors.response.use(res => {
     Toast.clear()
-    if (res.status !== 200) Notify({ type: 'danger', message: '网络请求错误，错误：' + res.statusText })
+    if (res.status !== 200) Notify({ type: 'danger', message: `网络请求错误，错误：${res.statusText}` })
     if (res.data.code !== 0) Notify({ type: 'danger', message: res.data.msg })
     return res.data  // 配置只返回data
   }), err => {

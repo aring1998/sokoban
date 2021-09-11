@@ -38,14 +38,10 @@ export default {
     // 弹出框类型
     popType() {
       const popTypeClass = {
-        normal: () => {
-          return 'popover-shade'
-        },
-        white: () => {
-          return 'white-popover-shade'
-        }
+        normal: 'popover-shade',
+        white: 'white-popover-shade'
       }
-      return popTypeClass[this.type]()
+      return popTypeClass[this.type]
     }
   }
 }

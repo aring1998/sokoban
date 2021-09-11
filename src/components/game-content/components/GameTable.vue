@@ -20,8 +20,8 @@ export default {
   text-align: center;
   margin: 0 auto;
   overflow: auto;
-  max-height: 365px;
-  max-width: 365px;
+  max-height: 364px;
+  max-width: 364px;
   &::-webkit-scrollbar {
     width: 0 !important;
   }
@@ -49,6 +49,7 @@ export default {
   .game-container {
     .game-table {
       background-size: 8px 8px;
+      border: none;
       .game-row {
         .game-cell {
           height: 8px;
@@ -57,9 +58,5 @@ export default {
       }
     }
   }
-}
-
-.table-border {
-  border: 2px #eaeaea solid;
 }
 </style>

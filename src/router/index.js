@@ -12,8 +12,7 @@ export default new Router({
   routes: [
     {
       path: '',
-      // redirect 重定向
-      redirect: to => {
+      redirect: () => {
         return '/index'
       }
     },

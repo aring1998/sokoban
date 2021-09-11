@@ -490,7 +490,8 @@ export default {
           // 判断活动层箱子目标点
           switch (activeBoxTarget) {
             // 碰箱子
-            case 3: return
+            case 3:
+            case 7: return
           }
           // 箱子可以正常移动
           if (isDefault) this.$set(this.activeMap[setBoxY], setBoxX, activeTarget)
