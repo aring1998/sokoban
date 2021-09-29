@@ -71,7 +71,7 @@ export default {
     text-align: right;
     margin-bottom: 10px;
     i {
-      font-weight: 600;
+      font-weight: bold;
       color: #fff;
       font-size: 20px;
     }
@@ -99,7 +99,7 @@ export default {
       text-align: right;
       margin-bottom: 10px;
       i {
-        font-weight: 600;
+        font-weight: bold;
         color: #777;
         font-size: 20px;
       }

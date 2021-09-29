@@ -332,7 +332,7 @@ export default {
       height: 30px;
     }
     i {
-      font-weight: 600;
+      font-weight: bold;
       color: #fff;
       font-size: 22px;
       background-color: rgba(0, 0, 0, 0.3);

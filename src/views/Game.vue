@@ -747,7 +747,7 @@ export default {
     .step {
       display: flex;
       align-items: center;
-      font-weight: 600;
+      font-weight: bold;
       padding: 0 15px;
       color: #333;
       height: 25px;

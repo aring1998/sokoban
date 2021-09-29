@@ -57,7 +57,7 @@
           <br>
           <span>
             &emsp;● 如果您想了解更多地图元素<div class="img-box fire"></div>的作用，请点击上方
-            <span style="font-weight: 600"><img src="~@/assets/img/index-intro/mapManual.png" alt="" />地图手册</span>
+            <span style="font-weight: bold"><img src="~@/assets/img/index-intro/mapManual.png" alt="" />地图手册</span>
           </span>
         </van-tab>
         <van-tab title="地图手册" class="index-intro-item">
@@ -77,11 +77,11 @@
           <a href="https://gitee.com/aring1998/sokoban"><span>&emsp;https://gitee.com/aring1998/sokoban</span></a>
           <p>&emsp;同时也欢迎您前来为我们点一个star<van-icon name="star-o" color="orange" /></p>
           <p>&emsp;开发过程十分感谢以下小伙伴(按首字母排序)：</p>
-          <p style="font-weight: 600">&emsp;funzeros, lyl, wangz, yuanyuanna</p>
+          <p style="font-weight: bold">&emsp;funzeros, lyl, wangz, yuanyuanna</p>
           <br>
           <p>&emsp;祝您游戏愉快！</p>
           <br><br>
-          <p style="text-align: right;font-weight: 600">aring</p>
+          <p style="text-align: right;font-weight: bold">aring</p>
         </van-tab>
       </van-tabs>
     </popover>
@@ -144,7 +144,7 @@ export default {
     button {
       width: 220px;
       margin-bottom: 20px;
-      font-weight: 600;
+      font-weight: bold;
       font-size: 20px;
       height: 60px;
       color: var(--deepMainColor);
@@ -152,7 +152,7 @@ export default {
       border-bottom: 4px var(--deepMainColor) solid;
     }
     .version {
-      font-weight: 600;
+      font-weight: bold;
       color: #fff;
       position: absolute;
       bottom: 20px;
@@ -231,7 +231,7 @@ export default {
 .van-tab__text--ellipsis,
 .van-tab__text {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: bold;
 }
 .van-tabs--line {
   border-radius: 10px;

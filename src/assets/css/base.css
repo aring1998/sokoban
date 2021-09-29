@@ -22,7 +22,7 @@
 
 .page-title {
   font-size: 25px;
-  font-weight: 600;
+  font-weight: bold;
   text-align: center;
   color: var(--deepMainColor);
   margin-bottom: 20px;

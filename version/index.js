@@ -3,11 +3,11 @@
     const { default: axios } = require('axios')
     const { version: versionId, isForce } = require('../src/assets/config/version.json')
     const md5 = require('js-md5')
-    const baseURL = 'http://47.103.218.109:10052/api/' // 正式环境
+    const baseURL = 'http://81.68.189.158:10052/sokoban/app/v1/' // 正式环境
     // const baseURL = 'http://127.0.0.1:10052/api/' // 测试环境
     const authData = {
-      name: '用户名',
-      password: md5('密码')
+      name: 'aring',
+      password: md5('caixin')
     }
     let token = 'Bearer '
     {

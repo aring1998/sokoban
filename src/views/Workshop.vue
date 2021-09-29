@@ -50,8 +50,8 @@
                 <create-content :gameMap="item.mapData"></create-content>
               </div>
               <div class="map-intro">
-                <span class="name">{{ item.mapName }}</span>
-                <span class="creator">{{ item.creator }}</span>
+                <span class="name">{{ item.mapName || '(未命名)' }}</span>
+                <span class="creator">{{ item.creator || '匿名' }}</span>
                 <!-- 点赞/收藏/分享 -->
                 <div class="tool-bar">
                   <div v-show="workshopTab !== 3">
@@ -65,6 +65,10 @@
                     <van-icon name="upgrade" @click.stop="uploadLocalMap(item.localId)"/>
                   </div>
                   <span class="date">{{ item.time | formatDate }}</span>
+                </div>
+                <div class="map-king">
+                  <van-icon name="medal-o" />
+                  <span>{{ item.recorder }}</span>
                 </div>
               </div>
             </li>
@@ -384,11 +388,12 @@ export default {
           display: flex;
           flex-flow: column nowrap;
           justify-content: space-evenly;
+          position: relative;
           span {
             color: #fff;
           }
           .name {
-            font-weight: 600;
+            font-weight: bold;
             font-size: 20px;
             white-space: nowrap;
             overflow: hidden;
@@ -408,13 +413,37 @@ export default {
             align-items: center;
             justify-content: space-between;
             font-size: 20px;
-            font-weight: 600;
+            font-weight: bold;
             color: #fff;
             margin-top: 5px;
             i {
               background-color: rgba(0, 0, 0, 0.3);
               border-radius: 50%;
               padding: 4px;
+            }
+          }
+          .map-king {
+            position: absolute;
+            height: 20px;
+            line-height: 20px;
+            width: 100px;
+            border-radius: 999px;
+            background-color: rgb(238, 227, 110);
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            left: 120px;
+            top: 20px;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            i {
+              font-size: 20px;
+              font-weight: 900;
+              margin-right: 5px;
+            }
+            span {
+              color: #333;
             }
           }
         }
