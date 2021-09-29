@@ -55,8 +55,8 @@
                 <!-- 点赞/收藏/分享 -->
                 <div class="tool-bar">
                   <div v-show="workshopTab !== 4">
-                    <van-icon :name="item.hasPraise ? 'good-job' : 'good-job-o'" @click.stop="like(index, item.id)" />
-                    <van-icon :name="item.hasCollect ? 'star' : 'star-o'" @click.stop="collect(index, item.id)" />
+                    <!-- <van-icon :name="item.hasPraise ? 'good-job' : 'good-job-o'" @click.stop="like(index, item.id)" />
+                    <van-icon :name="item.hasCollect ? 'star' : 'star-o'" @click.stop="collect(index, item.id)" /> -->
                     <van-icon :name="shareIndex === index ? 'share' : 'share-o'" @click.stop="share(index, item.mapName)" />
                     <van-icon name="close" v-show="$store.state.userInfo.name === 'aring' || workshopTab === 3" @click.stop="del(item.id, item.mapName, index)" />
                   </div>
@@ -222,36 +222,6 @@ export default {
     changePage(value) {
       this.current = value
       this.getGameMap()
-    },
-    // 点赞
-    like(index, id) {
-      if (!this.$store.getters.checkLogin) return
-      request({
-        url: `like/${id}`,
-        method: 'GET'
-      }).then(res => {
-        if (res.code === 0) {
-          this.$toast.success({ message: res.msg, duration: 500 })
-          // 修改列表数据，以展示不同的点赞图标
-          if (res.data) this.mapData[index].hasPraise = true
-          else this.mapData[index].hasPraise = false
-        }
-      })
-    },
-    // 收藏
-    collect(index, id) {
-      if (!this.$store.getters.checkLogin) return
-      request({
-        url: `collect/${id}`,
-        method: 'GET'
-      }).then(res => {
-        if (res.code === 0) {
-          this.$toast.success({ message: res.msg, duration: 500 })
-          // 修改列表数据，以展示不同的收藏图标
-          if (res.data) this.mapData[index].hasCollect = true
-          else this.mapData[index].hasCollect = false
-        }
-      })
     },
     // 分享
     share(index, name) {

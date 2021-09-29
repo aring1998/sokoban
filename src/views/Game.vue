@@ -82,8 +82,12 @@
         <van-icon name="play" style="transform: rotate(90deg)" @touchstart.prevent="move('y', 1)" @touchend.prevent="stopMove()" />
       </div>
     </div>
+    <div class="map-praise" v-if="$route.query.type === 'workshop'">
+      <van-icon :name="+hasPraise ? 'good-job' : 'good-job-o'" @click.stop="like()" />
+      <van-icon :name="+hasCollect ? 'star' : 'star-o'" @click.stop="collect()" />
+    </div>
     <!-- 保存地图弹出框 -->
-    <popover ref="saveMap" v-if="this.$route.query.type == 'created'">
+    <popover ref="saveMap" v-if="$route.query.type == 'created'">
       <div class="test-map-pop">
         <span>您已完成该地图的测试</span>
         <span>您可以选择将地图存储</span>
@@ -152,6 +156,7 @@ export default {
       levelCounter: 0, // 关卡总量
       gameMap: [], // 游戏地图
       mapName: '', // 地图名
+      mapId: '', // 地图id
       staticMap: [], // 静止层地图
       activeMap: [], // 活动层地图
       step: 0, // 步数
@@ -182,7 +187,9 @@ export default {
         lifeRecord: [], // 生命记录
         statusRecord: [], // 人物状态记录
         processRecord: [], // 过程记录
-      }
+      },
+      hasPraise: 0, // 是否点赞
+      hasCollect: 0 // 是否收藏
     }
   },
   components: {
@@ -284,12 +291,15 @@ export default {
       }).then(res => {
         this.$toast.clear()
         if (res.code === 0) {
+          this.mapId = res.data.id
           this.gameMap = res.data.mapData
           this.mapName = res.data.mapName
           this.initLife = res.data.playerHP
           this.tips = res.data.processData
           this.bestStep = res.data.stepsPas
           this.regretDisabled = res.data.regretDisabled
+          this.hasCollect = res.data.hasCollect
+          this.hasPraise = res.data.hasPraise
           this.init()
         }
       })
@@ -638,6 +648,36 @@ export default {
         }
       })
     },
+    // 点赞
+    like() {
+      if (!this.$store.getters.checkLogin) return
+      request({
+        url: `like/${this.mapId}`,
+        method: 'GET'
+      }).then(res => {
+        if (res.code === 0) {
+          this.$toast.success({ message: res.msg, duration: 500 })
+          // 修改列表数据，以展示不同的点赞图标
+          if (+this.hasPraise) this.hasPraise = 0
+          else this.hasPraise = 1
+        }
+      })
+    },
+    // 收藏
+    collect() {
+      if (!this.$store.getters.checkLogin) return
+      request({
+        url: `collect/${this.mapId}`,
+        method: 'GET'
+      }).then(res => {
+        if (res.code === 0) {
+          this.$toast.success({ message: res.msg, duration: 500 })
+          // 修改列表数据，以展示不同的收藏图标
+          if (+this.hasCollect) this.hasCollect = 0
+          else this.hasCollect = 1
+        }
+      })
+    },
     // 上传通关过程
     passProcess() {
       // 本地地图不上传
@@ -762,6 +802,21 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
       }
+    }
+  }
+  .map-praise {
+    display: flex;
+    width: 300px;
+    margin: 0 auto;
+    justify-content: space-around;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 5px;
+    i {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 50%;
+      padding: 4px;
     }
   }
   // 提示弹窗
