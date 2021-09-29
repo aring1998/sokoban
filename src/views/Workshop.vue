@@ -54,13 +54,13 @@
                 <span class="creator">{{ item.creator || '匿名' }}</span>
                 <!-- 点赞/收藏/分享 -->
                 <div class="tool-bar">
-                  <div v-show="workshopTab !== 3">
+                  <div v-show="workshopTab !== 4">
                     <van-icon :name="item.hasPraise ? 'good-job' : 'good-job-o'" @click.stop="like(index, item.id)" />
                     <van-icon :name="item.hasCollect ? 'star' : 'star-o'" @click.stop="collect(index, item.id)" />
                     <van-icon :name="shareIndex === index ? 'share' : 'share-o'" @click.stop="share(index, item.mapName)" />
-                    <van-icon name="close" v-show="$store.state.userInfo.name === 'aring'" @click.stop="del(item.id, item.mapName, index)" />
+                    <van-icon name="close" v-show="$store.state.userInfo.name === 'aring' || workshopTab === 3" @click.stop="del(item.id, item.mapName, index)" />
                   </div>
-                  <div v-show="workshopTab === 3">
+                  <div v-show="workshopTab === 4">
                     <van-icon name="close" @click.stop="delLocalMap(item.localId, item.mapName)"/>
                     <van-icon name="upgrade" @click.stop="uploadLocalMap(item.localId)"/>
                   </div>
