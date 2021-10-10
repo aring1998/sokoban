@@ -15,7 +15,7 @@ export default {
   name: 'App',
   created() {
     this.getVersion()
-    this.$store.dispatch('token') 
+    if (window.localStorage.getItem('token')) this.$store.dispatch('token') 
   },
   mounted() {
     // 根据缓存决定bgm是否播放

@@ -77,7 +77,7 @@
           <a href="https://gitee.com/aring1998/sokoban"><span>&emsp;https://gitee.com/aring1998/sokoban</span></a>
           <p>&emsp;同时也欢迎您前来为我们点一个star<van-icon name="star-o" color="orange" /></p>
           <p>&emsp;开发过程十分感谢以下小伙伴(按首字母排序)：</p>
-          <p style="font-weight: bold">&emsp;funzeros, lyl, wangz, yuanyuanna</p>
+          <p style="font-weight: bold">&emsp;dzz, funzeros, lyl, wangz, yuanyuanna</p>
           <br>
           <p>&emsp;祝您游戏愉快！</p>
           <br><br>
