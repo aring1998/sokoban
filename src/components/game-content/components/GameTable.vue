@@ -31,7 +31,7 @@ export default {
     background-image: url('~@/assets/img/theme/forest/floor.png');
     display: inline-block;
     text-align: center;
-    border: 2px #e8eaed solid;
+    border: 2px #e8eaeda6 solid;
     .game-row {
       display: flex;
       .game-cell {

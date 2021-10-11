@@ -1,49 +1,3 @@
-.theme-abstract {
-  --mainColor: #ccc;
-  --deepMainColor: #333;
-  --lightMainColor: #cccccc80;
-}
-
-.theme-abstract .game-container .game-table {
-  background-image: url('~@/assets/img/theme/abstract/floor.png');
-}
-
-.theme-abstract .floor {
-  background-image: url('~@/assets/img/theme/abstract/floor.png');
-}
-
-.theme-abstract .spikeweed {
-  background-image: url('~@/assets/img/theme/abstract/spikeweed.png');
-}
-
-.theme-abstract .wall {
-  background-image: url('~@/assets/img/theme/abstract/wall.png');
-}
-
-.theme-abstract .end {
-  background-image: url('~@/assets/img/theme/abstract/end.png');
-}
-
-.theme-abstract .fire {
-  background-image: url('~@/assets/img/theme/abstract/fire.png');
-}
-
-.theme-abstract .player {
-  background-image: url('~@/assets/img/theme/abstract/player.png');
-}
-
-.theme-abstract .box {
-  background-image: url('~@/assets/img/theme/abstract/box.png');
-}
-
-.theme-abstract .ice-box {
-  background-image: url('~@/assets/img/theme/abstract/ice-box.png');
-}
-
-.theme-abstract .box.end {
-  background-image: url('~@/assets/img/theme/abstract/end-box.png');
-}
-
 .theme-forest {
   --mainColor: #95d52f;
   --deepMainColor: #339933;
@@ -112,4 +66,120 @@
 
 .theme-forest .box.end {
   background-image: url('~@/assets/img/theme/forest/end-box.png');
+}
+
+.theme-abstract {
+  --mainColor: #ccc;
+  --deepMainColor: #333;
+  --lightMainColor: #cccccc80;
+}
+
+.theme-abstract .game-container .game-table {
+  background-image: url('~@/assets/img/theme/abstract/floor.png');
+}
+
+.theme-abstract .floor {
+  background-image: url('~@/assets/img/theme/abstract/floor.png');
+}
+
+.theme-abstract .spikeweed {
+  background-image: url('~@/assets/img/theme/abstract/spikeweed.png');
+}
+
+.theme-abstract .wall {
+  background-image: url('~@/assets/img/theme/abstract/wall.png');
+}
+
+.theme-abstract .end {
+  background-image: url('~@/assets/img/theme/abstract/end.png');
+}
+
+.theme-abstract .fire {
+  background-image: url('~@/assets/img/theme/abstract/fire.png');
+}
+
+.theme-abstract .player {
+  background-image: url('~@/assets/img/theme/abstract/player.png');
+}
+
+.theme-abstract .box {
+  background-image: url('~@/assets/img/theme/abstract/box.png');
+}
+
+.theme-abstract .ice-box {
+  background-image: url('~@/assets/img/theme/abstract/ice-box.png');
+}
+
+.theme-abstract .box.end {
+  background-image: url('~@/assets/img/theme/abstract/end-box.png');
+}
+
+.theme-net {
+  --mainColor: #95d52f;
+  --deepMainColor: #339933;
+  --lightMainColor: #95d52f80;
+}
+
+.theme-net .game-container .game-table {
+  background-image: url('~@/assets/img/theme/net/floor.png');
+}
+
+.theme-net .floor {
+  background-image: url('~@/assets/img/theme/net/floor.png');
+}
+
+.theme-net .spikeweed {
+  background-image: url('~@/assets/img/theme/net/spikeweed.png');
+}
+
+.theme-net .wall {
+  background-image: url('~@/assets/img/theme/net/wall.png');
+}
+
+.theme-net .end {
+  background-image: url('~@/assets/img/theme/net/end.png');
+}
+
+.theme-net .fire {
+  background-image: url('~@/assets/img/theme/net/fire.png');
+}
+
+.theme-net .toadstool {
+  background-image: url('~@/assets/img/theme/net/toadstool.png');
+}
+
+.theme-net .spring {
+  background-image: url('~@/assets/img/theme/net/spring.png');
+}
+
+.theme-net .single-portal-entry {
+  background-image: url('~@/assets/img/theme/net/single-portal-entry.png');
+}
+
+.theme-net .single-portal-exit {
+  background-image: url('~@/assets/img/theme/net/single-portal-exit.png');
+}
+
+.theme-net .beer {
+  background-image: url('~@/assets/img/theme/net/beer.png');
+}
+
+.theme-net .nectar {
+  background-image: url('~@/assets/img/theme/net/nectar.png');
+}
+
+.theme-net .player {
+  background-image: url('~@/assets/img/theme/net/player.png');
+}
+
+.theme-net .box {
+  background-image: url('~@/assets/img/theme/net/box.png');
+}
+
+.theme-net .ice-box {
+  background-image: url('~@/assets/img/theme/net/ice-box.png');
+}
+
+.theme-net .box.end {
+  background-image: url('~@/assets/img/theme/net/end-box.png');
 }

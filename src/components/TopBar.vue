@@ -177,14 +177,19 @@ export default {
       showPicker: false,
       theme: [
         {
+          title: '森林',
+          class: 'theme-forest',
+          intro: '经典的默认主题'
+        },
+        {
           title: '抽象',
           class: 'theme-abstract',
           intro: '作者亲笔所画，这波不用爆？'
         },
         {
-          title: '森林',
-          class: 'theme-forest',
-          intro: '经典的默认主题'
+          title: '网络',
+          class: 'theme-net',
+          intro: '素材来源网络，如有侵权请联系删除'
         }
       ],
       tabIndex: 0,
