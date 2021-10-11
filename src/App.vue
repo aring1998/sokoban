@@ -49,7 +49,7 @@ export default {
                 title: '有重大更新！',
                 message: '点击[确定]按钮前往下载最新版本'
               }).then(() => {
-                window.location.href
+                window.location.href = 'https://www.taptap.com/app/224432'
               })
             } 
             else {
@@ -57,7 +57,7 @@ export default {
                 title: '有新版本啦！',
                 message: '点击[确定]按钮前往下载最新版本'
               }).then(() => {
-                window.location.href
+                window.location.href = 'https://www.taptap.com/app/224432'
               })
             }
           }

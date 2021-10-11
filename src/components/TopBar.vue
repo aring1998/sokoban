@@ -181,11 +181,11 @@ export default {
           class: 'theme-forest',
           intro: '经典的默认主题'
         },
-        {
-          title: '抽象',
-          class: 'theme-abstract',
-          intro: '作者亲笔所画，这波不用爆？'
-        },
+        // {
+        //   title: '抽象',
+        //   class: 'theme-abstract',
+        //   intro: '作者亲笔所画，这波不用爆？'
+        // },
         {
           title: '网络',
           class: 'theme-net',

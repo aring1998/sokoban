@@ -54,10 +54,14 @@
                 <span class="creator">{{ item.creator || '匿名' }}</span>
                 <!-- 点赞/收藏/分享 -->
                 <div class="tool-bar">
-                  <div v-show="workshopTab !== 4">
-                    <!-- <van-icon :name="item.hasPraise ? 'good-job' : 'good-job-o'" @click.stop="like(index, item.id)" />
-                    <van-icon :name="item.hasCollect ? 'star' : 'star-o'" @click.stop="collect(index, item.id)" /> -->
-                    <van-icon :name="shareIndex === index ? 'share' : 'share-o'" @click.stop="share(index, item.mapName)" />
+                  <div v-show="workshopTab !== 4" class="tool-bar-item">
+                    <div>
+                      <van-icon name="good-job" color="#fedcbd" /><span>{{ item.praiseNumber }}</span>
+                    </div>
+                    <div>
+                      <van-icon name="star" color="#ffe600" /><span>{{ item.collectNumber }}</span>
+                    </div>
+                    <!-- <van-icon :name="shareIndex === index ? 'share' : 'share-o'" @click.stop="share(index, item.mapName)" /> -->
                     <van-icon name="close" v-show="$store.state.userInfo.name === 'aring' || workshopTab === 3" @click.stop="del(item.id, item.mapName, index)" />
                   </div>
                   <div v-show="workshopTab === 4">
@@ -386,10 +390,24 @@ export default {
             font-weight: bold;
             color: #fff;
             margin-top: 5px;
-            i {
-              background-color: rgba(0, 0, 0, 0.3);
-              border-radius: 50%;
-              padding: 4px;
+            .tool-bar-item {
+              width: 120px;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              div {
+                display: flex;
+                align-items: center;
+                width: 60px;
+                span {
+                  font-size: 16px;
+                }
+                i {
+                  border-radius: 50%;
+                  padding: 4px;
+                  margin-right: 2px;
+                }
+              }
             }
           }
           .map-king {
