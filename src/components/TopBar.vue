@@ -18,9 +18,7 @@
           <van-swipe 
             class="theme-swipe"
             indicator-color="white"
-            :initial-swipe="
-              $store.state.theme == 'theme-abstract' ? 0 : $store.theme == 'theme-forest' ? 1 : 1
-            "
+            :initial-swipe="0"
           >
             <van-swipe-item v-for="(item, index) of theme" :key="index">
               <div class="title">{{ item.title }}</div>
@@ -186,11 +184,11 @@ export default {
         //   class: 'theme-abstract',
         //   intro: '作者亲笔所画，这波不用爆？'
         // },
-        {
-          title: '网络',
-          class: 'theme-net',
-          intro: '素材来源网络，如有侵权请联系删除'
-        }
+        // {
+        //   title: '网络',
+        //   class: 'theme-net',
+        //   intro: '素材来源网络，如有侵权请联系删除'
+        // }
       ],
       tabIndex: 0,
       loginForm: {

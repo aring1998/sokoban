@@ -44,7 +44,7 @@ export default {
         if (res.code === 0) {
           if (res.data.versionId !== this.$store.state.version) {
             // 判断是否强制更新
-            if (res.data.isForce) {
+            if (res.data.force) {
               this.$dialog.alert({
                 title: '有重大更新！',
                 message: '点击[确定]按钮前往下载最新版本'

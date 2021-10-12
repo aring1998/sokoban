@@ -16,7 +16,7 @@
 1. 安装依赖 `npm install`
 2. 运行项目 `npm run dev`
 3. 打包项目 `npm run build`
-4. 发布版本 `npm pv`
+4. 发布版本 `npm run pv`
 
 #### 注意事项
 1. 需求概述可查阅[Demand](/docs/Demand.md)

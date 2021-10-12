@@ -240,7 +240,7 @@ export default {
     // 初始化
     init() {
       // 重置生命、终点个数，步数
-      this.life = this.initLife
+      this.life = +this.initLife
       this.endCounter = 0
       this.step = 0
       this.status = deepCloneObj(this.initStatus) // 对象深拷贝
