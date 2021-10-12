@@ -107,13 +107,13 @@
         v-model="uploadMap.mapName"
         maxlength="32"
         label="地图名"
-        placeholder="请为您的地图取个名字，最长32字"
+        placeholder="最长32字"
       />
       <van-field
         v-model="uploadMap.creator"
         maxlength="10"
         label="作者"
-        placeholder="请输入您的昵称，最长10字"
+        placeholder="最长10字"
       />
       <div style="margin: 16px;">
         <van-button round block type="info" @click="upload">上传</van-button>

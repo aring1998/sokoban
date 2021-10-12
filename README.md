@@ -1,6 +1,6 @@
 # 魔改推箱子
 
-#### [在线试玩](http://aring1998.gitee.io/sokoban-online/)
+#### [游戏已上架！点击了解详情](https://www.taptap.com/app/224432/)
 
 #### 介绍
 基于**Vue**框架开发的Web项目，由推箱子的游戏玩法拓展

@@ -66,6 +66,10 @@
         返回编辑
       </van-button>
       <van-button @click="$router.push('/index')" type="danger" size="mini"  v-if="$route.query.type == 'created'">放弃编辑</van-button>
+      <div class="map-praise" v-if="$route.query.type === 'workshop'">
+        <van-icon :name="+hasPraise ? 'good-job' : 'good-job-o'" @click.stop="like()" />
+        <van-icon :name="+hasCollect ? 'star' : 'star-o'" @click.stop="collect()" />
+      </div>
     </div>
     <!-- 游戏内容 -->
     <game-content :game-map="gameMap" ref="game"></game-content>
@@ -82,10 +86,6 @@
         <van-icon name="play" style="transform: rotate(90deg)" @touchstart.prevent="move('y', 1)" @touchend.prevent="stopMove()" />
       </div>
     </div>
-    <div class="map-praise" v-if="$route.query.type === 'workshop'">
-      <van-icon :name="+hasPraise ? 'good-job' : 'good-job-o'" @click.stop="like()" />
-      <van-icon :name="+hasCollect ? 'star' : 'star-o'" @click.stop="collect()" />
-    </div>
     <!-- 保存地图弹出框 -->
     <popover ref="saveMap" v-if="$route.query.type == 'created'">
       <div class="test-map-pop">
@@ -97,13 +97,13 @@
           v-model="uploadMap.mapName"
           maxlength="32"
           label="地图名"
-          placeholder="请为您的地图取个名字，最长32字"
+          placeholder="最长32字"
         />
         <van-field
           v-model="uploadMap.creator"
           maxlength="10"
           label="作者"
-          placeholder="请输入您的昵称，最长10字"
+          placeholder="最长10字"
         />
         <div>
           <button @click="saveLocal">存在本地</button>
@@ -806,13 +806,11 @@ export default {
   }
   .map-praise {
     display: flex;
-    width: 300px;
-    margin: 0 auto;
+    width: 70px;
     justify-content: space-around;
     font-size: 20px;
     font-weight: bold;
     color: #fff;
-    margin-top: 5px;
     i {
       background-color: rgba(0, 0, 0, 0.3);
       border-radius: 50%;
