@@ -103,7 +103,11 @@
             v-model="$store.state.userInfo.id"
             label="uid"
             readonly
-          />
+          >
+            <template #button>
+              <van-button size="small" type="primary" @click="copyUid">复制</van-button>
+            </template>
+          </van-field>
           <van-field
             v-model="$store.state.userInfo.name"
             label="用户名"
@@ -266,6 +270,10 @@ export default {
           this.login()
         }
       })
+    },
+    copyUid() {
+      this.$copyText(this.$store.state.userInfo.id)
+      this.$notify({ type: 'success', message: '复制uid成功' })
     },
     // 修改昵称
     changeNickname() {
