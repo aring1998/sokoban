@@ -230,8 +230,8 @@ export default {
     // 分享
     share(index, name) {
       this.shareIndex = index
-      this.$copyText(window.location.href + '?mapName=' + name)
-      this.$notify({ type: 'success', message: '已复制地图链接到剪贴板，快去分享给好友吧！' })
+      this.$copyText(name)
+      this.$notify({ type: 'success', message: '已复制地图名，快去分享给好友吧！' })
     },
     // 删除地图
     del(id, name, i) {

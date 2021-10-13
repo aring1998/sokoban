@@ -279,7 +279,7 @@ export default {
       // 深拷贝初始地图
       this.record.staticMapRecord = [deepClone2Arr(this.staticMap)]
       this.record.activeMapRecord = [deepClone2Arr(this.activeMap)]
-      this.record.lifeRecord = [this.initLife]
+      this.record.lifeRecord = [this.life]
       this.record.statusRecord = [deepCloneObj(this.status)]
     },
     // 创意工坊进入获取游戏地图数据
