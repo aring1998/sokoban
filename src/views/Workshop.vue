@@ -68,7 +68,7 @@
                     <van-icon name="close" @click.stop="delLocalMap(item.localId, item.mapName)"/>
                     <van-icon name="upgrade" @click.stop="uploadLocalMap(item.localId)"/>
                   </div>
-                  <span class="date">{{ item.time | formatDate }}</span>
+                  <span class="date">{{ item.createTime | formatDate }}</span>
                 </div>
                 <div class="map-king">
                   <van-icon name="medal-o" />
