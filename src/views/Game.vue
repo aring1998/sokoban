@@ -331,28 +331,6 @@ export default {
 
       // 判断是否中毒
       if (this.status.poisoning) step = -step
-      // 判断是否醉酒，根据判断奇偶来决定是否进行醉酒移动
-      if (this.status.drunk % 2 !== 0) {
-        this.status.drunk++ // 为接下来的move方法不触发醉酒移动
-        // 随机再进行0~2次移动
-        const drunkStep = Math.floor(Math.random() * 3)
-        for (let i = 0; i < drunkStep; i++) {
-          this.$nextTick(() => {
-            if (staticTarget === 13) return // 碰到甘露则停止
-            // 删除醉酒移动前的记录
-            this.step--
-            this.recordPop()
-            if (this.status.poisoning) this.move(direction, -step)
-            else this.move(direction, step)
-          })
-        }
-        // 结束循环后，恢复醉酒移动
-        this.$nextTick(() => {
-          this.status.drunk++
-          this.record.statusRecord.pop()
-          this.record.statusRecord.push(deepCloneObj(this.status))
-        })
-      }
 
       // 判断方向
       if (direction === 'x') {
@@ -518,8 +496,35 @@ export default {
         this.life -= loseLife
         if (this.life === 0) {
           this.$notify({ type: 'danger', message: 'you dead!' })
-          this.$nextTick(() => { return this.init() })
+          setTimeout(() => { return this.init() }, 200)
         }
+      }
+
+      // 判断是否醉酒，根据判断奇偶来决定是否进行醉酒移动
+      if (this.status.drunk % 2 !== 0) {
+        this.status.drunk++ // 为接下来的move方法不触发醉酒移动
+        // 随机再进行0~2次移动
+        const drunkStep = Math.floor(Math.random() * 3)
+        for (let i = 0; i < drunkStep; i++) {
+          if (this.status.drunk === 2) { // 首次触碰啤酒不触发酗酒移动
+            this.status.drunk++
+            break
+          }
+          this.$nextTick(() => {
+            if (staticTarget === 13) return // 碰到甘露则停止
+            // 删除醉酒移动前的记录
+            this.step--
+            this.recordPop()
+            if (this.status.poisoning) this.move(direction, -step)
+            else this.move(direction, step)
+          })
+        }
+        // 结束循环后，恢复醉酒移动
+        this.$nextTick(() => {
+          this.status.drunk++
+          this.record.statusRecord.pop()
+          this.record.statusRecord.push(deepCloneObj(this.status))
+        })
       }
 
       // 设定移动后的玩家坐标
