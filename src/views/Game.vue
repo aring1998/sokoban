@@ -199,7 +199,7 @@ export default {
   },
   mounted() {
     // 页面刷新，返回首页
-    if (isEmptyObject(this.$route.params)) return this.$router.push('/index')
+    if (isEmptyObject(this.$route.params) && this.$route.query.type !== 'share') return this.$router.push('/index')
     // 判断入口
     const checkEntry = {
       // 由选关进入
@@ -207,6 +207,7 @@ export default {
         this.level = this.$route.params.level
         // 判断地图包
         this.checkPack()
+        this.init()
       },
       // 由创意工坊进入
       workshop: () => {
@@ -229,12 +230,13 @@ export default {
         this.gameMap = this.$route.params.gameMap
         this.initLife = +this.$route.params.advancedForm.life || 0
         this.regretDisabled = +this.$route.params.advancedForm.regretDisabled
+        this.init()
+      },
+      share: () => {
+        this.getMapData(this.$route.query.mapId)
       }
     }
     checkEntry[this.$route.query.type]()
-
-    // 游戏初始化
-    if (this.$route.query.type !== 'workshop') this.init()
   },
   methods: {
     // 初始化

@@ -2,7 +2,7 @@
 <template>
   <div class="top-bar">
     <div class="top-bar-item">  
-      <slot><van-icon name="revoke" @click="$router.go(-1)" /></slot>
+      <slot><van-icon name="revoke" @click="$router.push('/index')" /></slot>
       <div>
         <van-icon name="music-o" :class="{ turn: $store.state.bgmPlay }" @click="musicControl"/>
         <van-icon name="user-o" @click="$refs.login.show()" />

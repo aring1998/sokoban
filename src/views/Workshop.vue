@@ -50,7 +50,13 @@
                 <create-content :gameMap="item.mapData"></create-content>
               </div>
               <div class="map-intro">
-                <span class="name">{{ item.mapName || '(未命名)' }}</span>
+                <div class="name-wrapper">
+                  <span class="name">{{ item.mapName || '(未命名)' }}</span>
+                  <div class="icon-wrapper" v-show="workshopTab !== 4">
+                    <van-icon :name="shareIndex === index ? 'share' : 'share-o'" @click.stop="share(index, item.id)" />
+                    <van-icon name="close" v-show="$store.state.userInfo.name === 'aring' || workshopTab === 3" @click.stop="del(item.id, item.mapName, index)" />
+                  </div>
+                </div>
                 <span class="creator">{{ item.creator || '匿名' }}</span>
                 <!-- 点赞/收藏/分享 -->
                 <div class="tool-bar">
@@ -61,8 +67,6 @@
                     <div>
                       <van-icon name="star" color="#ffe600" /><span>{{ item.collectNumber }}</span>
                     </div>
-                    <!-- <van-icon :name="shareIndex === index ? 'share' : 'share-o'" @click.stop="share(index, item.mapName)" /> -->
-                    <van-icon name="close" v-show="$store.state.userInfo.name === 'aring' || workshopTab === 3" @click.stop="del(item.id, item.mapName, index)" />
                   </div>
                   <div v-show="workshopTab === 4">
                     <van-icon name="close" @click.stop="delLocalMap(item.localId, item.mapName)"/>
@@ -228,10 +232,11 @@ export default {
       this.getGameMap()
     },
     // 分享
-    share(index, name) {
+    share(index, id) {
       this.shareIndex = index
-      this.$copyText(name)
-      this.$notify({ type: 'success', message: '已复制地图名，快去分享给好友吧！' })
+      this.$copyText(`http://aring1998.gitee.io/sokoban-online/#/game?type=share&mapId=${id}`)
+      // this.$copyText(`http://localhost:8080/#/game?type=share&mapId=${id}`)
+      this.$notify({ type: 'success', message: '已复制试玩链接，快去分享给好友吧！' })
     },
     // 删除地图
     del(id, name, i) {
@@ -366,13 +371,30 @@ export default {
           span {
             color: #fff;
           }
-          .name {
-            font-weight: bold;
-            font-size: 20px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 210px;
+          .name-wrapper {
+            display: flex;
+            justify-content: space-between;
+            width: 230px;
+            .name {
+              font-weight: bold;
+              font-size: 20px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              width: 210px;
+            }
+            .icon-wrapper {
+              display: flex;
+              width: 70px;
+              justify-content: flex-end;
+              i {
+                color: #fff;
+                background-color: rgba($color: #000000, $alpha: .3);
+                border-radius: 50%;
+                padding: 4px;
+                margin-right: 4px;
+              }
+            }
           }
           .creator {
             font-size: 16px;
@@ -389,7 +411,7 @@ export default {
             font-size: 20px;
             font-weight: bold;
             color: #fff;
-            margin-top: 5px;
+            margin-top: 10px;
             .tool-bar-item {
               width: 120px;
               display: flex;
@@ -401,11 +423,7 @@ export default {
                 width: 60px;
                 span {
                   font-size: 16px;
-                }
-                i {
-                  border-radius: 50%;
-                  padding: 4px;
-                  margin-right: 2px;
+                  justify-self: flex-end;
                 }
               }
             }
@@ -414,14 +432,14 @@ export default {
             position: absolute;
             height: 20px;
             line-height: 20px;
-            width: 100px;
+            width: 110px;
             border-radius: 999px;
             background-color: rgb(238, 227, 110);
             font-size: 16px;
             font-weight: bold;
             color: #333;
             left: 120px;
-            top: 20px;
+            top: 30px;
             display: flex;
             align-items: center;
             padding: 0 5px;
