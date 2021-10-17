@@ -47,6 +47,7 @@ export default {
 /* 作为缩略图 */
 .map-thumbnail {
   .game-container {
+    overflow: unset;
     .game-table {
       background-size: 8px 8px;
       border: none;
