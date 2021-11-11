@@ -1,5 +1,7 @@
 # 魔改推箱子
 
+#### [在线试玩 (PC端请切换手机调试模式)](http://aring1998.gitee.io/sokoban-online)
+
 #### [游戏已上架！点击了解详情](https://www.taptap.com/app/224432/)
 
 #### 介绍
