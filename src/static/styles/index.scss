@@ -1,0 +1,14 @@
+@import './theme.scss';
+
+:not(not) {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  font-family: 'Segoe WPC,Segoe UI,Microsoft YaHei,sans-serif';
+}
+
+.u-tabs__wrapper__nav__item {
+  font-weight: bold;
+}

@@ -1,0 +1,25 @@
+{
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+
+			}
+		},
+		{
+			"path": "pages/game/index",
+			"style": {
+
+			}
+		}
+	],
+	"globalStyle": {
+		"app-plus": {
+			"titleNView": false
+		},
+		"backgroundColor": "#F8F8F8"
+	}
+}
