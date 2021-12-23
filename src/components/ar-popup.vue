@@ -3,7 +3,9 @@
   <u-transition :show="isShow" mode="fade">
     <view :class="[popType()]" @click="show">
       <view class="popover" @click.stop>
-        <view class="closes" v-if="isClosed" @click="show">X</view>
+        <view class="closes" v-if="isClosed">
+          <span @click="show">X</span>
+        </view>
         <slot></slot>
       </view>
     </view>
@@ -37,12 +39,13 @@ export default {
     popType() {
       if (this.type === 'normal') return 'popover-shade'
       else if (this.type === 'white') return 'white-popover-shade'
+      else if (this.type === 'menu') return 'menu-popover-shade'
     }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .popover-shade {
   position: fixed;
   top: 0;
@@ -89,15 +92,39 @@ export default {
     padding: 20px;
     background-image: url('~@/static/img/common/popup-bg.png');
     border-radius: 10px;
-    .closes {
-      width: 100%;
-      text-align: right;
-      margin-bottom: 10px;
-      font-size: 20px;
-      font-weight: bold;
-      color: rgba(0, 0, 0, 0.5);
-      padding-right: 10px;
-    }
+  }
+}
+
+.closes {
+  width: 100%;
+  text-align: right;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.5);
+  padding-right: 10px;
+}
+
+.menu-popover-shade {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  .popover {
+    width: 700rpx;
+    height: 1000rpx;
+    padding: 40rpx;
+    background-color: #fff;
+    background-image: url('~@/static/img/game/menu-bg.png');
+    border-radius: 20rpx;
+  }
+  .closes {
+    margin-bottom: 160rpx;
   }
 }
 </style>

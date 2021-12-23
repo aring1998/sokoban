@@ -21,14 +21,11 @@ export default {
       
     }
   },
-	components: {
-		ArPopup,
-    ChoiceLevel
-	},
+	components: { ArPopup, ChoiceLevel },
   onLoad() {},
   methods: {
     routerGo(name) {
-      uni.redirectTo({
+      uni.navigateTo({
         url: `/pages/${name}/index`
       })
     }

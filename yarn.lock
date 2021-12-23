@@ -2382,6 +2382,11 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
+ant-design-icons@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.npmmirror.com/ant-design-icons/download/ant-design-icons-1.3.3.tgz#88f50bee831cfc8ca04be5d8bf2fa737fb59d300"
+  integrity sha1-iPUL7oMc/IygS+XYvy+nN/tZ0wA=
+
 any-promise@^1.0.0, any-promise@^1.1.0:
   version "1.3.0"
   resolved "https://registry.nlark.com/any-promise/download/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"

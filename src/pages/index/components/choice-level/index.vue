@@ -28,20 +28,19 @@ export default {
           id: 1,
           name: '拓展关卡'
         }
-      ]
+      ],
+      currentTab: 0
     }
   },
   methods: {
     tabClick(item) {
-      if (item.id === 0) {
-        this.levelList = basic
-      } else {
-        this.levelList = expand
-      }
+      if (item.id === 0) this.levelList = basic
+      else this.levelList = expand
+      this.currentTab = item.id
     },
-    goGame() {
-      uni.redirectTo({
-        url: `/pages/game/index`
+    goGame(index) {
+      uni.navigateTo({
+        url: `/pages/game/index?type=level&level=${index}&pack=${this.currentTab}`
       })
     }
   }

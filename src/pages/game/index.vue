@@ -6,14 +6,31 @@
     @moveRight="moveRight"
     @moveUp="moveUp"
     @moveDown="moveDown"
+    class="game-page"
   >
-    <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap"></game-content>
+    <u-notify ref="notify"></u-notify>
+    <game-top-bar
+      :step="gameCore.step"
+      :life="gameCore.life"
+      :mapName="gameMap.mapName"
+      @reset="reset"
+      @regret="regret"
+      @showMenu="$refs.menu.show()"
+    ></game-top-bar>
+    <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap" class="game-content"></game-content>
+    <ar-popup type="menu" ref="menu">
+      <game-menu></game-menu>
+    </ar-popup>
   </touch-layout>
 </template>
 
 <script>
 import TouchLayout from '@/components/touch-layout.vue'
 import GameContent from '@/components/game-content/game-content.vue'
+import ArPopup from '@/components/ar-popup.vue'
+import GameTopBar from './components/game-top-bar/game-top-bar.vue'
+import GameMenu from './components/game-menu/game-menu.vue'
+
 import { basic, expand } from '@/static/js/level/index'
 import { deepCloneObjArr } from '@/utils/index'
 import { Move } from './utils/move'
@@ -24,7 +41,8 @@ export default {
       expand: Object.freeze(expand),
       // 游戏地图
       gameMap: {
-        data: []
+        mapData: [],
+        mapName: ''
       },
       // 游戏核心
       gameCore: {
@@ -46,16 +64,26 @@ export default {
           poisoning: false,
           drunk: false
         },
-        portalExit: []
-      }
+        portalExit: [],
+        regretDisabled: false,
+        step: 0
+      },
+      gameRecord: []
     }
   },
-  components: { TouchLayout, GameContent },
+  components: { TouchLayout, GameContent, ArPopup, GameTopBar, GameMenu },
   onLoad(option) {
-    this.gameMap.data = deepCloneObjArr(expand[8].gameMap)
-    this.gameCore.staticMap = deepCloneObjArr(this.gameMap.data)
-    this.gameCore.activeMap = deepCloneObjArr(this.gameMap.data)
-    this.gameCore.life = expand[1].life
+    const { type, level, pack } = option
+    if (type === 'level') {
+      if (pack === '0') {
+        this.gameMap.mapData = deepCloneObjArr(basic[level])
+        this.gameMap.mapName = `基础关--${Number(level) + 1}`
+      } else {
+        this.gameMap.mapData = deepCloneObjArr(expand[level].gameMap)
+        this.gameCore.life = expand[level].life
+        this.gameMap.mapName = `拓展关--${Number(level) + 1}`
+      }
+    }
     this.init()
   },
   methods: {
@@ -75,11 +103,17 @@ export default {
           this.gameCore.portalExit.push({ x, y })
         }
       }
-      for (let y = 0; y < this.gameMap.data.length; y++) {
-        for (let x = 0; x < this.gameMap.data[y].length; x++) {
-          if (mapInit[this.gameMap.data[y][x]]) mapInit[this.gameMap.data[y][x]](x, y)
+      for (let y = 0; y < this.gameMap.mapData.length; y++) {
+        for (let x = 0; x < this.gameMap.mapData[y].length; x++) {
+          if (mapInit[this.gameMap.mapData[y][x]]) mapInit[this.gameMap.mapData[y][x]](x, y)
         }
       }
+      // 地图分层
+      this.gameCore.staticMap = deepCloneObjArr(this.gameMap.mapData)
+      this.gameCore.activeMap = deepCloneObjArr(this.gameMap.mapData)
+
+      // 记录游戏记录
+      this.gameRecord.push(deepCloneObjArr(this.gameCore))
     },
     moveBeforeHook(touches) {
       this.gameCore.setX = this.gameCore.playerX
@@ -91,26 +125,26 @@ export default {
     moveLeft() {
       this.gameCore.setX--
       this.gameCore.setBoxX = this.gameCore.setX - 1
-      new Move(this.gameCore, 1)
+      new Move(this.gameCore, 1, this.gameRecord)
     },
     moveRight() {
       this.gameCore.setX++
       this.gameCore.setBoxX = this.gameCore.setX + 1
-      new Move(this.gameCore, 2)
+      new Move(this.gameCore, 2, this.gameRecord)
     },
     moveUp() {
       this.gameCore.setY--
       this.gameCore.setBoxY = this.gameCore.setY - 1
-      new Move(this.gameCore, 3)
+      new Move(this.gameCore, 3, this.gameRecord)
     },
     moveDown() {
       this.gameCore.setY++
       this.gameCore.setBoxY = this.gameCore.setY + 1
-      new Move(this.gameCore, 4)
+      new Move(this.gameCore, 4, this.gameRecord)
     },
     moveAfterHook() {
       if (this.gameCore.life === 0) console.log('dead')
-      
+
     },
     statusEvent(touches) {
       // 中毒事件
@@ -137,8 +171,37 @@ export default {
             this.moveAfterHook()
           })
         }
+        // 清理酗酒移动途中的记录
+        setTimeout(() => {
+          this.gameRecord.splice(this.gameRecord.length - drunkStep - 1, drunkStep)
+        }, 50);
       }
+    },
+    reset() {
+      this.gameCore = deepCloneObjArr(this.gameRecord[0]) 
+    },
+    regret() {
+      if (this.gameRecord.length === 1) return this.$refs.notify.show({ type: 'error', message: '已经回退到头啦~' })
+      this.gameRecord.pop()
+      this.gameCore = deepCloneObjArr(this.gameRecord[this.gameRecord.length - 1])
     }
   }
 }
 </script>
+
+<style lang="scss">
+.game-page {
+  height: 100vh;
+  padding: 60rpx 0;
+  background-image: url('~@/static/img/game/bg.png');
+  display: flex;
+  flex-flow: column nowrap;
+  .game-content {
+    margin-top: 20vh;
+  }
+  .game-action {
+    padding: 0 40rpx;
+    display: flex;
+  }
+}
+</style>

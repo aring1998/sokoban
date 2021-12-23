@@ -5,6 +5,8 @@ Vue.config.productionTip = false
 import uView from 'uview-ui'
 Vue.use(uView)
 
+import 'ant-design-icons/dist/anticons.min.css'
+
 App.mpType = 'app'
 
 const app = new Vue({

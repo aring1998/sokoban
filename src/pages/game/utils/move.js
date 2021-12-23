@@ -1,10 +1,10 @@
 import Vue from 'vue'
+import { deepCloneObjArr } from '@/utils/index'
 
 export class Move {
   gameCore = {
     staticMap: [], // 静止层地图
     activeMap: [], // 活动层地图
-    playerX: 0, // 玩家x轴坐标
     playerY: 0, // 玩家y轴坐标
     setX: 0, //目标点x轴坐标
     setY: 0, // 目标点y轴坐标
@@ -18,14 +18,17 @@ export class Move {
     endCounter: 0, // 终点个数
     // 状态
     status: {
-      poisoning: false
+      poisoning: false,
+      drunk: false
     },
-    portalExit: [] // 传送门出口坐标
+    portalExit: [], // 传送门出口坐标
+    regretDisabled: false, // 禁用撤回功能
+    step: 0 // 步数
   }
-
   direction = 0
+  gameRecord = []
 
-  constructor(gameCore, direction) {
+  constructor(gameCore, direction, gameRecord) {
     this.gameCore = gameCore
     if (
       this.gameCore.setY < 0 ||
@@ -36,10 +39,11 @@ export class Move {
       return
     this.getTarget()
     this.direction = direction
+    this.gameRecord = gameRecord
     // 静止层人物目标点事件
     let staticEventFlag = true
     if (staticEvent[this.gameCore.staticTarget]) {
-      staticEventFlag = staticEvent[this.gameCore.staticTarget](this.gameCore, this.direction)
+      staticEventFlag = staticEvent[this.gameCore.staticTarget](this.gameCore, this.direction, this.gameRecord)
     }
     if (!staticEventFlag) return
     // 活动层人物目标点事件
@@ -58,6 +62,9 @@ export class Move {
     Vue.set(this.gameCore.activeMap[this.gameCore.playerY], this.gameCore.playerX, 1)
     this.gameCore.playerX = this.gameCore.setX
     this.gameCore.playerY = this.gameCore.setY
+    this.gameCore.step++
+    // 记录游戏记录
+    this.gameRecord.push(deepCloneObjArr(this.gameCore))
   }
 
   static moveIndex(gameCore) {
@@ -76,39 +83,47 @@ export class Move {
 }
 
 const staticEvent = {
+  // 墙
   0: () => false,
+  // 地刺
   5: gameCore => commonUtils.loseLife(gameCore),
+  // 火
   6: gameCore => commonUtils.loseLife(gameCore),
+  // 毒蘑菇
   8: gameCore => {
-    Vue.set(gameCore.staticMap[gameCore.setY], gameCore.setX, 1)
+    commonUtils.clearSelf(gameCore)
     gameCore.status.poisoning = true
     return true
   },
-  9: (gameCore, direction) => {
+  // 弹簧
+  9: (gameCore, direction, gameRecord) => {
     setTimeout(() => {
       if (direction === 1) gameCore.setX = gameCore.playerX - 2
       else if (direction === 2) gameCore.setX = gameCore.playerX + 2
       else if (direction === 3) gameCore.setY = gameCore.playerY - 2
       else if (direction === 4) gameCore.setY = gameCore.playerY + 2
-      new Move(gameCore)
+      new Move(gameCore, direction, gameRecord)
     }, 0)
     return true
   },
-  10: gameCore => {
+  // 传送门入口
+  10: (gameCore, direction, gameRecord) => {
     // 随机指定传送出口
     const exit = gameCore.portalExit[Math.floor(Math.random() * gameCore.portalExit.length)]
     // 修改目标点
     gameCore.setY = Number(exit.y)
     gameCore.setX = Number(exit.x)
-    new Move(gameCore)
+    new Move(gameCore, direction, gameRecord)
   },
+  // 啤酒
   12: gameCore => {
-    Vue.set(gameCore.staticMap[gameCore.setY], gameCore.setX, 1)
+    commonUtils.clearSelf(gameCore)
     gameCore.status.drunk = true
     return true
   },
+  // 解药
   13: gameCore => {
-    Vue.set(gameCore.staticMap[gameCore.setY], gameCore.setX, 1)
+    commonUtils.clearSelf(gameCore)
     for (let key in gameCore.status) {
       gameCore.status[key] = false
     }
@@ -117,12 +132,16 @@ const staticEvent = {
 }
 
 const activeEvent = {
+  // 普通箱子
   3: gameCore => commonUtils.checkBoxEvent(gameCore),
+  // 冰箱子
   7: gameCore => commonUtils.checkBoxEvent(gameCore)
 }
 
 const staticBoxEvent = {
+  // 墙
   0: () => false,
+  // 终点
   4: gameCore => {
     let onEnd = 0
     setTimeout(() => {
@@ -138,10 +157,13 @@ const staticBoxEvent = {
     }, 200)
     return true
   },
+  // 火
   6: gameCore => {
     if (gameCore.activeTarget === 7) {
       gameCore.activeTarget = 3 // 变为普通箱子
       Vue.set(gameCore.staticMap[gameCore.setBoxY], gameCore.setBoxX, 1) // 灭火
+    } else {
+      gameCore.activeTarget = 1 // 销毁普通箱子
     }
     return true
   }
@@ -167,5 +189,8 @@ const commonUtils = {
     }
     if (flag) Vue.set(gameCore.activeMap[gameCore.setBoxY], gameCore.setBoxX, gameCore.activeTarget)
     return flag
+  },
+  clearSelf: gameCore => {
+    Vue.set(gameCore.staticMap[gameCore.setY], gameCore.setX, 1)
   }
 }

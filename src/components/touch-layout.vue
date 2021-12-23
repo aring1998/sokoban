@@ -15,7 +15,9 @@ export default {
         startY: 0,
         endX: 0,
         endY: 0
-      }
+      },
+      longClickTimer: null,
+      longClickFlag: false
     }
   },
   mounted() {
@@ -31,10 +33,12 @@ export default {
       const { pageX, pageY } = e.touches[0]
       this.touches.startX = pageX
       this.touches.startY = pageY
+      this.longClickTimer = setInterval(() => {
+        this.longClickFlag = true
+        this.sendMoveEvent()
+      }, 300);
     },
     touchmove(e) {
-      if (this.touches.flag !== 0) return
-
       const { pageX, pageY } = e.touches[0]
       this.touches.endX = pageX
       this.touches.endY = pageY
@@ -45,27 +49,40 @@ export default {
         if (moveX > 50) {
           // 左划
           this.touches.flag = 1
+          this.setStartPosition(pageX, pageY)
         } else if (moveX < -50) {
           // 右划
           this.touches.flag = 2
+          this.setStartPosition(pageX, pageY)
         }
       } else {
         if (moveY > 50) {
           // 上划
           this.touches.flag = 3
+          this.setStartPosition(pageX, pageY)
         } else if (moveY < -50) {
           // 下划
           this.touches.flag = 4
+          this.setStartPosition(pageX, pageY)
         }
       }
     },
     touchend() {
+      if (!this.longClickFlag) this.sendMoveEvent()
+      clearInterval(this.longClickTimer)
+      this.longClickFlag = false
+      this.touches.flag = 0
+    },
+    sendMoveEvent() {
       if (this.emitEvent[this.touches.flag]) {
         this.$emit('moveBeforeHook', this.touches)
         this.emitEvent[this.touches.flag]()
         this.$emit('moveAfterHook', this.touches)
       }
-      this.touches.flag = 0
+    },
+    setStartPosition(x, y) {
+      this.touches.startX = x
+      this.touches.startY = y
     }
   }
 }

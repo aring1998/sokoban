@@ -9,6 +9,20 @@
   font-family: 'Segoe WPC,Segoe UI,Microsoft YaHei,sans-serif';
 }
 
+.common-btn {
+  height: 80rpx;
+  padding: 10rpx;
+  background-image: url('~@/static/img/common/common-btn.png');
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 48rpx;
+  img {
+    height: 50rpx;
+    margin-right: 8rpx;
+  }
+}
+
 .u-tabs__wrapper__nav__item {
   font-weight: bold;
 }
