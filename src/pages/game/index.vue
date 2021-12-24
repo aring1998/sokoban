@@ -15,16 +15,16 @@
       :mapName="gameMap.mapName"
       @reset="reset"
       @regret="regret"
-      @showMenu="$refs.tips.show()"
+      @showMenu="$refs.settings.show()"
     ></game-top-bar>
-    <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap" class="game-content"></game-content>
+    <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap"></game-content>
 
     <ar-popup type="menu" ref="settings">
       <game-menu></game-menu>
     </ar-popup>
 
     <ar-popup type="common" ref="tips" :isClosed="false">
-      <game-result @reset="reset(); $refs.tips.show()" @nextLevel="nextLevel(); $refs.tips.show()"></game-result>
+      <game-result @reset="reset" @nextLevel="nextLevel"></game-result>
     </ar-popup>
   </touch-layout>
 </template>
@@ -156,6 +156,7 @@ export default {
       new Move(this.gameCore, 4, this.gameRecord)
     },
     moveAfterHook() {
+      if (this.gameCore.suc === 1) return
       if (this.gameCore.life === 0) {
         setTimeout(() => {
           this.$refs.notify.show({ type: 'error', message: '你失败了~' })
@@ -166,7 +167,7 @@ export default {
         if (this.gameCore.suc === 1) {
           setTimeout(() => {
             this.$refs.tips.show()
-          }, 150);
+          }, 150)
         }
       }, 50)
     },
@@ -203,6 +204,7 @@ export default {
     },
     reset() {
       this.gameCore = deepCloneObjArr(this.gameRecord[0])
+      this.$refs.tips.isShow = false
     },
     regret() {
       if (this.gameRecord.length === 1) return this.$refs.notify.show({ type: 'error', message: '已经回退到头啦~' })
@@ -212,6 +214,7 @@ export default {
     nextLevel() {
       this.routeInfo.level++
       this.init()
+      this.$refs.tips.isShow = false
     }
   }
 }
@@ -221,10 +224,10 @@ export default {
 .game-page {
   height: 100vh;
   padding: 60rpx 0;
-  background-image: url('~@/static/img/game/bg.png');
+  background-image: url('~@/static/img/common/bg.png');
   display: flex;
   flex-flow: column nowrap;
-  .game-content {
+  .game-container {
     margin-top: 20vh;
   }
   .game-action {

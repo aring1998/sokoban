@@ -31,6 +31,7 @@ export class Move {
 
   constructor(gameCore, direction, gameRecord) {
     this.gameCore = gameCore
+    // 超出表格
     if (
       this.gameCore.setY < 0 ||
       this.gameCore.setY >= this.gameCore.staticMap.length ||
@@ -185,8 +186,8 @@ const commonUtils = {
     if (staticBoxEvent[gameCore.staticBoxTarget]) {
       flag = staticBoxEvent[gameCore.staticBoxTarget](gameCore)
     }
-    if (activeBoxEvent[gameCore.staticBoxTarget]) {
-      flag = activeBoxEvent[gameCore.staticBoxTarget](gameCore)
+    if (activeBoxEvent[gameCore.activeBoxTarget]) {
+      flag = activeBoxEvent[gameCore.activeBoxTarget](gameCore)
     }
     if (flag) Vue.set(gameCore.activeMap[gameCore.setBoxY], gameCore.setBoxX, gameCore.activeTarget)
     return flag
