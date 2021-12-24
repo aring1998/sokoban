@@ -1,8 +1,8 @@
 <!-- 弹出框 -->
 <template>
   <u-transition :show="isShow" mode="fade">
-    <view :class="[popType()]" @click="show">
-      <view class="popover" @click.stop>
+    <view class="popup-shade" :class="[popType()]" @click="isClosed && show()">
+      <view class="popup" @click.stop>
         <view class="closes" v-if="isClosed">
           <span @click="show">X</span>
         </view>
@@ -37,85 +37,59 @@ export default {
     },
     // 弹出框类型
     popType() {
-      if (this.type === 'normal') return 'popover-shade'
-      else if (this.type === 'white') return 'white-popover-shade'
-      else if (this.type === 'menu') return 'menu-popover-shade'
+      if (this.type === 'common') return 'common-popup-shade'
+      else if (this.type === 'paper') return 'paper-popup-shade'
+      else if (this.type === 'menu') return 'menu-popup-shade'
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.popover-shade {
+.popup-shade {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
   width: 100vw;
-  background-color: rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 101;
-  .popover {
-    width: 350px;
-    padding: 20px;
-    background-color: var(--mainColor);
-    border: var(--deepMainColor) 4px solid;
-    border-radius: 10px;
-  }
+  z-index: 100;
   .closes {
     width: 100%;
     text-align: right;
     margin-bottom: 10px;
-    i {
-      font-weight: bold;
-      color: #fff;
-      font-size: 20px;
-    }
+    font-size: 20px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.5);
+    padding-right: 10px;
   }
 }
 
-.white-popover-shade {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  .popover {
-    width: 350px;
+.common-popup-shade {
+  background-color: rgba($color: #000000, $alpha: 0.2);
+  .popup {
+    width: 700rpx;
+    height: 500rpx;
+    padding: 40rpx;
+    background-image: url('~@/static/img/common/common-menu-bg.png');
+    border-radius: 20rpx;
+  }
+}
+
+.paper-popup-shade {
+  .popup {
+    width: 700rpx;
     height: 70vh;
-    padding: 20px;
+    padding: 40rpx;
     background-image: url('~@/static/img/common/popup-bg.png');
-    border-radius: 10px;
+    border-radius: 20rpx;
   }
 }
 
-.closes {
-  width: 100%;
-  text-align: right;
-  margin-bottom: 10px;
-  font-size: 20px;
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.5);
-  padding-right: 10px;
-}
-
-.menu-popover-shade {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  .popover {
+.menu-popup-shade {
+  .popup {
     width: 700rpx;
     height: 1000rpx;
     padding: 40rpx;

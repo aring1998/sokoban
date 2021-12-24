@@ -15,11 +15,16 @@
       :mapName="gameMap.mapName"
       @reset="reset"
       @regret="regret"
-      @showMenu="$refs.menu.show()"
+      @showMenu="$refs.tips.show()"
     ></game-top-bar>
     <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap" class="game-content"></game-content>
-    <ar-popup type="menu" ref="menu">
+
+    <ar-popup type="menu" ref="settings">
       <game-menu></game-menu>
+    </ar-popup>
+
+    <ar-popup type="common" ref="tips" :isClosed="false">
+      <game-result @reset="reset(); $refs.tips.show()" @nextLevel="nextLevel(); $refs.tips.show()"></game-result>
     </ar-popup>
   </touch-layout>
 </template>
@@ -30,6 +35,7 @@ import GameContent from '@/components/game-content/game-content.vue'
 import ArPopup from '@/components/ar-popup.vue'
 import GameTopBar from './components/game-top-bar/game-top-bar.vue'
 import GameMenu from './components/game-menu/game-menu.vue'
+import GameResult from './components/game-result/game-result.vue'
 
 import { basic, expand } from '@/static/js/level/index'
 import { deepCloneObjArr } from '@/utils/index'
@@ -42,7 +48,8 @@ export default {
       // 游戏地图
       gameMap: {
         mapData: [],
-        mapName: ''
+        mapName: '',
+        level: 0
       },
       // 游戏核心
       gameCore: {
@@ -66,28 +73,33 @@ export default {
         },
         portalExit: [],
         regretDisabled: false,
-        step: 0
+        step: 0,
+        suc: 0
       },
-      gameRecord: []
+      gameRecord: [], // 游戏记录
+      routeInfo: {}
     }
   },
-  components: { TouchLayout, GameContent, ArPopup, GameTopBar, GameMenu },
+  components: { TouchLayout, GameContent, ArPopup, GameTopBar, GameMenu, GameResult },
   onLoad(option) {
-    const { type, level, pack } = option
-    if (type === 'level') {
-      if (pack === '0') {
-        this.gameMap.mapData = deepCloneObjArr(basic[level])
-        this.gameMap.mapName = `基础关--${Number(level) + 1}`
-      } else {
-        this.gameMap.mapData = deepCloneObjArr(expand[level].gameMap)
-        this.gameCore.life = expand[level].life
-        this.gameMap.mapName = `拓展关--${Number(level) + 1}`
-      }
-    }
+    this.routeInfo = option
     this.init()
   },
   methods: {
     init() {
+      // 重置初始gameCore
+      this.gameCore = deepCloneObjArr(this.$options.data().gameCore)
+      if (this.routeInfo.type === 'level') {
+        if (this.routeInfo.pack === '0') {
+          this.gameMap.mapData = deepCloneObjArr(basic[this.routeInfo.level])
+          this.gameMap.mapName = `基础关--${Number(this.routeInfo.level) + 1}`
+          this.gameCore.life = '**'
+        } else {
+          this.gameMap.mapData = deepCloneObjArr(expand[this.routeInfo.level].gameMap)
+          this.gameMap.mapName = `拓展关--${Number(this.routeInfo.level) + 1}`
+          this.gameCore.life = expand[this.routeInfo.level].life
+        }
+      }
       const mapInit = {
         // 玩家坐标
         2: (x, y) => {
@@ -113,6 +125,7 @@ export default {
       this.gameCore.activeMap = deepCloneObjArr(this.gameMap.mapData)
 
       // 记录游戏记录
+      this.gameRecord = []
       this.gameRecord.push(deepCloneObjArr(this.gameCore))
     },
     moveBeforeHook(touches) {
@@ -143,8 +156,19 @@ export default {
       new Move(this.gameCore, 4, this.gameRecord)
     },
     moveAfterHook() {
-      if (this.gameCore.life === 0) console.log('dead')
-
+      if (this.gameCore.life === 0) {
+        setTimeout(() => {
+          this.$refs.notify.show({ type: 'error', message: '你失败了~' })
+          this.reset()
+        }, 200)
+      }
+      setTimeout(() => {
+        if (this.gameCore.suc === 1) {
+          setTimeout(() => {
+            this.$refs.tips.show()
+          }, 150);
+        }
+      }, 50)
     },
     statusEvent(touches) {
       // 中毒事件
@@ -174,16 +198,20 @@ export default {
         // 清理酗酒移动途中的记录
         setTimeout(() => {
           this.gameRecord.splice(this.gameRecord.length - drunkStep - 1, drunkStep)
-        }, 50);
+        }, 50)
       }
     },
     reset() {
-      this.gameCore = deepCloneObjArr(this.gameRecord[0]) 
+      this.gameCore = deepCloneObjArr(this.gameRecord[0])
     },
     regret() {
       if (this.gameRecord.length === 1) return this.$refs.notify.show({ type: 'error', message: '已经回退到头啦~' })
       this.gameRecord.pop()
       this.gameCore = deepCloneObjArr(this.gameRecord[this.gameRecord.length - 1])
+    },
+    nextLevel() {
+      this.routeInfo.level++
+      this.init()
     }
   }
 }

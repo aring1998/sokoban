@@ -23,7 +23,8 @@ export class Move {
     },
     portalExit: [], // 传送门出口坐标
     regretDisabled: false, // 禁用撤回功能
-    step: 0 // 步数
+    step: 0, // 步数
+    suc: 0
   }
   direction = 0
   gameRecord = []
@@ -142,9 +143,9 @@ const staticBoxEvent = {
   // 墙
   0: () => false,
   // 终点
-  4: gameCore => {
+  4:  gameCore => {
     let onEnd = 0
-    setTimeout(() => {
+    Vue.nextTick(() => {
       for (let y in gameCore.activeMap) {
         for (let x in gameCore.activeMap[y]) {
           if (gameCore.activeMap[y][x] === 3 && gameCore.staticMap[y][x] === 4) {
@@ -153,8 +154,8 @@ const staticBoxEvent = {
         }
       }
       if (onEnd !== gameCore.endCounter) return
-      alert('win')
-    }, 200)
+      gameCore.suc = 1
+    })
     return true
   },
   // 火

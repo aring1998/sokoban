@@ -32,7 +32,7 @@ export default {
       default: 0
     },
     life: {
-      type: Number,
+      type: [Number, String],
       default: 0
     },
     mapName: {

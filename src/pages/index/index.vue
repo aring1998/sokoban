@@ -6,7 +6,7 @@
       <view class="btn" @click="routerGo('workshop')">创意工坊</view>
       <view class="btn" @click="routerGo('create')">创建地图</view>
     </view>
-    <ar-popup type="white" ref="choiceLevel">
+    <ar-popup type="paper" ref="choiceLevel">
       <choice-level></choice-level>
     </ar-popup>
   </view>

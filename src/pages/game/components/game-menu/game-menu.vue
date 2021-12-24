@@ -6,17 +6,17 @@
         <u-switch v-model="music" size="18"></u-switch>
       </view>
     </view>
-    <view class="bottom-form">
-      <view class="bottom-form-item" @click="goIndex">
-        <i class="ai-home" style="font-size: 50rpx"></i>
+    <view class="common-bottom-form">
+      <view class="common-bottom-form-item" @click="goIndex">
+        <i class="ai-home"></i>
         <span>首页</span>
       </view>
-      <view class="bottom-form-item">
-        <i class="ai-share-alt" style="font-size: 50rpx"></i>
+      <view class="common-bottom-form-item">
+        <i class="ai-share-alt"></i>
         <span>分享</span>
       </view>
-      <view class="bottom-form-item">
-        <i class="ai-question-circle-o" style="font-size: 50rpx"></i>
+      <view class="common-bottom-form-item">
+        <i class="ai-question-circle-o"></i>
         <span>帮助</span>
       </view>
     </view>
@@ -53,21 +53,6 @@ export default {
       align-items: center;
     }
   }
-  .bottom-form {
-    border-top: 4rpx #e8eaed solid;
-    padding-top: 40rpx;
-    display: flex;
-    justify-content: space-around;
-    .bottom-form-item {
-      display: flex;
-      flex-flow: column nowrap;
-      i {
-        margin-bottom: 4rpx;
-      }
-      span {
-        font-size: 32rpx;
-      }
-    }
-  }
+  
 }
 </style>

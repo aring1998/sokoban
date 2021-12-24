@@ -26,3 +26,21 @@
 .u-tabs__wrapper__nav__item {
   font-weight: bold;
 }
+
+.common-bottom-form {
+  border-top: 4rpx #e8eaed solid;
+  padding-top: 40rpx;
+  display: flex;
+  justify-content: space-around;
+  .common-bottom-form-item {
+    display: flex;
+    flex-flow: column nowrap;
+    i {
+      margin-bottom: 4rpx;
+      font-size: 50rpx;
+    }
+    span {
+      font-size: 32rpx;
+    }
+  }
+}
