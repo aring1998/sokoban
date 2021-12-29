@@ -83,10 +83,12 @@ export default {
   components: { TouchLayout, GameContent, ArPopup, GameTopBar, GameMenu, GameResult },
   onLoad(option) {
     this.routeInfo = option
+  },
+  onReady() {
     this.init()
   },
   methods: {
-    init() {
+    async init() {
       // 重置初始gameCore
       this.gameCore = deepCloneObjArr(this.$options.data().gameCore)
       if (this.routeInfo.type === 'level') {
@@ -97,7 +99,13 @@ export default {
         } else {
           this.gameMap.mapData = deepCloneObjArr(expand[this.routeInfo.level].gameMap)
           this.gameMap.mapName = `拓展关--${Number(this.routeInfo.level) + 1}`
-          this.gameCore.life = expand[this.routeInfo.level].life
+          this.gameCore.life = expand[this.routeInfo.level].life || '**'
+        }
+      } else if (this.routeInfo.type = 'workshop') {
+        const res = await this.$api.get(`map/${this.routeInfo.id}`)
+        if (res.code === 0) {
+          this.gameMap = res.data
+          this.gameCore.life = res.data.playerHP || '**'
         }
       }
       const mapInit = {

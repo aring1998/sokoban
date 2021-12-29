@@ -23,7 +23,7 @@ export default {
     // 样式类型
     type: {
       type: String,
-      default: 'normal'
+      default: 'common'
     },
     // 是否有关闭按钮
     isClosed: {
@@ -71,7 +71,6 @@ export default {
   background-color: rgba($color: #000000, $alpha: 0.2);
   .popup {
     width: 700rpx;
-    height: 500rpx;
     padding: 40rpx;
     background-image: url('~@/static/img/common/common-menu-bg.png');
     border-radius: 20rpx;

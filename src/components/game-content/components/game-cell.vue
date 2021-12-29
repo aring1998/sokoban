@@ -29,10 +29,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .game-cell {
-  height: 30px;
-  width: 30px;
+  height: 60rpx;
+  width: 60rpx;
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }

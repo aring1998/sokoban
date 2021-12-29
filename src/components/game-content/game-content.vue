@@ -31,25 +31,5 @@ export default {
 </script>
 
 <style lang="scss">
-.game-container {
-  text-align: center;
-  margin: 0 auto;
-  overflow: auto;
-  max-height: 364px;
-  max-width: 364px;
-  &::-webkit-scrollbar {
-    width: 0 !important;
-  }
-  .game-table {
-    background-size: 30px 30px;
-    background-repeat: repeat;
-    background-image: url('~@/static/img/game-content/forest/floor.png');
-    display: inline-block;
-    text-align: center;
-    border: 2px #e8eaeda6 solid;
-    .game-row {
-      display: flex;
-    }
-  }
-}
+@import './styles/index.scss';
 </style>

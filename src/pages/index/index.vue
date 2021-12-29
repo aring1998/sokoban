@@ -22,7 +22,6 @@ export default {
     }
   },
 	components: { ArPopup, ChoiceLevel },
-  onLoad() {},
   methods: {
     routerGo(name) {
       uni.navigateTo({
@@ -49,7 +48,7 @@ export default {
     color: rgb(247, 244, 49);
     margin: 100rpx 0;
     padding: 0 15rpx;
-    background-image: url('~@/static/img/index/title.png');
+    background-image: url('~@/static/img/common/common-title.png');
   }
   .action {
     .btn {

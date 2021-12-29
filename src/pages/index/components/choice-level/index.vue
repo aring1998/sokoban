@@ -1,6 +1,6 @@
 <template>
   <view class="choice-level">
-    <u-tabs :list="tabList" @click="tabClick"></u-tabs>
+    <u-tabs :list="tabList" @click="tabClick" lineColor="#5ac725"></u-tabs>
     <view class="level-list">
       <view class="level-item"
         v-for="(item, index) of levelList"
