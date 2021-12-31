@@ -17,7 +17,7 @@
       @regret="regret"
       @showMenu="$refs.settings.show()"
     ></game-top-bar>
-    <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap"></game-content>
+    <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap" ref="game"></game-content>
 
     <ar-popup type="menu" ref="settings">
       <game-menu></game-menu>
@@ -101,12 +101,18 @@ export default {
           this.gameMap.mapName = `拓展关--${Number(this.routeInfo.level) + 1}`
           this.gameCore.life = expand[this.routeInfo.level].life || '**'
         }
-      } else if (this.routeInfo.type = 'workshop') {
+      } else if (this.routeInfo.type === 'workshop') {
         const res = await this.$api.get(`map/${this.routeInfo.id}`)
         if (res.code === 0) {
           this.gameMap = res.data
           this.gameCore.life = res.data.playerHP || '**'
         }
+      } else if (this.routeInfo.type === 'create') {
+        const [ _, res ] = await uni.getStorage({
+          key: 'mapData'
+        })
+        this.gameMap.mapData = JSON.parse(res.data)
+        this.gameCore.life = res.data.playerHP || '**'
       }
       const mapInit = {
         // 玩家坐标

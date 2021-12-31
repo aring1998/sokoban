@@ -1,6 +1,6 @@
 <template>
   <view class="game-container">
-    <view class="game-table" :style="{backgroundSize: '30rpx 30rpx', border: 'none'}">
+    <view class="game-table" :style="shrink && 'backgroundSize: 30rpx 30rpx; border: none}'">
       <view class="game-row" v-for="(item, yIndex) of gameMap" :key="yIndex" @click="$emit('getRowIndex', yIndex)">
         <view
           v-for="(item, xIndex) of gameMap[yIndex]"
@@ -8,7 +8,7 @@
           :key="xIndex"
           class="game-cell"
           :class="[mapElClass(item)]"
-          :style="{height: '30rpx', width: '30rpx'}"
+          :style="shrink && 'height: 30rpx; width: 30rpx'"
         ></view>
       </view>
     </view>
@@ -20,7 +20,11 @@ import { mapElClass } from '@/static/js/map-el/index'
 
 export default {
   props: {
-    gameMap: Array
+    gameMap: Array,
+    shrink: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     mapElClass

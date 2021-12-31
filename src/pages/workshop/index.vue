@@ -1,6 +1,6 @@
 <template>
   <view class="workshop-page">
-    <top-bar @search="$refs.search.show()"></top-bar>
+    <top-bar title="创意工坊" @search="$refs.search.show()"></top-bar>
     <view class="search">
       <ar-popup type="common" ref="search">
         <ar-form :formOptions="formOptions" @formCreate="formCreate" @ok="search() && $refs.search.show()"></ar-form>
@@ -13,7 +13,7 @@
       <view class="map-item" v-for="(item, index) of mapData" :key="index" @click="goGame(item.id)">
         <view class="map-thumbnail">
           <span class="map-name">{{ item.mapName }}</span>
-          <create-content :gameMap="item.mapData"></create-content>
+          <create-content :gameMap="item.mapData" :shrink="true"></create-content>
         </view>
         <view class="map-info">
           <view class="map-info-item">
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import TopBar from '@/components/top-bar/top-bar.vue'
+import TopBar from '@/components/top-bar.vue'
 import ArPopup from '@/components/ar-popup.vue'
 import ArForm from '@/components/ar-form.vue'
 import CreateContent from '@/components/game-content/create-content.vue'

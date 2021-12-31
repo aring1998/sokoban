@@ -41,7 +41,7 @@ export default {
     font-weight: bold;
     font-size: 80rpx;
     margin: 60rpx 0;
-    color: sandybrown;
+    color: red;
   }
 }
 </style>

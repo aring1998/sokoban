@@ -3,51 +3,49 @@
 }
 
 page {
-  .game-container {
-    .floor {
-      background-image: url('~@/static/img/game-content/forest/floor.png');
-    }
-    .spikeweed {
-      background-image: url('~@/static/img/game-content/forest/spikeweed.png');
-    }
-    .wall {
-      background-image: url('~@/static/img/game-content/forest/wall.png');
-    }
-    .end {
-      background-image: url('~@/static/img/game-content/forest/end.png');
-    }
-    .fire {
-      background-image: url('~@/static/img/game-content/forest/fire.png');
-    }
-    .toadstool {
-      background-image: url('~@/static/img/game-content/forest/toadstool.png');
-    }
-    .spring {
-      background-image: url('~@/static/img/game-content/forest/spring.png');
-    }
-    .single-portal-entry {
-      background-image: url('~@/static/img/game-content/forest/single-portal-entry.png');
-    }
-    .single-portal-exit {
-      background-image: url('~@/static/img/game-content/forest/single-portal-exit.png');
-    }
-    .beer {
-      background-image: url('~@/static/img/game-content/forest/beer.png');
-    }
-    .nectar {
-      background-image: url('~@/static/img/game-content/forest/nectar.png');
-    }
-    .player {
-      background-image: url('~@/static/img/game-content/forest/player.png');
-    }
-    .box {
-      background-image: url('~@/static/img/game-content/forest/box.png');
-    }
-    .ice-box {
-      background-image: url('~@/static/img/game-content/forest/ice-box.png');
-    }
-    .box.end {
-      background-image: url('~@/static/img/game-content/forest/end-box.png');
-    }
+  .floor {
+    background-image: url('~@/static/img/game-content/forest/floor.png');
+  }
+  .spikeweed {
+    background-image: url('~@/static/img/game-content/forest/spikeweed.png');
+  }
+  .wall {
+    background-image: url('~@/static/img/game-content/forest/wall.png');
+  }
+  .end {
+    background-image: url('~@/static/img/game-content/forest/end.png');
+  }
+  .fire {
+    background-image: url('~@/static/img/game-content/forest/fire.png');
+  }
+  .toadstool {
+    background-image: url('~@/static/img/game-content/forest/toadstool.png');
+  }
+  .spring {
+    background-image: url('~@/static/img/game-content/forest/spring.png');
+  }
+  .portal-entry {
+    background-image: url('~@/static/img/game-content/forest/single-portal-entry.png');
+  }
+  .portal-exit {
+    background-image: url('~@/static/img/game-content/forest/single-portal-exit.png');
+  }
+  .beer {
+    background-image: url('~@/static/img/game-content/forest/beer.png');
+  }
+  .nectar {
+    background-image: url('~@/static/img/game-content/forest/nectar.png');
+  }
+  .player {
+    background-image: url('~@/static/img/game-content/forest/player.png');
+  }
+  .box {
+    background-image: url('~@/static/img/game-content/forest/box.png');
+  }
+  .ice-box {
+    background-image: url('~@/static/img/game-content/forest/ice-box.png');
+  }
+  .box.end {
+    background-image: url('~@/static/img/game-content/forest/end-box.png');
   }
 }

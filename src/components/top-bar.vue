@@ -1,13 +1,22 @@
 <template>
   <view class="top-bar">
-    <img src="../../static/img/common/back.png" alt="" @click="back">
-    <view class="common-title">创意工坊</view>
-    <img src="../../static/img/common/search.png" alt="" @click="$emit('search')">
+    <img src="../static/img/common/back.png" alt="" @click="back">
+    <view class="common-title">{{ title }}</view>
+    <view class="item">
+      <img v-if="showRight" src="../static/img/common/search.png" alt="" @click="$emit('search')">
+    </view>
   </view>
 </template>
 
 <script>
 export default {
+  props: {
+    title: String,
+    showRight: {
+      type: Boolean,
+      default: true
+    }
+  },
   methods: {
     back() {
       uni.navigateTo({
@@ -19,7 +28,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../uni.scss';
+@import '../uni.scss';
 .top-bar {
   display: flex;
   align-items: center;
@@ -31,6 +40,10 @@ export default {
     width: 80rpx;
     border-radius: 50%;
   }
+  .item {
+    height: 80rpx;
+    width: 80rpx;
+  }
   .common-title {
     width: 400rpx;
     height: 120rpx;
@@ -40,7 +53,7 @@ export default {
     color: $main-span-color;
     text-align: center;
     margin: 0 auto;
-    background-image: url('../../static/img/common/common-title.png');
+    background-image: url('~@/static/img/common/common-title.png');
   }
 }
 </style>

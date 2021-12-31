@@ -16,6 +16,12 @@
     border: 2px #e8eaeda6 solid;
     .game-row {
       display: flex;
+      .game-cell {
+        height: 60rpx;
+        width: 60rpx;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
     }
   }
 }

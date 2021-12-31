@@ -14,7 +14,7 @@
 
 <script>
 import ArPopup from '@/components/ar-popup.vue'
-import ChoiceLevel from './components/choice-level/index.vue'
+import ChoiceLevel from './components/choice-level/choice-level.vue'
 export default {
   data() {
     return {

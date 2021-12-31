@@ -4,22 +4,16 @@
 	},
 	"pages": [
 		{
-			"path": "pages/index/index",
-			"style": {
-
-			}
+			"path": "pages/index/index"
 		},
 		{
-			"path": "pages/game/index",
-			"style": {
-
-			}
+			"path": "pages/game/index"
 		},
 		{
-			"path": "pages/workshop/index",
-			"style": {
-
-			}
+			"path": "pages/workshop/index"
+		},
+		{
+			"path": "pages/create/index"
 		}
 	],
 	"globalStyle": {

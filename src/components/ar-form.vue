@@ -1,12 +1,30 @@
 <template>
   <view class="ar-form">
     <view class="ar-form-item" v-for="(item, index) of formOptions" :key="index">
-      <label :for="item.prop" :style="{width: `${labelWidth}rpx`}">{{ item.label }}</label>
-      <input v-if="item.type === 'digit'" type="number" @keydown.native="digitEvent" v-model="form[item.prop]">
-      <input class="input" v-else :type="item.type" v-model="form[item.prop]">
+      <label :for="item.prop" :style="{ width: `${labelWidth}rpx` }">{{ item.label }}</label>
+      <input v-if="item.type === 'digit'" type="number" @keydown.native="digitEvent" v-model="form[item.prop]" />
+      <input class="input" v-else :type="item.type" v-model="form[item.prop]" />
     </view>
     <view class="ar-form-item">
-      <view class="btn" @click="$emit('ok')">搜索</view>
+      <u-button
+        plain
+        class="btn"
+        @click="$emit('ok')"
+        :custom-style="{
+          height: '60rpx',
+          lineGeight: '60rpx',
+          width: '60%',
+          margin: '0 auto',
+          textAlign: 'center',
+          fontSize: '32rpx',
+          fontWeight: 'bold',
+          backgroundColor: 'rgba(255, 255, 255, .2)',
+          border: '2px #A6783D solid',
+          color: '#A6783D',
+          borderRadius: '999px'
+        }"
+        >搜索</u-button
+      >
     </view>
   </view>
 </template>
@@ -34,7 +52,7 @@ export default {
     labelWidth: {
       type: Number,
       default: 120
-    },
+    }
   },
   methods: {
     digitEvent(e) {
@@ -66,7 +84,7 @@ export default {
       border-radius: 999999px;
       flex-grow: 1;
       height: 60rpx;
-      border: 2px #A6783D solid;
+      border: 2px #a6783d solid;
       background-color: unset;
       outline: none;
     }
@@ -78,13 +96,13 @@ export default {
       text-align: center;
       font-size: 32rpx;
       font-weight: bold;
-      background-color: rgba($color: #fff, $alpha: .2);
-      border: 2px #A6783D solid;
-      color: #A6783D;
+      background-color: rgba($color: #fff, $alpha: 0.2);
+      border: 2px #a6783d solid;
+      color: #a6783d;
       border-radius: 99999px;
     }
     .btn:hover {
-      background-color: rgba($color: #000, $alpha: .2);
+      background-color: rgba($color: #000, $alpha: 0.2);
     }
   }
 }

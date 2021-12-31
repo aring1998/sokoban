@@ -89,18 +89,18 @@ export const mapEl= [
     ]
   },
   {
-    name: '单向传送门入口',
+    name: '传送门入口',
     value: 10,
-    class: 'single-portal-entry',
+    class: 'portal-entry',
     intro: [
       '与单向传送门出口联调',
       '触碰后随机前往传送门出口位置'
     ]
   },
   {
-    name: '单向传送门出口',
+    name: '传送门出口',
     value: 11,
-    class: 'single-portal-exit',
+    class: 'portal-exit',
     intro: [
       '与单向传送门入口联调',
       '触碰时不会传送'
