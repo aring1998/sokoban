@@ -10,21 +10,55 @@
         <i class="ai-reload"></i>
         <span>重玩</span>
       </view>
-      <view class="common-bottom-form-item" @click="$emit('nextLevel')">
+      <view class="common-bottom-form-item" @click="$emit('nextLevel')" v-if="type === 'level'">
         <i class="ai-arrow-right"></i>
         <span>下一关</span>
+      </view>
+      <view class="common-bottom-form-item" @click="back" v-if="type === 'workshop'">
+        <i class="ai-left-circle-o"></i>
+        <span>返回</span>
+      </view>
+      <view class="common-bottom-form-item" @click="$emit('saveServe')" v-if="type === 'create'">
+        <i class="ai-folder-add"></i>
+        <span>上传云端</span>
+      </view>
+      <view class="common-bottom-form-item" @click="$emit('saveLocal')" v-if="type === 'create'">
+        <i class="ai-folder-add"></i>
+        <span>保存本地</span>
       </view>
     </view>
   </view>
 </template>
 
 <script>
+import ArPopup from '@/components/ar-popup.vue'
+import ArForm from '@/components/ar-form.vue'
 export default {
+  components: { ArPopup, ArForm },
+  props: {
+    type: {
+      type: String,
+      default: 'level'
+    }
+  },
   methods: {
     goIndex() {
       uni.redirectTo({
         url: '/pages/index/index'
       })
+    },
+    back() {
+      uni.redirectTo({
+        url: '/pages/workshop/index'
+      })
+    },
+    async saveMap() {
+      const res = await this.$api.post('map/add', {
+
+      })
+    },
+    formCreate(form) {
+      this.form = form
     }
   }
 }

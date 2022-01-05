@@ -100,10 +100,10 @@ const staticEvent = {
   // 弹簧
   9: (gameCore, direction, gameRecord) => {
     setTimeout(() => {
-      if (direction === 1) gameCore.setX = gameCore.playerX - 2
-      else if (direction === 2) gameCore.setX = gameCore.playerX + 2
-      else if (direction === 3) gameCore.setY = gameCore.playerY - 2
-      else if (direction === 4) gameCore.setY = gameCore.playerY + 2
+      if (direction === 0) gameCore.setY = gameCore.playerY - 2
+      else if (direction === 1) gameCore.setX = gameCore.playerX + 2
+      else if (direction === 2) gameCore.setY = gameCore.playerY + 2
+      else if (direction === 3) gameCore.setX = gameCore.playerX - 2
       new Move(gameCore, direction, gameRecord)
     }, 0)
     return true

@@ -13,6 +13,7 @@
       :step="gameCore.step"
       :life="gameCore.life"
       :mapName="gameMap.mapName"
+      :showEdit="routeInfo.type === 'create' ? true : false"
       @reset="reset"
       @regret="regret"
       @showMenu="$refs.settings.show()"
@@ -24,7 +25,17 @@
     </ar-popup>
 
     <ar-popup type="common" ref="tips" :isClosed="false">
-      <game-result @reset="reset" @nextLevel="nextLevel"></game-result>
+      <game-result
+        @reset="reset"
+        @nextLevel="nextLevel"
+        @saveServe="saveType = 1; $refs.save.show() "
+        @saveLocal="saveType = 2; $refs.save.show()"
+        :type="routeInfo.type"
+      ></game-result>
+    </ar-popup>
+
+    <ar-popup ref="save">
+      <ar-form :formOptions="formOptions" okText="保存" @ok="saveType === 1 ? saveServe() : saveLocal()" @formCreate="formCreate"></ar-form>
     </ar-popup>
   </touch-layout>
 </template>
@@ -33,6 +44,7 @@
 import TouchLayout from '@/components/touch-layout.vue'
 import GameContent from '@/components/game-content/game-content.vue'
 import ArPopup from '@/components/ar-popup.vue'
+import ArForm from '@/components/ar-form.vue'
 import GameTopBar from './components/game-top-bar/game-top-bar.vue'
 import GameMenu from './components/game-menu/game-menu.vue'
 import GameResult from './components/game-result/game-result.vue'
@@ -40,11 +52,13 @@ import GameResult from './components/game-result/game-result.vue'
 import { basic, expand } from '@/static/js/level/index'
 import { deepCloneObjArr } from '@/utils/index'
 import { Move } from './utils/move'
+import { formOptions } from './config/data'
 export default {
   data() {
     return {
       basic: Object.freeze(basic),
       expand: Object.freeze(expand),
+      formOptions: Object.freeze(formOptions),
       // 游戏地图
       gameMap: {
         mapData: [],
@@ -77,10 +91,11 @@ export default {
         suc: 0
       },
       gameRecord: [], // 游戏记录
-      routeInfo: {}
+      routeInfo: {},
+      saveType: 0 // 保存方案 1-云端，2-本地
     }
   },
-  components: { TouchLayout, GameContent, ArPopup, GameTopBar, GameMenu, GameResult },
+  components: { TouchLayout, GameContent, ArPopup, ArForm, GameTopBar, GameMenu, GameResult },
   onLoad(option) {
     this.routeInfo = option
   },
@@ -108,10 +123,11 @@ export default {
           this.gameCore.life = res.data.playerHP || '**'
         }
       } else if (this.routeInfo.type === 'create') {
-        const [ _, res ] = await uni.getStorage({
+        const [_, res] = await uni.getStorage({
           key: 'mapData'
         })
         this.gameMap.mapData = JSON.parse(res.data)
+        this.gameMap.mapName = '测试地图(点击编辑图标可返回)'
         this.gameCore.life = res.data.playerHP || '**'
       }
       const mapInit = {
@@ -152,22 +168,22 @@ export default {
     moveLeft() {
       this.gameCore.setX--
       this.gameCore.setBoxX = this.gameCore.setX - 1
-      new Move(this.gameCore, 1, this.gameRecord)
+      new Move(this.gameCore, 3, this.gameRecord)
     },
     moveRight() {
       this.gameCore.setX++
       this.gameCore.setBoxX = this.gameCore.setX + 1
-      new Move(this.gameCore, 2, this.gameRecord)
+      new Move(this.gameCore, 1, this.gameRecord)
     },
     moveUp() {
       this.gameCore.setY--
       this.gameCore.setBoxY = this.gameCore.setY - 1
-      new Move(this.gameCore, 3, this.gameRecord)
+      new Move(this.gameCore, 0, this.gameRecord)
     },
     moveDown() {
       this.gameCore.setY++
       this.gameCore.setBoxY = this.gameCore.setY + 1
-      new Move(this.gameCore, 4, this.gameRecord)
+      new Move(this.gameCore, 2, this.gameRecord)
     },
     moveAfterHook() {
       if (this.gameCore.suc === 1) return
@@ -188,20 +204,20 @@ export default {
     statusEvent(touches) {
       // 中毒事件
       if (this.gameCore.status.poisoning) {
-        if (touches.flag === 1) touches.flag = 2
-        else if (touches.flag === 2) touches.flag = 1
-        else if (touches.flag === 3) touches.flag = 4
-        else if (touches.flag === 4) touches.flag = 3
+        if (touches.flag === 0) touches.flag = 2
+        else if (touches.flag === 1) touches.flag = 3
+        else if (touches.flag === 2) touches.flag = 0
+        else if (touches.flag === 3) touches.flag = 1
       }
       // 酗酒事件
       if (this.gameCore.status.drunk) {
         // 随机再进行0~2次移动
         const drunkStep = Math.floor(Math.random() * 3)
         let moveFunc = null
-        if (touches.flag === 1) moveFunc = this.moveLeft
-        else if (touches.flag === 2) moveFunc = this.moveRight
-        else if (touches.flag === 3) moveFunc = this.moveUp
-        else if (touches.flag === 4) moveFunc = this.moveDown
+        if (touches.flag === 0) moveFunc = this.moveUp
+        else if (touches.flag === 1) moveFunc = this.moveRight
+        else if (touches.flag === 2) moveFunc = this.moveDown
+        else if (touches.flag === 3) moveFunc = this.moveLeft
         for (let i = 0; i < drunkStep; i++) {
           this.$nextTick(() => {
             if (this.gameCore.staticTarget === 13) return // 碰到甘露则停止
@@ -229,6 +245,37 @@ export default {
       this.routeInfo.level++
       this.init()
       this.$refs.tips.isShow = false
+    },
+    async saveServe() {
+
+    },
+    async saveLocal() {
+      for (let i = 0; i < 99; i++) {
+        if (i === 99) return this.$refs.notify.show({ type: 'error', message: '本地存储已达上限' })
+        const [_, res] = await uni.getStorage({
+          key: `map${i}`
+        })
+        if (res) return
+        uni.setStorage({
+          key: `map${i}`,
+          data: JSON.stringify({
+            localId: i,
+            creator: this.form.creator || '匿名',
+            mapName: this.form.mapName || '未命名',
+            mapData: this.gameMap.mapData,
+            playerHP: this.gameCore.life,
+            time: new Date(),
+            stepsPas: this.gameRecord.step,
+            // processData: this.record.processRecord,
+            // regretDisabled: this.regretDisabled
+          })
+        })
+        this.$refs.notify.show({ type: 'success', message: '保存成功' })
+        break
+      }
+    },
+    formCreate(form) {
+      this.form = form
     }
   }
 }

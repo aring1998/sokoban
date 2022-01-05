@@ -23,7 +23,7 @@
           color: '#A6783D',
           borderRadius: '999px'
         }"
-        >搜索</u-button
+        >{{ okText }}</u-button
       >
     </view>
   </view>
@@ -52,6 +52,10 @@ export default {
     labelWidth: {
       type: Number,
       default: 120
+    },
+    okText: {
+      type: String,
+      default: '搜索'
     }
   },
   methods: {

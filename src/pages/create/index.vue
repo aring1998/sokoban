@@ -43,7 +43,7 @@ export default {
       gameMap: [
         [0, 0, 0, 0, 0, 0, 0],
         [0, 1, 1, 1, 1, 1, 0],
-        [0, 1, 1, 1, 1, 1, 0],
+        [0, 2, 3, 4, 1, 1, 0],
         [0, 1, 1, 1, 1, 1, 0],
         [0, 0, 0, 0, 0, 0, 0]
       ],
@@ -54,15 +54,20 @@ export default {
     }
   },
   components: { TopBar, CreateContent, MapEl },
+  async onLoad(option) {
+    if (option.type === 'back') {
+      const [ _, res ] = await uni.getStorage({
+        key: 'mapData'
+      })
+      this.gameMap = JSON.parse(res.data)
+    }
+  },
   methods: {
     getColumnIndex(index) {
       this.choiceColumn = index
     },
     getRowIndex(index) {
       this.choiceRow = index
-      this.changeCell()
-    },
-    changeCell() {
       this.$set(this.gameMap[this.choiceRow], this.choiceColumn, this.clickCellType)
     },
     chioceMapEl(val) {

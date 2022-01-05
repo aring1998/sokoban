@@ -1,11 +1,9 @@
 <template>
   <view class="workshop-page">
     <top-bar title="创意工坊" @search="$refs.search.show()"></top-bar>
-    <view class="search">
-      <ar-popup type="common" ref="search">
-        <ar-form :formOptions="formOptions" @formCreate="formCreate" @ok="search() && $refs.search.show()"></ar-form>
-      </ar-popup>
-    </view>
+    <ar-popup type="common" ref="search">
+      <ar-form :formOptions="formOptions" @formCreate="formCreate" @ok="search() && $refs.search.show()"></ar-form>
+    </ar-popup>
     <view class="tabs">
       <u-tabs :list="tabList" @click="item => (currentTab = item.id)" lineColor="#5ac725"></u-tabs>
     </view>
@@ -101,13 +99,15 @@ export default {
         this.searchInfo.total = res.data.total
       }
     },
-    searchLocal() {
-      this.mapData = []
+    async searchLocal() {
+      const data = []
       for (let i = 0; i < 99; i++) {
-        if (window.localStorage.getItem(`map${i}`)) {
-          this.mapData.push(JSON.parse(window.localStorage.getItem(`map${i}`)))
-        }
+        const [_, res] = await uni.getStorage({
+          key: `map${i}`
+        })
+        if (res) data.push(JSON.parse(res.data))
       }
+      this.mapData = data
     },
     goGame(id) {
       uni.navigateTo({

@@ -12,13 +12,14 @@
       </view>
     </view>
     <view class="settings">
-      <img src="~@/static/img/common/settings.png" alt="" @click="$emit('showMenu')">
+      <img src="~@/static/img/common/settings.png" alt="" @click="$emit('showMenu')" />
     </view>
     <view class="game-action">
-      <img src="~@/static/img/game/back.png" alt="" @click="$emit('regret')">
-      <img src="~@/static/img/game/reset.png" alt="" @click="$emit('reset')">
+      <i class="ai-rollback" @click="$emit('regret')" />
+      <i class="ai-reload" @click="$emit('reset')" />
+      <i class="ai-form" @click="backEdit" />
     </view>
-    <view class="map-name">
+    <view class="map-name" @click="showMapName">
       <span>{{ mapName }}</span>
     </view>
   </view>
@@ -26,6 +27,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      modalShow: false
+    }
+  },
   props: {
     step: {
       type: Number,
@@ -38,6 +44,22 @@ export default {
     mapName: {
       type: String,
       default: '(无名关卡)'
+    },
+    showEdit: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    backEdit() {
+      uni.navigateTo({
+        url: '/pages/create/index?type=back'
+      })
+    },
+    showMapName() {
+      if (this.mapName.length > 8) {
+        uni.showToast({ title: this.mapName, icon: 'none' })
+      }
     }
   }
 }
@@ -82,12 +104,12 @@ export default {
     position: absolute;
     right: 100rpx;
     bottom: -30rpx;
-    img {
-      height: 50rpx;
-      width: 50rpx;
+    i {
+      font-size: 40rpx;
       background-color: #e8eaed;
       border-radius: 50%;
-      margin-right: 30rpx;
+      padding: 10rpx;
+      margin-right: 20rpx;
     }
   }
   .map-name {
@@ -99,6 +121,10 @@ export default {
     padding: 6rpx 30rpx;
     border-bottom-right-radius: 20rpx;
     border-bottom-left-radius: 20rpx;
+    max-width: 320rpx;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>
