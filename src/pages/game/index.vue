@@ -72,7 +72,7 @@ export default {
         mapData: [],
         mapName: '',
         level: 0,
-        regretDisabled: 1
+        regretDisabled: 0
       },
       // 游戏核心
       gameCore: {
