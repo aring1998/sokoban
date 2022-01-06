@@ -8,7 +8,7 @@
       <u-tabs :list="tabList" @click="item => (currentTab = item.id)" lineColor="#5ac725"></u-tabs>
     </view>
     <view class="map-wrap">
-      <view class="map-item" v-for="(item, index) of mapData" :key="index" @click="goGame(item.id)">
+      <view class="map-item" v-for="(item, index) of mapData" :key="index" @click="goGame(item.id, item.localId)">
         <view class="map-thumbnail">
           <span class="map-name">{{ item.mapName }}</span>
           <create-content :gameMap="item.mapData" :shrink="true"></create-content>
@@ -77,12 +77,12 @@ export default {
           break
         }
         case 2: {
-          // if (!this.$store.getters.checkLogin) return this.mapData = []
+          if (!this.$store.getters.checkLogin) return this.mapData = []
           this.searchInfo.type = 'collect'
           break
         }
         case 3: {
-          // if (!this.$store.getters.checkLogin) return this.mapData = []
+          if (!this.$store.getters.checkLogin) return this.mapData = []
           this.searchInfo.type = 'personal'
           break
         }
@@ -102,16 +102,14 @@ export default {
     async searchLocal() {
       const data = []
       for (let i = 0; i < 99; i++) {
-        const [_, res] = await uni.getStorage({
-          key: `map${i}`
-        })
-        if (res) data.push(JSON.parse(res.data))
+        const res = uni.getStorageSync(`map${i}`)
+        if (res) data.push(JSON.parse(res))
       }
       this.mapData = data
     },
-    goGame(id) {
+    goGame(id, localId) {
       uni.navigateTo({
-        url: `/pages/game/index?type=workshop&id=${id}`
+        url: `/pages/game/index?type=workshop&id=${id}&localId=${localId}`
       })
     },
     prePage() {

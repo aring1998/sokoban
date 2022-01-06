@@ -1,5 +1,6 @@
 import axios from 'axios'
 import axiosAdapterUniapp from 'axios-adapter-uniapp'
+import store from '../store'
 // 创建axios实例
 const instance = axios.create({
   baseURL: 'http://81.68.189.158:10052/sokoban/app/v1/',
@@ -12,7 +13,7 @@ const instance = axios.create({
 // 请求拦截
 instance.interceptors.request.use(config => {
   uni.showLoading({ title: '加载中...' })
-  config.headers.Authorization = `Bearer `
+  config.headers.Authorization = `Bearer ${store.state.token}`
   return config
 }),
   err => {

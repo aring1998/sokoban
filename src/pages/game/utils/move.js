@@ -24,7 +24,8 @@ export class Move {
     portalExit: [], // 传送门出口坐标
     regretDisabled: false, // 禁用撤回功能
     step: 0, // 步数
-    suc: 0
+    suc: 0, // 获胜标识
+    processData: [] // 流程记录
   }
   direction = 0
   gameRecord = []
@@ -67,6 +68,7 @@ export class Move {
     this.gameCore.step++
     // 记录游戏记录
     this.gameRecord.push(deepCloneObjArr(this.gameCore))
+    this.gameCore.processData.push(this.direction)
   }
 
   static moveIndex(gameCore) {

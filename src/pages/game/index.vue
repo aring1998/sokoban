@@ -28,8 +28,14 @@
       <game-result
         @reset="reset"
         @nextLevel="nextLevel"
-        @saveServe="saveType = 1; $refs.save.show() "
-        @saveLocal="saveType = 2; $refs.save.show()"
+        @saveServe="
+          saveType = 1
+          $refs.save.show()
+        "
+        @saveLocal="
+          saveType = 2
+          $refs.save.show()
+        "
         :type="routeInfo.type"
       ></game-result>
     </ar-popup>
@@ -63,7 +69,8 @@ export default {
       gameMap: {
         mapData: [],
         mapName: '',
-        level: 0
+        level: 0,
+        regretDisabled: 1
       },
       // 游戏核心
       gameCore: {
@@ -88,7 +95,8 @@ export default {
         portalExit: [],
         regretDisabled: false,
         step: 0,
-        suc: 0
+        suc: 0,
+        processData: []
       },
       gameRecord: [], // 游戏记录
       routeInfo: {},
@@ -117,18 +125,24 @@ export default {
           this.gameCore.life = expand[this.routeInfo.level].life || '**'
         }
       } else if (this.routeInfo.type === 'workshop') {
-        const res = await this.$api.get(`map/${this.routeInfo.id}`)
-        if (res.code === 0) {
-          this.gameMap = res.data
-          this.gameCore.life = res.data.playerHP || '**'
+        if (Number(this.routeInfo.id)) {
+          const res = await this.$api.get(`map/${this.routeInfo.id}`)
+          if (res.code === 0) {
+            this.gameMap = res.data
+            this.gameCore.life = res.data.playerHP || '**'
+          }
+        } else {
+          const data = JSON.parse(uni.getStorageSync(`map${this.routeInfo.localId}`))
+          this.gameMap.mapData = data.mapData
+          this.gameCore.life = data.life || '**'
+          this.gameMap.regretDisabled = data.regretDisabled
         }
       } else if (this.routeInfo.type === 'create') {
-        const [_, res] = await uni.getStorage({
-          key: 'mapData'
-        })
-        this.gameMap.mapData = JSON.parse(res.data)
-        this.gameMap.mapName = '测试地图(点击编辑图标可返回)'
-        this.gameCore.life = res.data.playerHP || '**'
+        const data = JSON.parse(uni.getStorageSync('createMap'))
+        this.gameMap.mapData = data.mapData
+        this.gameMap.mapName = '测试地图'
+        this.gameCore.life = data.life || '**'
+        this.gameMap.regretDisabled = data.regretDisabled
       }
       const mapInit = {
         // 玩家坐标
@@ -237,6 +251,7 @@ export default {
       this.$refs.tips.isShow = false
     },
     regret() {
+      if (this.gameMap.regretDisabled === 1) return this.$refs.notify.show({ type: 'error', message: '该图作者已禁用撤回' })
       if (this.gameRecord.length === 1) return this.$refs.notify.show({ type: 'error', message: '已经回退到头啦~' })
       this.gameRecord.pop()
       this.gameCore = deepCloneObjArr(this.gameRecord[this.gameRecord.length - 1])
@@ -247,15 +262,27 @@ export default {
       this.$refs.tips.isShow = false
     },
     async saveServe() {
-
+      const res = await this.$api.post('map/add', {
+        ...this.form,
+        ...this.gameMap,
+        playerHP: this.$options.data().gameCore.life,
+        stepsPas: this.gameCore.step,
+        processData: this.gameCore.processData
+      })
+      if (res.code === 0) {
+        this.$refs.notify.show({ type: 'success', message: '上传成功，3秒后将返回首页' })
+        this.$refs.save.show()
+        this.$refs.tips.show()
+        setTimeout(() => {
+          uni.redirectTo({ url: '/pages/index/index' })
+        }, 3000)
+      }
     },
     async saveLocal() {
       for (let i = 0; i < 99; i++) {
         if (i === 99) return this.$refs.notify.show({ type: 'error', message: '本地存储已达上限' })
-        const [_, res] = await uni.getStorage({
-          key: `map${i}`
-        })
-        if (res) return
+        const res = uni.getStorageSync(`map${i}`)
+        if (res) continue
         uni.setStorage({
           key: `map${i}`,
           data: JSON.stringify({
@@ -266,11 +293,16 @@ export default {
             playerHP: this.gameCore.life,
             time: new Date(),
             stepsPas: this.gameRecord.step,
-            // processData: this.record.processRecord,
-            // regretDisabled: this.regretDisabled
+            processData: this.gameCore.processData,
+            regretDisabled: this.gameMap.regretDisabled
           })
         })
-        this.$refs.notify.show({ type: 'success', message: '保存成功' })
+        this.$refs.notify.show({ type: 'success', message: '保存成功，3秒后将返回首页' })
+        this.$refs.save.show()
+        this.$refs.tips.show()
+        setTimeout(() => {
+          uni.redirectTo({ url: '/pages/index/index' })
+        }, 3000)
         break
       }
     },

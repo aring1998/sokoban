@@ -10,7 +10,7 @@
           <u-button type="primary" plain text="测试地图" @click="testMap"></u-button>
         </view>
         <view class="action-btn-item">
-          <u-button type="warning" plain text="高级选项" @click="delRow" :disabled="gameMap.length === 1"></u-button>
+          <u-button type="warning" plain text="高级选项" @click="$refs.advanced.show()" :disabled="gameMap.length === 1"></u-button>
         </view>
       </view>
       <view class="action-btn">
@@ -28,18 +28,25 @@
         </view>
       </view>
     </view>
+    <ar-popup ref="advanced">
+      <ar-form :formOptions="advancedFormOptions" @formCreate="advancedFormCreate" okText="确定" @ok="$refs.advanced.show()"></ar-form>
+    </ar-popup>
   </view>
 </template>
 
 <script>
 import TopBar from '@/components/top-bar.vue'
 import CreateContent from '@/components/game-content/create-content.vue'
+import ArPopup from '@/components/ar-popup.vue'
+import ArForm from '@/components/ar-form.vue'
 import MapEl from './components/map-el/map-el.vue'
 import { checkMap } from './utils/check-map'
+import { advancedFormOptions } from './config/data'
 
 export default {
   data() {
     return {
+      advancedFormOptions: Object.freeze(advancedFormOptions),
       gameMap: [
         [0, 0, 0, 0, 0, 0, 0],
         [0, 1, 1, 1, 1, 1, 0],
@@ -53,13 +60,13 @@ export default {
       advancedForm: {}
     }
   },
-  components: { TopBar, CreateContent, MapEl },
+  components: { TopBar, CreateContent, MapEl, ArPopup, ArForm },
   async onLoad(option) {
     if (option.type === 'back') {
-      const [ _, res ] = await uni.getStorage({
-        key: 'mapData'
-      })
-      this.gameMap = JSON.parse(res.data)
+      const data = JSON.parse(uni.getStorageSync('createMap'))
+      this.gameMap = data.mapData
+      this.advancedForm.life = data.life
+      this.advancedForm.regretDisabled = data.regretDisabled
     }
   },
   methods: {
@@ -96,12 +103,19 @@ export default {
       const tip = checkMap(this.gameMap, this.advancedForm)
       if (tip) return this.$refs.notify.show({ type: 'error', message: tip })
       uni.setStorage({
-        key: 'mapData',
-        data: JSON.stringify(this.gameMap)
+        key: 'createMap',
+        data: JSON.stringify({
+          mapData: this.gameMap,
+          life: this.advancedForm.life,
+          regretDisabled: this.advancedForm.regretDisabled
+        })
       })
       uni.navigateTo({
         url: '/pages/game/index?type=create'
       })
+    },
+    advancedFormCreate(form) {
+      this.advancedForm = form
     }
   }
 }

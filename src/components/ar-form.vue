@@ -2,7 +2,10 @@
   <view class="ar-form">
     <view class="ar-form-item" v-for="(item, index) of formOptions" :key="index">
       <label :for="item.prop" :style="{ width: `${labelWidth}rpx` }">{{ item.label }}</label>
-      <input v-if="item.type === 'digit'" type="number" @keydown.native="digitEvent" v-model="form[item.prop]" />
+      <input class="input" v-if="item.type === 'digit'" maxlength="3" @keydown.native="digitEvent" v-model="form[item.prop]" />
+      <u-radio-group v-model="form[item.prop]" v-else-if="item.type === 'radio'" placement="row">
+        <u-radio v-for="item of item.options" :key="item.name" :label="item.label" :name="item.name" />
+      </u-radio-group>
       <input class="input" v-else :type="item.type" v-model="form[item.prop]" />
     </view>
     <view class="ar-form-item">
@@ -60,7 +63,7 @@ export default {
   },
   methods: {
     digitEvent(e) {
-      if (/^[0-9]$/.test(e.key)) return
+      if (/^[0-9]$/.test(e.key) || e.key === 'Backspace') return
       e.preventDefault()
     }
   }
@@ -82,6 +85,7 @@ export default {
     label {
       margin-right: 8rpx;
       text-align: right;
+      font-size: 30rpx;
     }
     .input {
       padding: 0 30rpx;

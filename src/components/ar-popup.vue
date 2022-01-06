@@ -1,15 +1,13 @@
 <!-- 弹出框 -->
 <template>
-  <u-transition :show="isShow" mode="fade">
-    <view class="popup-shade" :class="[popType()]" @click="isClosed && show()">
-      <view class="popup" @click.stop>
-        <view class="closes" v-if="isClosed">
-          <span @click="show">X</span>
-        </view>
-        <slot></slot>
+  <view class="popup-shade" :class="[popType(), { hidden: !isShow }, isShow ? 'fade-in' : '']" @click="isClosed && show()">
+    <view class="popup" @click.stop>
+      <view class="closes" v-if="isClosed">
+        <span @click="show">X</span>
       </view>
+      <slot></slot>
     </view>
-  </u-transition>
+  </view>
 </template>
 
 <script>
@@ -98,6 +96,20 @@ export default {
   }
   .closes {
     margin-bottom: 160rpx;
+  }
+}
+.hidden {
+  display: none !important;
+}
+.fade-in {
+  animation: fadeIn .3s linear;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: .5;
+  }
+  100% {
+    opacity: 1;
   }
 }
 </style>
