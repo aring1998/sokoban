@@ -41,7 +41,7 @@ export default {
 <style lang="scss" scoped>
 .analog-handle {
   position: absolute;
-  bottom: 120rpx;
+  bottom: 80rpx;
   left: calc(50vw - 220rpx);
   z-index: 100;
   display: flex;
@@ -65,7 +65,6 @@ export default {
     overflow: hidden;
   }
   i {
-    padding: 10rpx;
     color: #fff;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 20rpx;
