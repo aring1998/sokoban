@@ -6,7 +6,9 @@
 vue2版本请切换至 `version-vue2` 分支
 ```
 
-## ✨[在线试玩Vue2版本 (PC端请切换手机调试模式)](http://aring1998.gitee.io/sokoban-online)
+## ✨[在线试玩Vue2版本 (PC端请切换手机调试模式)](http://aringproject.3vfree.net/#/index)
+
+## ✨[抢先体验Uni版本 (PC端请切换手机调试模式)](http://aring1998.gitee.io/sokoban-online)
 
 ## ✨[游戏已上架！点击了解详情](https://www.taptap.com/app/224432/)
 
