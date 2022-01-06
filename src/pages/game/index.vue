@@ -1,13 +1,5 @@
 <template>
-  <touch-layout
-    @moveBeforeHook="moveBeforeHook"
-    @moveAfterHook="moveAfterHook"
-    @moveLeft="moveLeft"
-    @moveRight="moveRight"
-    @moveUp="moveUp"
-    @moveDown="moveDown"
-    class="game-page"
-  >
+  <view class="game-page">
     <u-notify ref="notify"></u-notify>
     <game-top-bar
       :step="gameCore.step"
@@ -19,6 +11,15 @@
       @showMenu="$refs.settings.show()"
     ></game-top-bar>
     <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap" ref="game"></game-content>
+
+    <analog-handle
+      @moveBeforeHook="moveBeforeHook"
+      @moveAfterHook="moveAfterHook"
+      @moveLeft="moveLeft"
+      @moveRight="moveRight"
+      @moveUp="moveUp"
+      @moveDown="moveDown"
+    ></analog-handle>
 
     <ar-popup type="menu" ref="settings">
       <game-menu></game-menu>
@@ -43,7 +44,7 @@
     <ar-popup ref="save">
       <ar-form :formOptions="formOptions" okText="保存" @ok="saveType === 1 ? saveServe() : saveLocal()" @formCreate="formCreate"></ar-form>
     </ar-popup>
-  </touch-layout>
+  </view>
 </template>
 
 <script>
@@ -54,6 +55,7 @@ import ArForm from '@/components/ar-form.vue'
 import GameTopBar from './components/game-top-bar/game-top-bar.vue'
 import GameMenu from './components/game-menu/game-menu.vue'
 import GameResult from './components/game-result/game-result.vue'
+import AnalogHandle from './components/analog-handle/analog-handle.vue'
 
 import { basic, expand } from '@/static/js/level/index'
 import { deepCloneObjArr } from '@/utils/index'
@@ -103,7 +105,7 @@ export default {
       saveType: 0 // 保存方案 1-云端，2-本地
     }
   },
-  components: { TouchLayout, GameContent, ArPopup, ArForm, GameTopBar, GameMenu, GameResult },
+  components: { TouchLayout, GameContent, ArPopup, ArForm, GameTopBar, GameMenu, GameResult, AnalogHandle },
   onLoad(option) {
     this.routeInfo = option
   },
@@ -172,12 +174,12 @@ export default {
       this.gameRecord = []
       this.gameRecord.push(deepCloneObjArr(this.gameCore))
     },
-    moveBeforeHook(touches) {
+    moveBeforeHook(direction) {
       this.gameCore.setX = this.gameCore.playerX
       this.gameCore.setY = this.gameCore.playerY
       this.gameCore.setBoxX = this.gameCore.setX
       this.gameCore.setBoxY = this.gameCore.setY
-      this.statusEvent(touches)
+      this.statusEvent(direction)
     },
     moveLeft() {
       this.gameCore.setX--
@@ -215,23 +217,23 @@ export default {
         }
       }, 50)
     },
-    statusEvent(touches) {
+    statusEvent(direction) {
       // 中毒事件
       if (this.gameCore.status.poisoning) {
-        if (touches.flag === 0) touches.flag = 2
-        else if (touches.flag === 1) touches.flag = 3
-        else if (touches.flag === 2) touches.flag = 0
-        else if (touches.flag === 3) touches.flag = 1
+        if (direction === 0) direction = 2
+        else if (direction === 1) direction = 3
+        else if (direction === 2) direction = 0
+        else if (direction === 3) direction = 1
       }
       // 酗酒事件
       if (this.gameCore.status.drunk) {
         // 随机再进行0~2次移动
         const drunkStep = Math.floor(Math.random() * 3)
         let moveFunc = null
-        if (touches.flag === 0) moveFunc = this.moveUp
-        else if (touches.flag === 1) moveFunc = this.moveRight
-        else if (touches.flag === 2) moveFunc = this.moveDown
-        else if (touches.flag === 3) moveFunc = this.moveLeft
+        if (direction === 0) moveFunc = this.moveUp
+        else if (direction === 1) moveFunc = this.moveRight
+        else if (direction === 2) moveFunc = this.moveDown
+        else if (direction === 3) moveFunc = this.moveLeft
         for (let i = 0; i < drunkStep; i++) {
           this.$nextTick(() => {
             if (this.gameCore.staticTarget === 13) return // 碰到甘露则停止

@@ -11,7 +11,6 @@ import 'ant-design-icons/dist/anticons.min.css'
 import { api } from './utils/api'
 Vue.prototype.$api = api
 
-
 App.mpType = 'app'
 
 const app = new Vue({

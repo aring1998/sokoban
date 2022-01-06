@@ -5,8 +5,8 @@ export const staticMapRander = {
   6: 'fire',
   8: 'toadstool',
   9: 'spring',
-  10: 'single-portal-entry',
-  11: 'single-portal-exit',
+  10: 'portal-entry',
+  11: 'portal-exit',
   12: 'beer',
   13: 'nectar'
 }
