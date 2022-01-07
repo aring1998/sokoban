@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import TouchLayout from '@/components/touch-layout.vue'
 import GameContent from '@/components/game-content/game-content.vue'
 import ArPopup from '@/components/ar-popup.vue'
 import ArForm from '@/components/ar-form.vue'
@@ -105,7 +104,7 @@ export default {
       saveType: 0 // 保存方案 1-云端，2-本地
     }
   },
-  components: { TouchLayout, GameContent, ArPopup, ArForm, GameTopBar, GameMenu, GameResult, AnalogHandle },
+  components: { GameContent, ArPopup, ArForm, GameTopBar, GameMenu, GameResult, AnalogHandle },
   onLoad(option) {
     this.routeInfo = option
   },
@@ -323,7 +322,7 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   .game-container {
-    margin-top: 20vh;
+    margin-top: 80rpx;
   }
   .game-action {
     padding: 0 40rpx;

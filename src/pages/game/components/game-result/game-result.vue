@@ -33,8 +33,9 @@
 <script>
 import ArPopup from '@/components/ar-popup.vue'
 import ArForm from '@/components/ar-form.vue'
+import HelpInfo from '@/components/help-info.vue'
 export default {
-  components: { ArPopup, ArForm },
+  components: { ArPopup, ArForm, HelpInfo },
   props: {
     type: {
       type: String,

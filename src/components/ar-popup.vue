@@ -67,7 +67,7 @@ export default {
 
 .common-popup-shade {
   background-color: rgba($color: #000000, $alpha: 0.2);
-  .popup {
+  >.popup {
     width: 700rpx;
     padding: 40rpx;
     background-image: url('~@/static/img/common/common-menu-bg.png');
@@ -76,7 +76,7 @@ export default {
 }
 
 .paper-popup-shade {
-  .popup {
+  >.popup {
     width: 700rpx;
     height: 70vh;
     padding: 40rpx;
@@ -86,16 +86,16 @@ export default {
 }
 
 .menu-popup-shade {
-  .popup {
+  >.popup {
     width: 700rpx;
     height: 1000rpx;
     padding: 40rpx;
     background-color: #fff;
     background-image: url('~@/static/img/game/menu-bg.png');
     border-radius: 20rpx;
-  }
-  .closes {
-    margin-bottom: 160rpx;
+    >.closes {
+      margin-bottom: 160rpx;
+    }
   }
 }
 .hidden {

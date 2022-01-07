@@ -27,8 +27,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import '../uni.scss';
+<style lang="scss" scoped>
 .top-bar {
   display: flex;
   align-items: center;

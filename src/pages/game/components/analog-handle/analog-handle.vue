@@ -1,14 +1,14 @@
 <template>
   <div class="analog-handle">
     <div class="top">
-      <i class="ai-caret-up" @touchstart="sendMoveEvent(0)" @touchend.prevent="$emit('stop')" />
+      <i class="ai-caret-up" @touchstart="sendMoveEvent(0)" @touchend.prevent="stopMove" />
     </div>
     <div class="center">
-      <i class="ai-caret-left" @touchstart="sendMoveEvent(3)" @touchend.prevent="$emit('stop')" />
-      <i class="ai-caret-right" @touchstart="sendMoveEvent(1)" @touchend.prevent="$emit('stop')" />
+      <i class="ai-caret-left" @touchstart="sendMoveEvent(3)" @touchend.prevent="stopMove" />
+      <i class="ai-caret-right" @touchstart="sendMoveEvent(1)" @touchend.prevent="stopMove" />
     </div>
     <div class="bottom">
-      <i class="ai-caret-down" @touchstart="sendMoveEvent(2)" @touchend.prevent="$emit('stop')" />
+      <i class="ai-caret-down" @touchstart="sendMoveEvent(2)" @touchend.prevent="stopMove" />
     </div>
   </div>
 </template>
@@ -17,7 +17,8 @@
 export default {
   data() {
     return {
-      emitEvent: null
+      emitEvent: null,
+      keepMove: null
     }
   },
   mounted() {
@@ -30,10 +31,18 @@ export default {
   },
   methods: {
     sendMoveEvent(direction) {
+      // 长按持续移动
+      clearTimeout(this.keepMove)
+      this.keepMove = setTimeout(() => {
+        this.sendMoveEvent(direction)
+      }, 300)
       this.$emit('moveBeforeHook', direction)
       this.emitEvent[direction]()
       this.$emit('moveAfterHook', direction)
     },
+    stopMove() {
+      clearTimeout(this.keepMove)
+    }
   }
 }
 </script>

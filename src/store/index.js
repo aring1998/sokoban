@@ -16,7 +16,12 @@ const store = new Vuex.Store({
     // token: uni.getStorageSync('token'),
     bgmPlay: true
   },
-  mutations: {},
+  mutations: {
+    setUserInfo(_, res) {
+      if (res.code === 0) this.state.userInfo = res.data
+      else uni.removeStorageSync('token')
+    }
+  },
   getters: {
     checkLogin(state) {
       if (!state.userInfo.name) {
@@ -28,17 +33,13 @@ const store = new Vuex.Store({
   },
   actions: {
     async token() {
-      const res = await api.post('users/token')
-      this.commit('setUserInfo', res)
-    },
-    
-  },
-  mudules: {
-    setUserInfo(_, res) {
-      if (res.code === 0) this.state.userInfo = res.data
-      else window.localStorage.removeItem('token')
+      const res = await api.post('user/token')
+      if (res.code === 0) {
+        this.commit('setUserInfo', res)
+      }
     }
-  }
+  },
+  mudules: {}
 })
 
 export default store

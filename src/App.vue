@@ -1,7 +1,7 @@
 <script>
 	export default {
 		onLaunch() {
-			
+			if (uni.getStorageSync('token')) this.$store.dispatch('token')
 		},
 		onShow() {
 
