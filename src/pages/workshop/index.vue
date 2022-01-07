@@ -5,7 +5,7 @@
       <ar-form :formOptions="formOptions" @formCreate="formCreate" @ok="search() && $refs.search.show()"></ar-form>
     </ar-popup>
     <view class="tabs">
-      <u-tabs :list="tabList" @click="item => (currentTab = item.id)" lineColor="#5ac725"></u-tabs>
+      <u-tabs :list="tabList" @click="item => (currentTab = item.id)" lineColor="#5ac725" :current="currentTab"></u-tabs>
     </view>
     <view class="map-wrap">
       <view class="map-item" v-for="(item, index) of mapData" :key="index" @click="goGame(item.id, item.localId)">

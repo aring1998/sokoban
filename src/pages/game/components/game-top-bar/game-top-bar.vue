@@ -17,7 +17,7 @@
     <view class="game-action">
       <i class="ai-rollback" @click="$emit('regret')" />
       <i class="ai-reload" @click="$emit('reset')" />
-      <i class="ai-form" @click="backEdit" />
+      <i class="ai-form" @click="backEdit" v-show="showEdit" />
     </view>
     <view class="map-name" @click="showMapName">
       <span>{{ mapName }}</span>

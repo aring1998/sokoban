@@ -64,11 +64,5 @@ export default {
       }
     }
   }
-  deep .u-tabs__wrapper__nav__item {
-    span {
-
-    font-size: 13px;
-    }
-  }
 }
 </style>

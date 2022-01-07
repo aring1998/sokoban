@@ -1,5 +1,6 @@
 <template>
   <view class="index-page">
+    <index-top-bar></index-top-bar>
 		<view class="title">魔改推箱子</view>
     <view class="action">
       <view class="btn" @click="$refs.choiceLevel.show()">开始游戏</view>
@@ -14,14 +15,10 @@
 
 <script>
 import ArPopup from '@/components/ar-popup.vue'
+import IndexTopBar from './components/index-top-bar/index-top-bar.vue'
 import ChoiceLevel from './components/choice-level/choice-level.vue'
 export default {
-  data() {
-    return {
-      
-    }
-  },
-	components: { ArPopup, ChoiceLevel },
+	components: { ArPopup, IndexTopBar, ChoiceLevel },
   methods: {
     routerGo(name) {
       uni.navigateTo({
@@ -46,7 +43,7 @@ export default {
     font-size: 80rpx;
     font-weight: bold;
     color: rgb(247, 244, 49);
-    margin: 100rpx 0;
+    margin-bottom: 100rpx;
     padding: 0 15rpx;
     background-image: url('~@/static/img/common/common-title.png');
   }
