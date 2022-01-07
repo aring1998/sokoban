@@ -264,8 +264,8 @@ export default {
     },
     async saveServe() {
       const res = await this.$api.post('map/add', {
-        ...this.form,
         ...this.gameMap,
+        ...this.form,
         playerHP: this.$options.data().gameCore.life,
         stepsPas: this.gameCore.step,
         processData: this.gameCore.processData

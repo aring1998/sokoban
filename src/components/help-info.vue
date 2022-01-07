@@ -46,7 +46,7 @@
       <span>这是作者在学习前端一年后创建的第一个开源项目，目前项目仍在优化推进阶段，真挚地恳请您提出宝贵意见。</span>
       <span>项目开源，欢迎开发者参考学习，并且无比期盼您的参与，项目地址如下：</span>
       <a href="https://gitee.com/aring1998/sokoban"><span>gitee.com/aring1998/sokoban</span></a>
-      <span>同时也欢迎您前来为我们点一个star<van-icon name="star-o" color="orange" /></span>
+      <span>同时也欢迎您前来为我们点一个star</span>
       <span>开发过程十分感谢以下小伙伴(按首字母排序)：</span>
       <span style="font-weight: bold; word-break: break-all">dzz, funzeros, lyl, wangz, yuanyuanna</span>
       <br>
