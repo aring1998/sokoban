@@ -170,7 +170,12 @@ const staticBoxEvent = {
       gameCore.activeTarget = 1 // 销毁普通箱子
     }
     return true
-  }
+  },
+  // 弹簧
+  9: () => false,
+  // 传送门
+  10: () => false,
+  11: () => false
 }
 
 const activeBoxEvent = {
