@@ -36,7 +36,7 @@ export default {
       height: 80rpx;
     }
     i {
-      color: gray;
+      color: rgb(87, 87, 87);
       font-weight: bold;
       font-size: 60rpx;
     }

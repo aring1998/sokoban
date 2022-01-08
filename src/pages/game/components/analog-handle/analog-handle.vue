@@ -17,6 +17,9 @@
 export default {
   data() {
     return {
+      clickEvent: {
+        direction: 0
+      },
       emitEvent: null,
       keepMove: null
     }
@@ -36,9 +39,11 @@ export default {
       this.keepMove = setTimeout(() => {
         this.sendMoveEvent(direction)
       }, 300)
-      this.$emit('moveBeforeHook', direction)
-      this.emitEvent[direction]()
-      this.$emit('moveAfterHook', direction)
+
+      this.clickEvent.direction = direction
+      this.$emit('moveBeforeHook', this.clickEvent)
+      this.emitEvent[this.clickEvent.direction]()
+      this.$emit('moveAfterHook', this.clickEvent)
     },
     stopMove() {
       clearTimeout(this.keepMove)

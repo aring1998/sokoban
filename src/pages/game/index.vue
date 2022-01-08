@@ -173,12 +173,12 @@ export default {
       this.gameRecord = []
       this.gameRecord.push(deepCloneObjArr(this.gameCore))
     },
-    moveBeforeHook(direction) {
+    moveBeforeHook(clickEvent) {
       this.gameCore.setX = this.gameCore.playerX
       this.gameCore.setY = this.gameCore.playerY
       this.gameCore.setBoxX = this.gameCore.setX
       this.gameCore.setBoxY = this.gameCore.setY
-      this.statusEvent(direction)
+      this.statusEvent(clickEvent)
     },
     moveLeft() {
       this.gameCore.setX--
@@ -216,23 +216,24 @@ export default {
         }
       }, 50)
     },
-    statusEvent(direction) {
+    statusEvent(clickEvent) {
       // 中毒事件
       if (this.gameCore.status.poisoning) {
-        if (direction === 0) direction = 2
-        else if (direction === 1) direction = 3
-        else if (direction === 2) direction = 0
-        else if (direction === 3) direction = 1
+        console.log(clickEvent);
+        if (clickEvent.direction === 0) clickEvent.direction = 2
+        else if (clickEvent.direction === 1) clickEvent.direction = 3
+        else if (clickEvent.direction === 2) clickEvent.direction = 0
+        else if (clickEvent.direction === 3) clickEvent.direction = 1
       }
       // 酗酒事件
       if (this.gameCore.status.drunk) {
         // 随机再进行0~2次移动
         const drunkStep = Math.floor(Math.random() * 3)
         let moveFunc = null
-        if (direction === 0) moveFunc = this.moveUp
-        else if (direction === 1) moveFunc = this.moveRight
-        else if (direction === 2) moveFunc = this.moveDown
-        else if (direction === 3) moveFunc = this.moveLeft
+        if (clickEvent.direction === 0) moveFunc = this.moveUp
+        else if (clickEvent.direction === 1) moveFunc = this.moveRight
+        else if (clickEvent.direction === 2) moveFunc = this.moveDown
+        else if (clickEvent.direction === 3) moveFunc = this.moveLeft
         for (let i = 0; i < drunkStep; i++) {
           this.$nextTick(() => {
             if (this.gameCore.staticTarget === 13) return // 碰到甘露则停止
