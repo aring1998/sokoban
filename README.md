@@ -6,11 +6,14 @@
 vue2版本请切换至 `version-vue2` 分支
 ```
 
-## ✨[在线试玩Vue2版本 (PC端请切换手机调试模式)](http://aringproject.3vfree.net/#/index)
+### ✨[抢先体验Uni版本 (PC端请切换手机调试模式)](http://aring1998.gitee.io/sokoban-online)
 
-## ✨[抢先体验Uni版本 (PC端请切换手机调试模式)](http://aring1998.gitee.io/sokoban-online)
+### ✨扫码下载APP版本(请勿使用微信扫码)
+<img height="90" src="http://aring.3vfree.net/my-img/sokoban/app.png" />
 
-## ✨[游戏已上架！点击了解详情](https://www.taptap.com/app/224432/)
+### ✨[在线试玩Vue2版本 (PC端请切换手机调试模式)](http://aringproject.3vfree.net/#/index)
+
+### ✨[游戏已上架！点击了解详情](https://www.taptap.com/app/224432/)
 
 ## 📖介绍
 基于**uni-app**框架开发的三端(H5, APP, 小程序)通配应用，由推箱子的游戏玩法拓展
