@@ -49,10 +49,10 @@
       <span>同时也欢迎您前来为我们点一个star</span>
       <span>开发过程十分感谢以下小伙伴(按首字母排序)：</span>
       <span style="font-weight: bold; word-break: break-all">dzz, funzeros, lyl, wangz, yuanyuanna</span>
-      <br>
+      <br />
       <span>祝您游戏愉快！</span>
-      <br><br>
-      <span style="text-align: right;font-weight: bold">aring</span>
+      <br /><br />
+      <span style="text-align: right; font-weight: bold">aring</span>
     </view>
   </view>
 </template>
@@ -107,8 +107,8 @@ export default {
       width: 50rpx;
     }
     .img-box {
-      height: 50rpx;
-      width: 50rpx;
+      height: 60rpx;
+      width: 60rpx;
       display: inline-block;
     }
   }

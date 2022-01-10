@@ -23,7 +23,7 @@ instance.interceptors.request.use(config => {
 instance.interceptors.response.use(res => {
   uni.hideLoading()
   if (res.status !== 200) return uni.showToast({ title: '网络请求错误', icon: 'none' })
-  if (res.data.code !== 0) uni.showToast({ title: '网络请求错误', icon: 'none' })
+  if (res.data.code !== 0) uni.showToast({ title: res.data.msg || '网络请求错误', icon: 'none' })
   return res.data // 配置只返回data
 }),
   err => {

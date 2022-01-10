@@ -67,6 +67,7 @@
     "axios-adapter-uniapp": "^0.1.3",
     "core-js": "^3.6.5",
     "flyio": "^0.6.2",
+    "md5": "^2.3.0",
     "regenerator-runtime": "^0.12.1",
     "uview-ui": "^2.0.14",
     "vue": "^2.6.11",

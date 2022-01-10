@@ -6,19 +6,21 @@ import { api } from '@/utils/api'
 const store = new Vuex.Store({
   state: {
     userInfo: {
-      id: '1448255643403292673',
-      name: 'test',
+      id: '',
+      name: '',
       emaile: '',
       coin: '',
       nickname: ''
     },
-    token: '5451668056514bb8bc5d8efa4440f710',
-    // token: uni.getStorageSync('token'),
+    token: uni.getStorageSync('token'),
     bgmPlay: true
   },
   mutations: {
     setUserInfo(_, res) {
-      if (res.code === 0) this.state.userInfo = res.data
+      if (res.code === 0) {
+        this.state.userInfo = res.data
+        uni.showToast({ title: `欢迎回来，${res.data.name}` })
+      }
       else uni.removeStorageSync('token')
     }
   },

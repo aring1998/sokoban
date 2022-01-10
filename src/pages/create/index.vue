@@ -31,6 +31,18 @@
     <ar-popup ref="advanced">
       <ar-form :formOptions="advancedFormOptions" @formCreate="advancedFormCreate" okText="确定" @ok="$refs.advanced.show()"></ar-form>
     </ar-popup>
+    <ar-popup ref="tips" style="padding: 0 70rpx; text-align: center">
+      <h4>提示</h4>
+      <span>使用该功能建议您先登录，是否前往登录？</span>
+      <view class="action-btn">
+        <view class="action-btn-item">
+          <u-button type="error" plain shape="circle" text="不再提示" @click="doNotTip" :disabled="gameMap.length === 1"></u-button>
+        </view>
+        <view class="action-btn-item">
+          <u-button type="success" plain shape="circle" text="前往登录" @click="goLogin" :disabled="gameMap.length === 30"></u-button>
+        </view>
+      </view>
+    </ar-popup>
   </view>
 </template>
 
@@ -67,6 +79,11 @@ export default {
       this.gameMap = data.mapData
       this.advancedForm.life = data.life
       this.advancedForm.regretDisabled = data.regretDisabled
+    }
+  },
+  onReady() {
+    if (!this.$store.state.userInfo.id && uni.getStorageSync('loginTips') !== '1') {
+      this.$refs.tips.show()
     }
   },
   methods: {
@@ -116,6 +133,16 @@ export default {
     },
     advancedFormCreate(form) {
       this.advancedForm = form
+    },
+    doNotTip() {
+      uni.setStorageSync('loginTips', '1')
+      this.$refs.tips.show()
+    },
+    goLogin() {
+      uni.navigateTo({
+        url: '/pages/login/index'
+      })
+      this.$refs.tips.show()
     }
   }
 }
@@ -131,15 +158,15 @@ export default {
   .action {
     background-color: rgba($color: #fff, $alpha: 0.8);
     padding: 30rpx 0;
-    .action-btn {
-      display: flex;
-      justify-content: space-between;
-      margin: 20rpx 0;
-      padding: 0 30rpx;
-      .action-btn-item {
-        width: 150rpx;
-        font-weight: bold;
-      }
+  }
+  .action-btn {
+    display: flex;
+    justify-content: space-between;
+    margin: 20rpx 0;
+    padding: 0 30rpx;
+    .action-btn-item {
+      width: 150rpx;
+      font-weight: bold;
     }
   }
 }

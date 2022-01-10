@@ -219,7 +219,6 @@ export default {
     statusEvent(clickEvent) {
       // 中毒事件
       if (this.gameCore.status.poisoning) {
-        console.log(clickEvent);
         if (clickEvent.direction === 0) clickEvent.direction = 2
         else if (clickEvent.direction === 1) clickEvent.direction = 3
         else if (clickEvent.direction === 2) clickEvent.direction = 0

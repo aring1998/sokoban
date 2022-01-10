@@ -1,11 +1,21 @@
 <template>
   <view class="index-menu">
+    <u-notify ref="notify"></u-notify>
     <view class="menu">
       <img src="~@/static/img/index-menu/help.png" alt="" @click="$refs.help.show()">
-      <i class="ai-user" />
+      <i class="ai-user" @click="goUser" />
     </view>
     <ar-popup ref="help" type="paper">
       <help-info></help-info>
+    </ar-popup>
+    <ar-popup ref="user" class="user-info">
+      <h4>用户信息</h4>
+      <p>uid：{{ this.$store.state.userInfo.id }}</p>
+      <p>用户名：{{ this.$store.state.userInfo.name }}</p>
+      <p>邮箱：{{ this.$store.state.userInfo.email }}</p>
+      <view class="btn">
+        <button size="mini" @click="logOut">退出登录</button>
+      </view>
     </ar-popup>
   </view>
 </template>
@@ -14,7 +24,21 @@
 import ArPopup from '@/components/ar-popup.vue'
 import HelpInfo from '@/components/help-info.vue'
 export default {
-  components: { ArPopup, HelpInfo }
+  components: { ArPopup, HelpInfo },
+  methods: {
+    goUser() {
+      if (this.$store.state.userInfo.id) this.$refs.user.show()
+      else uni.navigateTo({ url: '/pages/user/index' })
+    },
+    logOut() {
+      for (let i in this.$store.state.userInfo) {
+        this.$store.state.userInfo[i] = ''
+      }
+      uni.removeStorageSync('token')
+      this.$refs.user.show()
+      this.$refs.notify.show({ type: 'success', message: '退出登录成功' })    
+    }
+  }
 }
 </script>
 
@@ -39,6 +63,21 @@ export default {
       color: rgb(87, 87, 87);
       font-weight: bold;
       font-size: 60rpx;
+    }
+  }
+  .user-info {
+    h4 {
+      text-align: center;
+      margin-bottom: 8rpx;
+      font-size: 50rpx;
+    }
+    p {
+      display: block;
+      margin: 6rpx 0;
+    }
+    .btn {
+      margin-top: 8rpx;
+      text-align: center;
     }
   }
 }
