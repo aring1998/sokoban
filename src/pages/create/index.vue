@@ -39,7 +39,7 @@
           <u-button type="error" plain shape="circle" text="不再提示" @click="doNotTip" :disabled="gameMap.length === 1"></u-button>
         </view>
         <view class="action-btn-item">
-          <u-button type="success" plain shape="circle" text="前往登录" @click="goLogin" :disabled="gameMap.length === 30"></u-button>
+          <u-button type="success" plain shape="circle" text="前往登录" @click="goUser" :disabled="gameMap.length === 30"></u-button>
         </view>
       </view>
     </ar-popup>
@@ -82,7 +82,7 @@ export default {
     }
   },
   onReady() {
-    if (!this.$store.state.userInfo.id && uni.getStorageSync('loginTips') !== '1') {
+    if (!this.$store.state.token && uni.getStorageSync('loginTips') !== '1') {
       this.$refs.tips.show()
     }
   },
@@ -138,9 +138,9 @@ export default {
       uni.setStorageSync('loginTips', '1')
       this.$refs.tips.show()
     },
-    goLogin() {
+    goUser() {
       uni.navigateTo({
-        url: '/pages/login/index'
+        url: '/pages/user/index'
       })
       this.$refs.tips.show()
     }
