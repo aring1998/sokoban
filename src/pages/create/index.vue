@@ -10,7 +10,7 @@
           <u-button type="primary" plain text="测试地图" @click="testMap"></u-button>
         </view>
         <view class="action-btn-item">
-          <u-button type="warning" plain text="高级选项" @click="$refs.advanced.show()" :disabled="gameMap.length === 1"></u-button>
+          <u-button type="warning" plain text="高级选项" @click="$refs.advanced.show()"></u-button>
         </view>
       </view>
       <view class="action-btn">
@@ -18,13 +18,13 @@
           <u-button type="success" plain text="添加一行" @click="addRow" :disabled="gameMap.length === 30"></u-button>
         </view>
         <view class="action-btn-item">
-          <u-button type="error" plain text="删除一行" @click="delRow" :disabled="gameMap.length === 1"></u-button>
+          <u-button type="error" plain text="删除一行" @click="delRow" :disabled="gameMap.length === 5"></u-button>
         </view>
         <view class="action-btn-item">
           <u-button type="success" plain text="添加一列" @click="addColumn" :disabled="gameMap[0].length === 30"></u-button>
         </view>
         <view class="action-btn-item">
-          <u-button type="error" plain text="删除一列" @click="delColumn" :disabled="gameMap[0].length === 1"></u-button>
+          <u-button type="error" plain text="删除一列" @click="delColumn" :disabled="gameMap[0].length === 5"></u-button>
         </view>
       </view>
     </view>
@@ -36,10 +36,10 @@
       <span>使用该功能建议您先登录，是否前往登录？</span>
       <view class="action-btn">
         <view class="action-btn-item">
-          <u-button type="error" plain shape="circle" text="不再提示" @click="doNotTip" :disabled="gameMap.length === 1"></u-button>
+          <u-button type="error" plain shape="circle" text="不再提示" @click="doNotTip"></u-button>
         </view>
         <view class="action-btn-item">
-          <u-button type="success" plain shape="circle" text="前往登录" @click="goUser" :disabled="gameMap.length === 30"></u-button>
+          <u-button type="success" plain shape="circle" text="前往登录" @click="goUser"></u-button>
         </view>
       </view>
     </ar-popup>

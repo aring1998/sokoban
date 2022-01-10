@@ -153,6 +153,7 @@ export default {
     font-size: 32rpx;
     img {
       width: 180rpx;
+      height: 180rpx;
       border-radius: 20rpx;
     }
     span {

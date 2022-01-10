@@ -1,4 +1,5 @@
 // 处理hbuilder打包app之后点击手机返回键直接退出app的问题
+// #ifndef MP
 let first = null
 document.addEventListener('plusready', function () {
   const webview = plus.webview.currentWebview()
@@ -22,3 +23,4 @@ document.addEventListener('plusready', function () {
     } else webview.back()
   })
 })
+// #endif
