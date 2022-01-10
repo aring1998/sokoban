@@ -16,7 +16,7 @@
         </view>
         <view class="form-item">
           <i class="ai-lock" />
-          <input type="password" maxlength="32"  v-model="loginForm.password" placeholder="请输入密码" />
+          <input type="password" maxlength="32" v-model="loginForm.password" placeholder="请输入密码" @keydown.enter="login" />
         </view>
       </view>
       <view class="action-btn">
@@ -40,7 +40,7 @@
         </view>
         <view class="form-item">
           <i class="ai-lock" />
-          <input type="password" maxlength="32" v-model="registerForm.checkPassword" placeholder="请再次输入密码" />
+          <input type="password" maxlength="32" v-model="registerForm.checkPassword" placeholder="请再次输入密码" @keydown.enter="register" />
         </view>
       </view>
       <view class="action-btn">
