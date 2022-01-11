@@ -18,13 +18,15 @@
       <i class="ai-rollback" @click="$emit('regret')" />
       <i class="ai-reload" @click="$emit('reset')" />
       <i class="ai-form" @click="backEdit" v-show="showEdit" />
+      <i :class="gameMap.hasPraise === '1' ? 'ai-like' : 'ai-like-o'" v-show="showLike" @click="like" />
+      <i :class="gameMap.hasCollect === '1' ? 'ai-star' : 'ai-star-o'" v-show="showLike" @click="collect" />
     </view>
     <view class="map-name" @click="showMapName">
-      <span>{{ mapName }}</span>
+      <span>{{ gameMap.mapName || '(未命名)' }}</span>
     </view>
     <view class="best-step">
       <i class="ai-star-o" />
-      <span>{{ bestStep }}</span>
+      <span>{{ gameMap.stepsPas }}</span>
     </view>
   </view>
 </template>
@@ -37,6 +39,10 @@ export default {
     }
   },
   props: {
+    gameMap: {
+      type: Object,
+      default: () => {}
+    },
     step: {
       type: Number,
       default: 0
@@ -45,17 +51,13 @@ export default {
       type: [Number, String],
       default: 0
     },
-    mapName: {
-      type: String,
-      default: '(无名关卡)'
-    },
     showEdit: {
       type: Boolean,
       default: false
     },
-    bestStep: {
-      type: [Number, String],
-      default: 0
+    showLike: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -67,6 +69,22 @@ export default {
     showMapName() {
       if (this.mapName.length > 8) {
         uni.showToast({ title: this.mapName, icon: 'none' })
+      }
+    },
+    async like() {
+      if (!this.$store.state.userInfo.id) return uni.showToast({ title: '您需要先登录', icon: 'none' })
+      const res = await this.$api.get(`like/${this.gameMap.id}`)
+      if (res.code === 0) {
+        this.gameMap.hasPraise = this.gameMap.hasPraise === '1' ? '0' : '1'
+        uni.showToast({ title: res.msg, icon: 'none' })
+      }
+    },
+    async collect() {
+      if (!this.$store.state.userInfo.id) return uni.showToast({ title: '您需要先登录', icon: 'none' })
+      const res = await this.$api.get(`collect/${this.gameMap.id}`)
+      if (res.code === 0) {
+        this.gameMap.hasCollect = this.gameMap.hasCollect === '1' ? '0' : '1'
+        uni.showToast({ title: res.msg, icon: 'none' })
       }
     }
   }

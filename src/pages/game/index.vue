@@ -2,11 +2,11 @@
   <view class="game-page">
     <u-notify ref="notify"></u-notify>
     <game-top-bar
+      :gameMap="gameMap"
       :step="gameCore.step"
       :life="gameCore.life"
-      :mapName="gameMap.mapName"
       :showEdit="routeInfo.type === 'create' ? true : false"
-      :bestStep="gameMap.stepsPas"
+      :showLike="routeInfo.type === 'workshop' && routeInfo.id !== 'undefined' ? true : false"
       @reset="reset"
       @regret="regret"
       @showMenu="$refs.settings.show()"
@@ -73,7 +73,7 @@ export default {
         mapName: '',
         level: 0,
         regretDisabled: 0,
-        stepsPas: 0
+        stepsPas: '**'
       },
       // 游戏核心
       gameCore: {
