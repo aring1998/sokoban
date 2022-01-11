@@ -26,7 +26,7 @@
     </view>
     <view class="best-step">
       <i class="ai-star-o" />
-      <span>{{ gameMap.stepsPas }}</span>
+      <span>{{ gameMap.stepsPas || '**' }}</span>
     </view>
   </view>
 </template>
