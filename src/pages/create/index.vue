@@ -82,7 +82,7 @@ export default {
     }
   },
   onReady() {
-    if (!this.$store.state.token && uni.getStorageSync('loginTips') !== '1') {
+    if (!this.$store.state.userInfo.id && uni.getStorageSync('loginTips') !== '1') {
       this.$refs.tips.show()
     }
   },

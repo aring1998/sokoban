@@ -2,6 +2,7 @@
 	export default {
 		onLaunch() {
 			if (uni.getStorageSync('token')) this.$store.dispatch('token')
+			this.$music.bgmPlay(this.$store.state.bgmPlay)
 		},
 		onShow() {
 

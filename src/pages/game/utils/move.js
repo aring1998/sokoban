@@ -146,7 +146,7 @@ const staticBoxEvent = {
   // 墙
   0: () => false,
   // 终点
-  4:  gameCore => {
+  4: gameCore => {
     let onEnd = 0
     Vue.nextTick(() => {
       for (let y in gameCore.activeMap) {

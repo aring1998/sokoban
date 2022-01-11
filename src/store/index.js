@@ -8,20 +8,19 @@ const store = new Vuex.Store({
     userInfo: {
       id: '',
       name: '',
-      emaile: '',
+      email: '',
       coin: '',
       nickname: ''
     },
     token: uni.getStorageSync('token'),
-    bgmPlay: true
+    bgmPlay: JSON.parse(uni.getStorageSync('bgmPlay') || true)
   },
   mutations: {
     setUserInfo(_, res) {
       if (res.code === 0) {
         this.state.userInfo = res.data
         uni.showToast({ title: `欢迎回来，${res.data.name}` })
-      }
-      else uni.removeStorageSync('token')
+      } else uni.removeStorageSync('token')
     }
   },
   getters: {

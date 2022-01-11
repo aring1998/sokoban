@@ -2,8 +2,11 @@
   <view class="index-menu">
     <u-notify ref="notify"></u-notify>
     <view class="menu">
-      <img src="~@/static/img/index-menu/help.png" alt="" @click="$refs.help.show()">
-      <i class="ai-user" @click="goUser" />
+      <img src="~@/static/img/index-menu/help.png" alt="" @click="$refs.help.show()" />
+      <view class="icons">
+        <i class="ai-sound" @click="bgmPlay" :class="{ mute: !$store.state.bgmPlay }" />
+        <i class="ai-user" @click="goUser" />
+      </view>
     </view>
     <ar-popup ref="help" type="paper">
       <help-info></help-info>
@@ -26,6 +29,11 @@ import HelpInfo from '@/components/help-info.vue'
 export default {
   components: { ArPopup, HelpInfo },
   methods: {
+    bgmPlay() {
+      this.$store.state.bgmPlay = !this.$store.state.bgmPlay
+      this.$music.bgmPlay(this.$store.state.bgmPlay)
+      uni.setStorageSync('bgmPlay', JSON.stringify(this.$store.state.bgmPlay))
+    },
     goUser() {
       if (this.$store.state.userInfo.id) this.$refs.user.show()
       else uni.navigateTo({ url: '/pages/user/index' })
@@ -36,7 +44,7 @@ export default {
       }
       uni.removeStorageSync('token')
       this.$refs.user.show()
-      this.$refs.notify.show({ type: 'success', message: '退出登录成功' })    
+      this.$refs.notify.show({ type: 'success', message: '退出登录成功' })
     }
   }
 }
@@ -54,15 +62,24 @@ export default {
     img {
       display: block;
       padding: 10rpx;
-      background-color: rgba($color: #000, $alpha: .2);
+      background-color: rgba($color: #000, $alpha: 0.2);
       border-radius: 50%;
       width: 80rpx;
       height: 80rpx;
     }
-    i {
-      color: rgb(87, 87, 87);
-      font-weight: bold;
-      font-size: 60rpx;
+    .icons {
+      display: flex;
+      i {
+        color: rgb(87, 87, 87);
+        font-weight: bold;
+        font-size: 60rpx;
+      }
+      i:nth-child(1) {
+        margin-right: 16rpx;
+      }
+      i.mute {
+        background: rgba($color: #000, $alpha: 0.2) linear-gradient(45deg, transparent 46%, #333 46%, #333 54%, transparent 54%);
+      }
     }
   }
   .user-info {
