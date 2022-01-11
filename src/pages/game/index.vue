@@ -97,7 +97,7 @@ export default {
         },
         portalExit: [],
         regretDisabled: false,
-        step: -1,
+        step: 0,
         suc: 0,
         processData: []
       },
