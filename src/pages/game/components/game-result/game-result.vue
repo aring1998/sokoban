@@ -32,10 +32,9 @@
 
 <script>
 import ArPopup from '@/components/ar-popup.vue'
-import ArForm from '@/components/ar-form.vue'
 import HelpInfo from '@/components/help-info.vue'
 export default {
-  components: { ArPopup, ArForm, HelpInfo },
+  components: { ArPopup, HelpInfo },
   props: {
     type: {
       type: String,
@@ -52,14 +51,6 @@ export default {
       uni.redirectTo({
         url: '/pages/workshop/index'
       })
-    },
-    async saveMap() {
-      const res = await this.$api.post('map/add', {
-
-      })
-    },
-    formCreate(form) {
-      this.form = form
     }
   }
 }

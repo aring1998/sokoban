@@ -2,9 +2,9 @@
   <view class="game-menu">
     <view class="main">
       <view class="top-form">
-        <view class="top-form-item">
+        <view class="top-form-item" @click="bgmPlay">
           <span>音乐</span>
-          <u-switch v-model="music" size="18"></u-switch>
+          <u-switch v-model="$store.state.bgmPlay" size="18"></u-switch>
         </view>
       </view>
       <view class="common-bottom-form">
@@ -33,17 +33,16 @@ import ArPopup from '@/components/ar-popup.vue'
 import ArForm from '@/components/ar-form.vue'
 import HelpInfo from '@/components/help-info.vue'
 export default {
-  data() {
-    return {
-      music: true
-    }
-  },
   components: { ArPopup, ArForm, HelpInfo },
   methods: {
     goIndex() {
       uni.redirectTo({
         url: '/pages/index/index'
       })
+    },
+    bgmPlay() {
+      this.$music.bgmPlay(this.$store.state.bgmPlay)
+      uni.setStorageSync('bgmPlay', JSON.stringify(this.$store.state.bgmPlay))
     }
   }
 }

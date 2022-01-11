@@ -6,6 +6,7 @@
       :life="gameCore.life"
       :mapName="gameMap.mapName"
       :showEdit="routeInfo.type === 'create' ? true : false"
+      :bestStep="gameMap.stepsPas"
       @reset="reset"
       @regret="regret"
       @showMenu="$refs.settings.show()"
@@ -71,7 +72,8 @@ export default {
         mapData: [],
         mapName: '',
         level: 0,
-        regretDisabled: 0
+        regretDisabled: 0,
+        stepsPas: 0
       },
       // 游戏核心
       gameCore: {
@@ -95,7 +97,7 @@ export default {
         },
         portalExit: [],
         regretDisabled: false,
-        step: 0,
+        step: -1,
         suc: 0,
         processData: []
       },
@@ -212,6 +214,7 @@ export default {
         if (this.gameCore.suc === 1) {
           setTimeout(() => {
             this.$refs.tips.show()
+            this.passProcess()
           }, 150)
         }
       }, 50)
@@ -261,6 +264,19 @@ export default {
       this.routeInfo.level++
       this.init()
       this.$refs.tips.isShow = false
+    },
+    async passProcess() {
+      if (this.routeInfo.type !== 'workshop' || this.routeInfo.id === 'undefined') return
+      if (this.gameMap.stepsPas > this.gameCore.step) {
+        const res = await this.$api.post('/map/steps_pas', {
+          mapId: this.routeInfo.id,
+          stepsPas: this.step,
+          processData: this.gameCore.processData
+        })
+        if (res.code === 0) {
+          this.$refs.notify.show({ type: 'success', message: '您达成了新的最优步数，已将您的通关过程上传至云端' })
+        }
+      }
     },
     async saveServe() {
       const res = await this.$api.post('map/add', {

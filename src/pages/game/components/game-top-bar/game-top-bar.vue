@@ -22,6 +22,10 @@
     <view class="map-name" @click="showMapName">
       <span>{{ mapName }}</span>
     </view>
+    <view class="best-step">
+      <i class="ai-star-o" />
+      <span>{{ bestStep }}</span>
+    </view>
   </view>
 </template>
 
@@ -48,6 +52,10 @@ export default {
     showEdit: {
       type: Boolean,
       default: false
+    },
+    bestStep: {
+      type: [Number, String],
+      default: 0
     }
   },
   methods: {
@@ -125,6 +133,18 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .best-step {
+    position: absolute;
+    top: 100rpx;
+    left: calc(100% - 630rpx);
+    font-size: 28rpx;
+    background-color: #e8eaed;
+    padding: 6rpx 30rpx;
+    border-radius: 99px;
+    i {
+      margin-right: 16rpx;
+    }
   }
 }
 </style>

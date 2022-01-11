@@ -23,6 +23,10 @@
             <span>{{ item.praiseNumber || '0' }}</span>
           </view>
         </view>
+        <view class="champion">
+          <img src="~@/static/img/workshop/champion.png" alt="">
+          <span>{{ item.recorder }}</span>
+        </view>
       </view>
     </view>
     <view class="pagination">
@@ -152,6 +156,7 @@ export default {
       width: calc(50% - 20rpx);
       flex-flow: column nowrap;
       align-items: center;
+      position: relative;
       .map-thumbnail {
         position: relative;
         width: 100%;
@@ -186,6 +191,24 @@ export default {
           i {
             margin-right: 4rpx;
           }
+        }
+      }
+      .champion {
+        position: absolute;
+        top: 18rpx;
+        right: 8rpx;
+        display: flex;
+        align-items: center;
+        background-color: rgba($color: #fff, $alpha: 0.6);
+        border-radius: 20rpx;
+        padding: 6rpx 30rpx;
+        img {
+          height: 40rpx;
+          width: 40rpx;
+        }
+        span {
+          font-size: 28rpx;
+          font-weight: bold;
         }
       }
     }
