@@ -72,7 +72,7 @@ export default {
       }
     },
     async like() {
-      if (!this.$store.state.userInfo.id) return uni.showToast({ title: '您需要先登录', icon: 'none' })
+      if (!this.$store.getters.checkLogin) return
       const res = await this.$api.get(`like/${this.gameMap.id}`)
       if (res.code === 0) {
         this.gameMap.hasPraise = this.gameMap.hasPraise === '1' ? '0' : '1'
@@ -80,7 +80,7 @@ export default {
       }
     },
     async collect() {
-      if (!this.$store.state.userInfo.id) return uni.showToast({ title: '您需要先登录', icon: 'none' })
+      if (!this.$store.getters.checkLogin) return
       const res = await this.$api.get(`collect/${this.gameMap.id}`)
       if (res.code === 0) {
         this.gameMap.hasCollect = this.gameMap.hasCollect === '1' ? '0' : '1'

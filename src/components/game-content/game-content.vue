@@ -1,5 +1,5 @@
 <template>
-  <view class="game-container">
+  <scroll-view class="game-container" :scroll-left="scrollLeft" :scroll-top="scrollTop" :scroll-x="true" :scroll-y="true">
     <view class="game-table">
       <view class="game-row" v-for="(item, yIndex) of staticMap" :key="yIndex">
         <game-cell
@@ -10,12 +10,18 @@
         ></game-cell>
       </view>
     </view>
-  </view>
+  </scroll-view>
 </template>
 
 <script>
 import GameCell from './components/game-cell.vue'
 export default {
+  data() {
+    return {
+      scrollTop: 0,
+      scrollLeft: 0
+    }
+  },
   components: { GameCell },
   props: {
     staticMap: {

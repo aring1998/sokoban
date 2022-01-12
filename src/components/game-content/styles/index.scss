@@ -4,6 +4,7 @@
   overflow: auto;
   max-height: 734rpx;
   max-width: 734rpx;
+  white-space: nowrap;
   &::-webkit-scrollbar {
     width: 0 !important;
   }

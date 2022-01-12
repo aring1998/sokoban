@@ -218,6 +218,12 @@ export default {
           }, 150)
         }
       }, 50)
+      // 大地图追踪视角
+      if (this.gameMap.mapData.length > 12 || this.gameMap.mapData[0].length > 12) {
+        const screenScale = uni.getSystemInfoSync().windowWidth / 375
+        this.$refs.game.scrollLeft = this.gameCore.playerX * screenScale * 30 - screenScale * 165
+        this.$refs.game.scrollTop = this.gameCore.playerY * screenScale * 30 - screenScale * 165
+      }
     },
     statusEvent(clickEvent) {
       // 中毒事件
