@@ -99,6 +99,7 @@ export default {
         regretDisabled: false,
         step: 0,
         suc: 0,
+        direction: 5,
         processData: []
       },
       gameRecord: [], // 游戏记录

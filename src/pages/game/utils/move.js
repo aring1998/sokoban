@@ -25,7 +25,7 @@ export class Move {
     regretDisabled: false, // 禁用撤回功能
     step: 0, // 步数
     suc: 0, // 获胜标识
-    direction: 0, // 方向
+    direction: 5, // 方向
     processData: [] // 流程记录
   }
   gameRecord = []

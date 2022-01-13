@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { staticMapRander, acitveMapRander } from '../config/render'
+import { staticMapRander, acitveMapRander, direction } from '../config/render'
 
 export default {
   props: {
@@ -30,10 +30,7 @@ export default {
       return res
     },
     checkDirection() {
-      if (this.direction === 0) return 'move-up'
-      else if (this.direction === 1) return 'move-right'
-      else if (this.direction === 2) return 'move-down'
-      else if (this.direction === 3) return 'move-left'
+      return direction[this.direction]
     }
   }
 }
@@ -46,4 +43,61 @@ export default {
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
+
+.move-left {
+  position: relative;
+  animation: left 0.2s linear;
+}
+
+@keyframes left {
+  0% {
+    left: 60rpx;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+.move-right {
+  position: relative;
+  animation: right 0.2s linear;
+}
+
+@keyframes right {
+  0% {
+    left: -60rpx;
+  }
+  100% {
+    left: 0;
+  }
+}
+
+.move-up {
+  position: relative;
+  animation: up 0.2s linear;
+}
+
+@keyframes up {
+  0% {
+    top: 60rpx;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+.move-down {
+  position: relative;
+  animation: down 0.2s linear;
+}
+
+@keyframes down {
+  0% {
+    top: -60rpx;
+  }
+  100% {
+    top: 0;
+  }
+}
+
 </style>

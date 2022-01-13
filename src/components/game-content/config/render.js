@@ -16,3 +16,10 @@ export const acitveMapRander = {
   3: ' box',
   7: ' ice-box'
 }
+
+export const direction = {
+  0: 'move-up',
+  1: 'move-right',
+  2: 'move-down',
+  3: 'move-left'
+}
