@@ -7,6 +7,7 @@
           :key="xIndex"
           :staticValue="staticMap[yIndex][xIndex]"
           :activeValue="activeMap[yIndex][xIndex]"
+          :direction="direction"
         ></game-cell>
       </view>
     </view>
@@ -31,6 +32,10 @@ export default {
     activeMap: {
       type: Array,
       default: () => []
+    },
+    direction: {
+      type: Number,
+      default: 5
     }
   }
 }

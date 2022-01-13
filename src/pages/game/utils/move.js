@@ -25,9 +25,9 @@ export class Move {
     regretDisabled: false, // 禁用撤回功能
     step: 0, // 步数
     suc: 0, // 获胜标识
+    direction: 0, // 方向
     processData: [] // 流程记录
   }
-  direction = 0
   gameRecord = []
 
   constructor(gameCore, direction, gameRecord) {
@@ -41,12 +41,12 @@ export class Move {
     )
       return
     this.getTarget()
-    this.direction = direction
+    this.gameCore.direction = direction
     this.gameRecord = gameRecord
     // 静止层人物目标点事件
     let staticEventFlag = true
     if (staticEvent[this.gameCore.staticTarget]) {
-      staticEventFlag = staticEvent[this.gameCore.staticTarget](this.gameCore, this.direction, this.gameRecord)
+      staticEventFlag = staticEvent[this.gameCore.staticTarget](this.gameCore, this.gameCore.direction, this.gameRecord)
     }
     if (!staticEventFlag) return
     // 活动层人物目标点事件
@@ -68,7 +68,7 @@ export class Move {
     this.gameCore.step++
     // 记录游戏记录
     this.gameRecord.push(deepCloneObjArr(this.gameCore))
-    this.gameCore.processData.push(this.direction)
+    this.gameCore.processData.push(this.gameCore.direction)
   }
 
   static moveIndex(gameCore) {

@@ -1,5 +1,5 @@
 <template>
-  <view class="game-cell" :class="randerClass"></view>
+  <view class="game-cell" :class="[randerClass, activeValue === 2 ? checkDirection : '']"></view>
 </template>
 
 <script>
@@ -14,6 +14,10 @@ export default {
     activeValue: {
       type: Number,
       default: 1
+    },
+    direction: {
+      type: Number,
+      default: 5
     }
   },
   computed: {
@@ -24,6 +28,12 @@ export default {
       // 活动层渲染
       if (acitveMapRander[this.activeValue]) res += acitveMapRander[this.activeValue]
       return res
+    },
+    checkDirection() {
+      if (this.direction === 0) return 'move-up'
+      else if (this.direction === 1) return 'move-right'
+      else if (this.direction === 2) return 'move-down'
+      else if (this.direction === 3) return 'move-left'
     }
   }
 }

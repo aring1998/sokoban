@@ -11,7 +11,7 @@
       @regret="regret"
       @showMenu="$refs.settings.show()"
     ></game-top-bar>
-    <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap" ref="game"></game-content>
+    <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap" :direction="gameCore.direction" ref="game"></game-content>
 
     <analog-handle
       @moveBeforeHook="moveBeforeHook"
