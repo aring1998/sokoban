@@ -5,7 +5,7 @@
       <i class="ai-close" @click="goIndex" />
     </view>
     <view class="title">
-      <img src="~@/static/img/logo.png" alt="" />
+      <img src="../static/logo.png" alt="" />
       <span>魔改推箱子</span>
     </view>
     <view v-show="formType === 0">

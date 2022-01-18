@@ -341,7 +341,7 @@ export default {
 .game-page {
   height: 100vh;
   padding: 60rpx 0;
-  background-image: url('~@/static/img/common/bg.png');
+  background-image: url('http://81.68.189.158:8080/download/sokoban-static/img/common/bg.png');
   display: flex;
   flex-flow: column nowrap;
   .game-container {

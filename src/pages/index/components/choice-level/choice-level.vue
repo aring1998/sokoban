@@ -40,7 +40,7 @@ export default {
     },
     goGame(index) {
       uni.navigateTo({
-        url: `/pages/game/index?type=level&level=${index}&pack=${this.currentTab}`
+        url: `/pack-game/pages/index?type=level&level=${index}&pack=${this.currentTab}`
       })
     }
   }

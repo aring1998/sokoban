@@ -5,18 +5,44 @@
 	"pages": [
 		{
 			"path": "pages/index/index"
+		}
+	],
+	"subpackages": [
+		{
+			"root": "pack-game",
+			"pages": [
+				{
+					"path": "pages/index"
+				}
+			],
+			"independent": false
 		},
 		{
-			"path": "pages/game/index"
+			"root": "pack-create",
+			"pages": [
+				{
+					"path": "pages/index"
+				}
+			],
+			"independent": false
 		},
 		{
-			"path": "pages/workshop/index"
+			"root": "pack-workshop",
+			"pages": [
+				{
+					"path": "pages/index"
+				}
+			],
+			"independent": false
 		},
 		{
-			"path": "pages/create/index"
-		},
-		{
-			"path": "pages/user/index"
+			"root": "pack-user",
+			"pages": [
+				{
+					"path": "pages/index"
+				}
+			],
+			"independent": false
 		}
 	],
 	"globalStyle": {

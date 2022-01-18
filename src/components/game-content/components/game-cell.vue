@@ -30,7 +30,9 @@ export default {
       return res
     },
     checkDirection() {
+      // #ifndef MP
       return direction[this.direction]
+      // #endif
     }
   }
 }

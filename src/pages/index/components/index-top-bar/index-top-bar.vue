@@ -2,7 +2,7 @@
   <view class="index-menu">
     <u-notify ref="notify"></u-notify>
     <view class="menu">
-      <img src="~@/static/img/index-menu/help.png" alt="" @click="$refs.help.show()" />
+      <img src="http://81.68.189.158:8080/download/sokoban-static/img/index-menu/help.png" alt="" @click="$refs.help.show()" />
       <view class="icons">
         <i class="ai-sound" @click="bgmPlay" :class="{ mute: !$store.state.bgmPlay }" />
         <i class="ai-user" @click="goUser" />
@@ -36,7 +36,7 @@ export default {
     },
     goUser() {
       if (this.$store.state.userInfo.id) this.$refs.user.show()
-      else uni.navigateTo({ url: '/pages/user/index' })
+      else uni.navigateTo({ url: '/pack-user/pages/index' })
     },
     logOut() {
       for (let i in this.$store.state.userInfo) {
