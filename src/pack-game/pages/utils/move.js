@@ -61,8 +61,8 @@ export class Move {
 
   // 常规移动
   commonMove() {
-    Vue.set(this.gameCore.activeMap[this.gameCore.setY], this.gameCore.setX, 2)
     Vue.set(this.gameCore.activeMap[this.gameCore.playerY], this.gameCore.playerX, 1)
+    Vue.set(this.gameCore.activeMap[this.gameCore.setY], this.gameCore.setX, 2)
     this.gameCore.playerX = this.gameCore.setX
     this.gameCore.playerY = this.gameCore.setY
     this.gameCore.step++

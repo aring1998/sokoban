@@ -63,7 +63,7 @@ export default {
   methods: {
     backEdit() {
       uni.navigateTo({
-        url: '/pages/create/index?type=back'
+        url: '/pack-create/pages/index?type=back'
       })
     },
     showMapName() {

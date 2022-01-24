@@ -128,7 +128,7 @@ export default {
         })
       })
       uni.navigateTo({
-        url: '/pages/game/index?type=create'
+        url: '/pack-game/pages/index?type=create'
       })
     },
     advancedFormCreate(form) {
