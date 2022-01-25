@@ -99,7 +99,7 @@ export default {
         regretDisabled: false,
         step: 0,
         suc: 0,
-        direction: 5,
+        direction: -1,
         processData: []
       },
       gameRecord: [], // 游戏记录
@@ -265,6 +265,7 @@ export default {
       if (this.gameMap.regretDisabled === 1) return this.$refs.notify.show({ type: 'error', message: '该图作者已禁用撤回' })
       if (this.gameRecord.length === 1) return this.$refs.notify.show({ type: 'error', message: '已经回退到头啦~' })
       this.gameRecord.pop()
+      this.gameRecord[this.gameRecord.length - 1].direction = -1
       this.gameCore = deepCloneObjArr(this.gameRecord[this.gameRecord.length - 1])
     },
     nextLevel() {

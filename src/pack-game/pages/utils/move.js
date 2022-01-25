@@ -5,6 +5,7 @@ export class Move {
   gameCore = {
     staticMap: [], // 静止层地图
     activeMap: [], // 活动层地图
+    playerX: 0, // 玩家x轴坐标
     playerY: 0, // 玩家y轴坐标
     setX: 0, //目标点x轴坐标
     setY: 0, // 目标点y轴坐标
@@ -25,7 +26,7 @@ export class Move {
     regretDisabled: false, // 禁用撤回功能
     step: 0, // 步数
     suc: 0, // 获胜标识
-    direction: 5, // 方向
+    direction: -1, // 方向
     processData: [] // 流程记录
   }
   gameRecord = []
@@ -41,12 +42,11 @@ export class Move {
     )
       return
     this.getTarget()
-    this.gameCore.direction = direction
     this.gameRecord = gameRecord
     // 静止层人物目标点事件
     let staticEventFlag = true
     if (staticEvent[this.gameCore.staticTarget]) {
-      staticEventFlag = staticEvent[this.gameCore.staticTarget](this.gameCore, this.gameCore.direction, this.gameRecord)
+      staticEventFlag = staticEvent[this.gameCore.staticTarget](this.gameCore, direction, this.gameRecord)
     }
     if (!staticEventFlag) return
     // 活动层人物目标点事件
@@ -55,20 +55,21 @@ export class Move {
       activeEventFlag = activeEvent[this.gameCore.activeTarget](this.gameCore)
     }
     if (!activeEventFlag) return
-    this.commonMove()
+    this.commonMove(direction)
     return true
   }
 
   // 常规移动
-  commonMove() {
+  commonMove(direction) {
     Vue.set(this.gameCore.activeMap[this.gameCore.playerY], this.gameCore.playerX, 1)
     Vue.set(this.gameCore.activeMap[this.gameCore.setY], this.gameCore.setX, 2)
     this.gameCore.playerX = this.gameCore.setX
     this.gameCore.playerY = this.gameCore.setY
+    this.gameCore.direction = direction
     this.gameCore.step++
     // 记录游戏记录
     this.gameRecord.push(deepCloneObjArr(this.gameCore))
-    this.gameCore.processData.push(this.gameCore.direction)
+    this.gameCore.processData.push(direction)
   }
 
   static moveIndex(gameCore) {
