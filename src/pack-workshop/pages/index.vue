@@ -113,7 +113,7 @@ export default {
     },
     goGame(id, localId) {
       uni.navigateTo({
-        url: `/pages/game/index?type=workshop&id=${id}&localId=${localId}`
+        url: `/pack-game/pages/index?type=workshop&id=${id}&localId=${localId}`
       })
     },
     prePage() {
