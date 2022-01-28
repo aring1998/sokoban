@@ -9,7 +9,7 @@ vue2版本请切换至 `version-vue2` 分支
 ### ✨[抢先体验Uni版本 (PC端请切换手机调试模式)](http://aring1998.gitee.io/sokoban-online)
 
 ### ✨扫码下载APP版本(请勿使用微信扫码)
-<img height="90" src="http://aring.3vfree.net/my-img/sokoban/app.png" />
+<img height="90" src="http://aring.3vfree.cc/my-img/sokoban/app.png" />
 
 ### ✨[在线试玩Vue2版本 (PC端请切换手机调试模式)](http://aringproject.3vfree.net/#/index)
 
