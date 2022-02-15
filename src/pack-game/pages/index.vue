@@ -274,7 +274,7 @@ export default {
       this.$refs.tips.isShow = false
     },
     async passProcess() {
-      if (this.routeInfo.type !== 'workshop' || this.routeInfo.id === 'undefined') return
+      if (this.routeInfo.type !== 'workshop' || this.routeInfo.id === 'undefined' || !this.$store.state.userInfo.name) return
       if (this.gameMap.stepsPas > this.gameCore.step) {
         const res = await this.$api.post('/map/steps_pas', {
           mapId: this.routeInfo.id,
