@@ -1,3 +1,4 @@
+import store from '@/store/index'
 export const formOptions = [
   {
     label: '地图名',
@@ -5,6 +6,7 @@ export const formOptions = [
   },
   {
     label: '作者',
-    prop: 'creator'
+    prop: 'creator',
+    initValue: store.state.userInfo.name
   }
 ]

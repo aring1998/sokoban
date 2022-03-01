@@ -5,11 +5,16 @@
       :gameMap="gameMap"
       :step="gameCore.step"
       :life="gameCore.life"
-      :showEdit="routeInfo.type === 'create' ? true : false"
-      :showLike="routeInfo.type === 'workshop' && routeInfo.id !== 'undefined' ? true : false"
+      :showEdit="routeInfo.type === 'create'"
+      :showLike="routeInfo.type === 'workshop' && routeInfo.id !== 'undefined'"
+      :showUpload="routeInfo.type === 'workshop' && routeInfo.localId !== 'undefined'"
       @reset="reset"
       @regret="regret"
       @showMenu="$refs.settings.show()"
+      @upload="
+        saveType = 1
+        $refs.save.show()
+      "
     ></game-top-bar>
     <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap" :direction="gameCore.direction" ref="game"></game-content>
 
@@ -137,9 +142,11 @@ export default {
           }
         } else {
           const data = JSON.parse(uni.getStorageSync(`map${this.routeInfo.localId}`))
+          this.gameMap.mapName = data.mapName
           this.gameMap.mapData = data.mapData
           this.gameCore.life = data.life || '**'
           this.gameMap.regretDisabled = data.regretDisabled
+          this.form.mapName = this.gameMap.mapName
         }
       } else if (this.routeInfo.type === 'create') {
         const data = JSON.parse(uni.getStorageSync('createMap'))

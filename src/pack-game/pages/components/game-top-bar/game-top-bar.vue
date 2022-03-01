@@ -20,6 +20,7 @@
       <i class="ai-form" @click="backEdit" v-show="showEdit" />
       <i :class="gameMap.hasPraise === '1' ? 'ai-like' : 'ai-like-o'" v-show="showLike" @click="like" />
       <i :class="gameMap.hasCollect === '1' ? 'ai-star' : 'ai-star-o'" v-show="showLike" @click="collect" />
+      <i class="ai-upload" v-show="showUpload" @click="$emit('upload')" />
     </view>
     <view class="map-name" @click="showMapName">
       <span>{{ gameMap.mapName || '(未命名)' }}</span>
@@ -56,6 +57,10 @@ export default {
       default: false
     },
     showLike: {
+      type: Boolean,
+      default: false
+    },
+    showUpload: {
       type: Boolean,
       default: false
     }

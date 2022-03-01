@@ -49,7 +49,7 @@ export default {
     },
     back() {
       uni.redirectTo({
-        url: '/pages/workshop/index'
+        url: '/pack-workshop/pages/index'
       })
     }
   }
