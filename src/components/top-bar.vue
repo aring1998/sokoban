@@ -1,9 +1,9 @@
 <template>
   <view class="top-bar">
-    <img src="http://81.68.189.158:8080/download/sokoban-static/img/common/back.png" alt="" @click="back">
+    <img src="http://81.68.189.158:87/project/sokoban-static//img/common/back.png" alt="" @click="back">
     <view class="common-title">{{ title }}</view>
     <view class="item">
-      <img v-if="showRight" src="http://81.68.189.158:8080/download/sokoban-static/img/common/search.png" alt="" @click="$emit('search')">
+      <img v-if="showRight" src="http://81.68.189.158:87/project/sokoban-static//img/common/search.png" alt="" @click="$emit('search')">
     </view>
   </view>
 </template>
@@ -52,7 +52,7 @@ export default {
     color: $main-span-color;
     text-align: center;
     margin: 0 auto;
-    background-image: url('http://81.68.189.158:8080/download/sokoban-static/img/common/common-title.png');
+    background-image: url('http://81.68.189.158:87/project/sokoban-static//img/common/common-title.png');
   }
 }
 </style>

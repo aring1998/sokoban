@@ -24,7 +24,7 @@
           </view>
         </view>
         <view class="champion">
-          <img src="http://81.68.189.158:8080/download/sokoban-static/img/workshop/champion.png" alt="">
+          <img src="http://81.68.189.158:87/project/sokoban-static//img/workshop/champion.png" alt="">
           <span>{{ item.recorder }}</span>
         </view>
       </view>
@@ -138,7 +138,7 @@ export default {
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
-  background-image: url('http://81.68.189.158:8080/download/sokoban-static/img/common/bg.png');
+  background-image: url('http://81.68.189.158:87/project/sokoban-static//img/common/bg.png');
   .tabs {
     background-color: rgba($color: #fff, $alpha: 0.7);
   }

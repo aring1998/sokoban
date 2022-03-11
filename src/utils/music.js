@@ -1,5 +1,5 @@
 const bgm = uni.createInnerAudioContext()
-bgm.src = 'http://81.68.189.158:8080/download/sokoban-static/audio/bgm.mp3'
+bgm.src = 'http://81.68.189.158:87/project/sokoban-static//audio/bgm.mp3'
 bgm.loop = true
 
 export const music = {

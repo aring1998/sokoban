@@ -34,7 +34,7 @@ export default {
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
-  background-image: url('http://81.68.189.158:8080/download/sokoban-static/img/index/bg.png');
+  background-image: url('http://81.68.189.158:87/project/sokoban-static//img/index/bg.png');
   .title {
     width: 100%;
     height: 180rpx;
@@ -45,7 +45,7 @@ export default {
     color: rgb(247, 244, 49);
     margin-bottom: 100rpx;
     padding: 0 15rpx;
-    background-image: url('http://81.68.189.158:8080/download/sokoban-static/img/common/common-title.png');
+    background-image: url('http://81.68.189.158:87/project/sokoban-static//img/common/common-title.png');
   }
   .action {
     .btn {
@@ -56,7 +56,7 @@ export default {
       font-weight: bold;
       color: rgb(36, 131, 40);
       margin: 60rpx 120rpx;
-      background-image: url('http://81.68.189.158:8080/download/sokoban-static/img/index/btn.png');
+      background-image: url('http://81.68.189.158:87/project/sokoban-static//img/index/btn.png');
     }
   }
 }

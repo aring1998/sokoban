@@ -12,7 +12,7 @@
       </view>
     </view>
     <view class="settings">
-      <img src="http://81.68.189.158:8080/download/sokoban-static/img/common/settings.png" alt="" @click="$emit('showMenu')" />
+      <img src="http://81.68.189.158:87/project/sokoban-static//img/common/settings.png" alt="" @click="$emit('showMenu')" />
     </view>
     <view class="game-action">
       <i class="ai-rollback" @click="$emit('regret')" />
