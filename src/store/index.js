@@ -37,6 +37,8 @@ const store = new Vuex.Store({
       const res = await api.post('user/token')
       if (res.code === 0) {
         this.commit('setUserInfo', res)
+      } else {
+        uni.removeStorageSync('token')
       }
     }
   },
