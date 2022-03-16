@@ -30,7 +30,7 @@
 ## ✨游戏版本
 - [在线试玩Uni版本 (PC端请切换手机调试模式)](http://aring1998.gitee.io/sokoban-online)
 
-- [点击下载Uni版本 (APP)](http://81.68.189.158:87/apk/sokoban.apk)
+- [点击下载Uni版本 (APP)](http://81.68.189.158:88/apk/sokoban.apk)
 
 - [在线试玩Vue2版本 (PC端请切换手机调试模式)](http://aringproject.3vfree.net/#/index)
 

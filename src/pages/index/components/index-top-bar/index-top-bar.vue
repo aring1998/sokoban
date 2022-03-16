@@ -2,7 +2,7 @@
   <view class="index-menu">
     <u-notify ref="notify"></u-notify>
     <view class="menu">
-      <img src="http://81.68.189.158:87/project/sokoban-static//img/index-menu/help.png" alt="" @click="$refs.help.show()" />
+      <img src="http://81.68.189.158:88/project/sokoban-static/img/index-menu/help.png" alt="" @click="$refs.help.show()" />
       <view class="icons">
         <i class="ai-sound" @click="bgmPlay" :class="{ mute: !$store.state.bgmPlay }" />
         <i class="ai-user" @click="goUser" />

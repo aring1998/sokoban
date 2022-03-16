@@ -70,7 +70,7 @@ export default {
   >.popup {
     width: 700rpx;
     padding: 40rpx;
-    background-image: url('http://81.68.189.158:87/project/sokoban-static//img/common/common-menu-bg.png');
+    background-image: url('http://81.68.189.158:88/project/sokoban-static/img/common/common-menu-bg.png');
     border-radius: 20rpx;
   }
 }
@@ -80,7 +80,7 @@ export default {
     width: 700rpx;
     height: 70vh;
     padding: 40rpx;
-    background-image: url('http://81.68.189.158:87/project/sokoban-static//img/common/popup-bg.png');
+    background-image: url('http://81.68.189.158:88/project/sokoban-static/img/common/popup-bg.png');
     border-radius: 20rpx;
   }
 }
@@ -91,7 +91,7 @@ export default {
     height: 1000rpx;
     padding: 40rpx;
     background-color: #fff;
-    background-image: url('http://81.68.189.158:87/project/sokoban-static//img/game/menu-bg.png');
+    background-image: url('http://81.68.189.158:88/project/sokoban-static/img/game/menu-bg.png');
     border-radius: 20rpx;
     >.closes {
       margin-bottom: 160rpx;
