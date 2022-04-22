@@ -1,6 +1,6 @@
 # 🎃魔改推箱子
 
-## [在线试玩 (PC端请切换手机调试模式)](http://aring1998.gitee.io/sokoban-online)
+## [在线试玩 (PC端请切换手机调试模式)](http://aring.cc/sokoban)
 
 ## 📖介绍
 基于**uni-app**框架开发的三端(H5, APP, 小程序)通配应用，由推箱子的游戏玩法拓展
@@ -28,10 +28,10 @@
 4. 目前master分支为uni的开发版本，Vue2版本请切换至[version-vue2分支](https://gitee.com/aring1998/sokoban/tree/version-vue2/)
 
 ## ✨游戏版本
-- [在线试玩Uni版本 (PC端请切换手机调试模式)](http://aring1998.gitee.io/sokoban-online)
+- [在线试玩Uni版本 (PC端请切换手机调试模式)](http://aring.cc/sokoban)
 
-- [点击下载Uni版本 (APP)](http://81.68.189.158:88/apk/sokoban.apk)
+- [点击下载Uni版本 (APP)](https://source.aring.cc/assets/sokoban.apk)
 
-- [在线试玩Vue2版本 (PC端请切换手机调试模式)](http://aringproject.3vfree.net/#/index)
+- [在线试玩Vue2版本 (PC端请切换手机调试模式)](http://aring.cc/sokoban-vue2)
 
 - [游戏已上架！点击了解详情](https://www.taptap.com/app/224432/)
