@@ -39,6 +39,9 @@ const store = new Vuex.Store({
         this.commit('setUserInfo', res)
       } else {
         uni.removeStorageSync('token')
+        for (let key in store.state.userInfo) {
+          store.state.userInfo[key] = ''
+        }
       }
     }
   },

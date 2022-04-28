@@ -140,7 +140,7 @@ export default {
     },
     goUser() {
       uni.navigateTo({
-        url: '/pages/user/index'
+        url: '/pack-user/pages/index'
       })
       this.$refs.tips.show()
     }
