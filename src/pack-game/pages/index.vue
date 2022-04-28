@@ -221,8 +221,10 @@ export default {
       setTimeout(() => {
         if (this.gameCore.suc === 1) {
           setTimeout(() => {
-            this.$refs.tips.show()
-            this.passProcess()
+            if (!this.$refs.tips.isShow) {
+              this.$refs.tips.show()
+              this.passProcess()
+            }
           }, 150)
         }
       }, 50)
