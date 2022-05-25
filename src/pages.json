@@ -1,54 +1,55 @@
 {
-	"easycom": {
-		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
-	},
-	"pages": [
-		{
-			"path": "pages/index/index"
-		}
-	],
-	"subpackages": [
-		{
-			"root": "pack-game",
-			"pages": [
-				{
-					"path": "pages/index"
-				}
-			],
-			"independent": false
-		},
-		{
-			"root": "pack-create",
-			"pages": [
-				{
-					"path": "pages/index"
-				}
-			],
-			"independent": false
-		},
-		{
-			"root": "pack-workshop",
-			"pages": [
-				{
-					"path": "pages/index"
-				}
-			],
-			"independent": false
-		},
-		{
-			"root": "pack-user",
-			"pages": [
-				{
-					"path": "pages/index"
-				}
-			],
-			"independent": false
-		}
-	],
-	"globalStyle": {
-		"app-plus": {
-			"titleNView": false
-		},
-		"backgroundColor": "#F8F8F8"
-	}
+  "easycom": {
+    "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+  },
+  "pages": [
+    {
+      "path": "pages/index/index"
+    }
+  ],
+  "subpackages": [
+    {
+      "root": "pack-game",
+      "pages": [
+        {
+          "path": "pages/index"
+        }
+      ],
+      "independent": false
+    },
+    {
+      "root": "pack-create",
+      "pages": [
+        {
+          "path": "pages/index"
+        }
+      ],
+      "independent": false
+    },
+    {
+      "root": "pack-workshop",
+      "pages": [
+        {
+          "path": "pages/index"
+        }
+      ],
+      "independent": false
+    },
+    {
+      "root": "pack-user",
+      "pages": [
+        {
+          "path": "pages/index"
+        }
+      ],
+      "independent": false
+    }
+  ],
+  "globalStyle": {
+    "app-plus": {
+      "titleNView": false,
+      "navigationBarTitleText": "魔改推箱子"
+    },
+    "backgroundColor": "#F8F8F8"
+  }
 }
