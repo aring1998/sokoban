@@ -79,6 +79,7 @@ export default {
       this.gameMap = data.mapData
       this.advancedForm.life = data.life
       this.advancedForm.regretDisabled = data.regretDisabled
+      this.advancedForm.nightMode = data.nightMode
     }
   },
   onReady() {
@@ -124,7 +125,8 @@ export default {
         data: JSON.stringify({
           mapData: this.gameMap,
           life: this.advancedForm.life,
-          regretDisabled: this.advancedForm.regretDisabled
+          regretDisabled: this.advancedForm.regretDisabled,
+          nightMode: this.advancedForm.nightMode
         })
       })
       uni.navigateTo({

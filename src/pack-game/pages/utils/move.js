@@ -3,8 +3,8 @@ import { deepCloneObjArr } from '@/utils/index'
 
 export class Move {
   gameCore = {
-    staticMap: [], // 静止层地图
-    activeMap: [], // 活动层地图
+    staticMap: [[]], // 静止层地图
+    activeMap: [[]], // 活动层地图
     playerX: 0, // 玩家x轴坐标
     playerY: 0, // 玩家y轴坐标
     setX: 0, //目标点x轴坐标
@@ -23,7 +23,6 @@ export class Move {
       drunk: false
     },
     portalExit: [], // 传送门出口坐标
-    regretDisabled: false, // 禁用撤回功能
     step: 0, // 步数
     suc: 0, // 获胜标识
     direction: -1, // 方向

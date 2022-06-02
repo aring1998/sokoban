@@ -16,7 +16,14 @@
         $refs.save.show()
       "
     ></game-top-bar>
-    <game-content :staticMap="gameCore.staticMap" :activeMap="gameCore.activeMap" :direction="gameCore.direction" ref="game"></game-content>
+    <game-content
+      :staticMap="gameCore.staticMap"
+      :activeMap="gameCore.activeMap"
+      :direction="gameCore.direction"
+      :playerPostion="{ playerX: gameCore.playerX, playerY: gameCore.playerY }"
+      :nightMode="gameMap.nightMode"
+      ref="game"
+    ></game-content>
 
     <analog-handle
       @moveBeforeHook="moveBeforeHook"
@@ -77,13 +84,14 @@ export default {
         mapData: [],
         mapName: '',
         level: 0,
-        regretDisabled: 0,
-        stepsPas: '**'
+        regretDisabled: 0, // 禁用撤回
+        stepsPas: '**', // 最优步数
+        nightMode: 0 // 黑夜模式
       },
       // 游戏核心
       gameCore: {
-        staticMap: [],
-        activeMap: [],
+        staticMap: [[]],
+        activeMap: [[]],
         playerX: 0,
         playerY: 0,
         setX: 0,
@@ -101,7 +109,6 @@ export default {
           drunk: false
         },
         portalExit: [],
-        regretDisabled: false,
         step: 0,
         suc: 0,
         direction: -1,
@@ -146,6 +153,7 @@ export default {
           this.gameMap.mapData = data.mapData
           this.gameCore.life = data.life || '**'
           this.gameMap.regretDisabled = data.regretDisabled
+          this.gameMap.nightMode = data.nightMode
           this.form.mapName = this.gameMap.mapName
         }
       } else if (this.routeInfo.type === 'create') {
@@ -154,6 +162,7 @@ export default {
         this.gameMap.mapName = '测试地图'
         this.gameCore.life = data.life || '**'
         this.gameMap.regretDisabled = data.regretDisabled
+        this.gameMap.nightMode = data.nightMode
       }
       const mapInit = {
         // 玩家坐标

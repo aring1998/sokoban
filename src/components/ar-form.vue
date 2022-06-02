@@ -2,7 +2,7 @@
   <view class="ar-form">
     <view class="ar-form-item" v-for="(item, index) of formOptions" :key="index">
       <label :for="item.prop" :style="{ width: `${labelWidth}rpx` }">{{ item.label }}</label>
-      <input class="input" v-if="item.type === 'digit'" maxlength="3" @keydown.native="digitEvent" v-model="form[item.prop]" />
+      <input class="input" type="number" v-if="item.type === 'digit'" maxlength="3" @keydown.native="digitEvent" v-model="form[item.prop]" />
       <u-radio-group v-model="form[item.prop]" v-else-if="item.type === 'radio'" placement="row">
         <u-radio v-for="item of item.options" :key="item.name" :label="item.label" :name="item.name" />
       </u-radio-group>

@@ -19,5 +19,21 @@ export const advancedFormOptions = [
         name: 0
       }
     ]
+  },
+  {
+    type: 'radio',
+    label: '黑夜模式',
+    prop: 'nightMode',
+    initValue: false,
+    options: [
+      {
+        label: '是',
+        name: 1
+      },
+      {
+        label: '否',
+        name: 0
+      }
+    ]
   }
 ]
