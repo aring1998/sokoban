@@ -174,6 +174,7 @@ export default {
           color: rgba($color: #000, $alpha: 0.6);
           font-weight: bold;
           font-size: 50rpx;
+          z-index: 100;
         }
       }
       .map-info {
