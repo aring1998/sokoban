@@ -153,7 +153,7 @@ export default {
           this.gameMap.mapData = data.mapData
           this.gameCore.life = data.life || '**'
           this.gameMap.regretDisabled = data.regretDisabled
-          this.gameMap.nightMode = data.nightMode
+          this.gameMap.nightMode = data.nightMode || 0
           this.form.mapName = this.gameMap.mapName
         }
       } else if (this.routeInfo.type === 'create') {
@@ -162,7 +162,7 @@ export default {
         this.gameMap.mapName = '测试地图'
         this.gameCore.life = data.life || '**'
         this.gameMap.regretDisabled = data.regretDisabled
-        this.gameMap.nightMode = data.nightMode
+        this.gameMap.nightMode = data.nightMode || 0
       }
       const mapInit = {
         // 玩家坐标
@@ -261,6 +261,7 @@ export default {
         else if (clickEvent.direction === 1) moveFunc = this.moveRight
         else if (clickEvent.direction === 2) moveFunc = this.moveDown
         else if (clickEvent.direction === 3) moveFunc = this.moveLeft
+        const startRecordLength = this.gameRecord.length
         for (let i = 0; i < drunkStep; i++) {
           this.$nextTick(() => {
             if (this.gameCore.staticTarget === 13) return // 碰到甘露则停止
@@ -271,7 +272,9 @@ export default {
         }
         // 清理酗酒移动途中的记录
         setTimeout(() => {
-          this.gameRecord.splice(this.gameRecord.length - drunkStep - 1, drunkStep)
+          const endRecordLength = this.gameRecord.length
+          const totalStep = endRecordLength - startRecordLength
+          this.gameRecord.splice(startRecordLength, totalStep - 1)
         }, 50)
       }
     },

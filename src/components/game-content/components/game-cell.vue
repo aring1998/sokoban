@@ -47,58 +47,54 @@ export default {
 }
 
 .move-left {
-  position: relative;
   animation: left 0.2s linear;
 }
 
 @keyframes left {
   0% {
-    left: 60rpx;
+    transform: translate(60rpx, 0);
   }
   100% {
-    left: 0;
+    transform: translate(0, 0);
   }
 }
 
 .move-right {
-  position: relative;
   animation: right 0.2s linear;
 }
 
 @keyframes right {
   0% {
-    left: -60rpx;
+    transform: translate(-60rpx, 0);
   }
   100% {
-    left: 0;
+    transform: translate(0, 0);
   }
 }
 
 .move-up {
-  position: relative;
   animation: up 0.2s linear;
 }
 
 @keyframes up {
   0% {
-    top: 60rpx;
+    transform: translate(0, 60rpx);
   }
   100% {
-    top: 0;
+    transform: translate(0, 0);
   }
 }
 
 .move-down {
-  position: relative;
   animation: down 0.2s linear;
 }
 
 @keyframes down {
   0% {
-    top: -60rpx;
+    transform: translate(0, -60rpx);
   }
   100% {
-    top: 0;
+    transform: translate(0, 0);
   }
 }
 
