@@ -7,6 +7,6 @@ export const formOptions = [
   {
     label: '作者',
     prop: 'creator',
-    initValue: store.state.userInfo.name
+    initValue: store.state.userInfo.username
   }
 ]

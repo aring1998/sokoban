@@ -152,7 +152,7 @@ export default {
           this.gameMap.mapName = data.mapName
           this.gameMap.mapData = data.mapData
           this.gameCore.life = data.life || '**'
-          this.gameMap.regretDisabled = data.regretDisabled
+          this.gameMap.regretDisabled = data.regretDisabled || 0
           this.gameMap.nightMode = data.nightMode || 0
           this.form.mapName = this.gameMap.mapName
         }
@@ -295,11 +295,11 @@ export default {
       this.$refs.tips.isShow = false
     },
     async passProcess() {
-      if (this.routeInfo.type !== 'workshop' || this.routeInfo.id === 'undefined' || !this.$store.state.userInfo.name) return
+      if (this.routeInfo.type !== 'workshop' || this.routeInfo.id === 'undefined' || !this.$store.state.userInfo.username) return
       if (this.gameMap.stepsPas > this.gameCore.step) {
-        const res = await this.$api.post('/map/steps_pas', {
+        const res = await this.$api.post('/map/stepsPas', {
           mapId: this.routeInfo.id,
-          stepsPas: this.step,
+          stepsPas: this.gameCore.step,
           processData: this.gameCore.processData
         })
         if (res.code === 0) {
@@ -363,7 +363,7 @@ export default {
 .game-page {
   height: 100vh;
   padding: 60rpx 0;
-  background-image: url('http://81.68.189.158:88/project/sokoban-static/img/common/bg.png');
+  background-image: url('https://source.aring.cc/assets/project/sokoban/imgs/common/bg.png');
   display: flex;
   flex-flow: column nowrap;
   .game-container {

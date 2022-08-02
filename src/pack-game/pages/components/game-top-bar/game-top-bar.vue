@@ -12,7 +12,7 @@
       </view>
     </view>
     <view class="settings">
-      <img src="http://81.68.189.158:88/project/sokoban-static/img/common/settings.png" alt="" @click="$emit('showMenu')" />
+      <img src="https://source.aring.cc/assets/project/sokoban/imgs/common/settings.png" alt="" @click="$emit('showMenu')" />
     </view>
     <view class="game-action">
       <i class="ai-rollback" @click="$emit('regret')" />
@@ -81,7 +81,7 @@ export default {
       const res = await this.$api.get(`like/${this.gameMap.id}`)
       if (res.code === 0) {
         this.gameMap.hasPraise = this.gameMap.hasPraise === '1' ? '0' : '1'
-        uni.showToast({ title: res.msg, icon: 'none' })
+        uni.showToast({ title: res.message, icon: 'none' })
       }
     },
     async collect() {
@@ -89,7 +89,7 @@ export default {
       const res = await this.$api.get(`collect/${this.gameMap.id}`)
       if (res.code === 0) {
         this.gameMap.hasCollect = this.gameMap.hasCollect === '1' ? '0' : '1'
-        uni.showToast({ title: res.msg, icon: 'none' })
+        uni.showToast({ title: res.message, icon: 'none' })
       }
     }
   }

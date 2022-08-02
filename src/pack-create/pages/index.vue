@@ -135,6 +135,7 @@ export default {
     },
     advancedFormCreate(form) {
       this.advancedForm = form
+      console.log(this.advancedForm)
     },
     doNotTip() {
       uni.setStorageSync('loginTips', '1')
@@ -155,7 +156,7 @@ export default {
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
-  background-image: url('http://81.68.189.158:88/project/sokoban-static/img/common/bg.png');
+  background-image: url('https://source.aring.cc/assets/project/sokoban/imgs/common/bg.png');
   justify-content: space-between;
   .action {
     background-color: rgba($color: #fff, $alpha: 0.8);

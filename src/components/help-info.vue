@@ -10,7 +10,7 @@
     ></u-tabs>
     <view class="item" v-show="currentTab === 0">
       <span>
-        通过虚拟手柄<img src="http://81.68.189.158:88/project/sokoban-static/img/help-info/handle.png" alt="" /> 控制人物移动，将所有箱子
+        通过虚拟手柄<img src="https://source.aring.cc/assets/project/sokoban/imgs/help-info/handle.png" alt="" /> 控制人物移动，将所有箱子
         <div class="img-box box"></div>
         推入终点
         <div class="img-box end"></div>
@@ -23,13 +23,15 @@
       <span
         >● 务必小心地图中各种各样的陷阱
         <div class="img-box spikeweed"></div>
-        它们将夺走您的生命<img src="http://81.68.189.158:88/project/sokoban-static/img/help-info/heart.png" alt=""
+        它们将夺走您的生命<img src="https://source.aring.cc/assets/project/sokoban/imgs/help-info/heart.png" alt=""
       /></span>
       <span>
         ● 如果您想了解更多地图元素
         <div class="img-box fire"></div>
         的作用，请点击上方
-        <span style="font-weight: bold; display: inline"><img src="http://81.68.189.158:88/project/sokoban-static/img/help-info/map-manual.png" alt="" />地图手册</span>
+        <span style="font-weight: bold; display: inline"
+          ><img src="https://source.aring.cc/assets/project/sokoban/imgs/help-info/map-manual.png" alt="" />地图手册</span
+        >
       </span>
     </view>
     <view class="item" v-show="currentTab === 1">

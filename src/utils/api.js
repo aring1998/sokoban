@@ -3,17 +3,18 @@ import axiosAdapterUniapp from 'axios-adapter-uniapp'
 import store from '../store'
 // 创建axios实例
 const instance = axios.create({
-  baseURL: 'http://81.68.189.158:10052/sokoban/app/v1/',
+  // baseURL: 'http://localhost:3006/api',
+  baseURL: 'https://api.aring.cc/sokoban/api',
   timeout: 30000,
   // 允许返回所有状态码，不会遇到错误就停止
   validateStatus: status => status >= 200 && status <= 600,
-  adapter: axiosAdapterUniapp,
+  adapter: axiosAdapterUniapp
 })
 
 // 请求拦截
 instance.interceptors.request.use(config => {
   uni.showLoading({ title: '加载中...' })
-  config.headers.Authorization = `Bearer ${store.state.token}`
+  config.headers.token = store.state.token
   return config
 }),
   err => {
@@ -22,8 +23,8 @@ instance.interceptors.request.use(config => {
 // 响应拦截
 instance.interceptors.response.use(res => {
   uni.hideLoading()
-  if (res.status !== 200) return uni.showToast({ title: '网络请求错误', icon: 'none' })
-  if (res.data.code !== 0) uni.showToast({ title: res.data.msg || '网络请求错误', icon: 'none' })
+  if (res.status < 200 || res.status > 400) return uni.showToast({ title: '网络请求错误', icon: 'none' })
+  if (res.data.code !== 0) uni.showToast({ title: res.data.message || '网络请求错误', icon: 'none' })
   return res.data // 配置只返回data
 }),
   err => {

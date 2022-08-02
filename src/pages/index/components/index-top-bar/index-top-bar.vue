@@ -2,7 +2,7 @@
   <view class="index-menu">
     <u-notify ref="notify"></u-notify>
     <view class="menu">
-      <img src="http://81.68.189.158:88/project/sokoban-static/img/index-menu/help.png" alt="" @click="$refs.help.show()" />
+      <img src="https://source.aring.cc/assets/project/sokoban/imgs/index-menu/help.png" alt="" @click="$refs.help.show()" />
       <view class="icons">
         <i class="ai-sound" @click="bgmPlay" :class="{ mute: !$store.state.bgmPlay }" />
         <i class="ai-user" @click="goUser" />
@@ -14,7 +14,7 @@
     <ar-popup ref="user" class="user-info">
       <h4>用户信息</h4>
       <p>uid：{{ this.$store.state.userInfo.id }}</p>
-      <p>用户名：{{ this.$store.state.userInfo.name }}</p>
+      <p>用户名：{{ this.$store.state.userInfo.username }}</p>
       <p>邮箱：{{ this.$store.state.userInfo.email }}</p>
       <view class="btn">
         <button size="mini" @click="logOut">退出登录</button>

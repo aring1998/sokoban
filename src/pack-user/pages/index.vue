@@ -12,7 +12,7 @@
       <view class="form">
         <view class="form-item">
           <i class="ai-user" />
-          <input type="text" maxlength="16" v-model="loginForm.name" placeholder="请输入账号" />
+          <input type="text" maxlength="16" v-model="loginForm.username" placeholder="请输入账号" />
         </view>
         <view class="form-item">
           <i class="ai-lock" />
@@ -32,7 +32,7 @@
         </view>
         <view class="form-item">
           <i class="ai-user" />
-          <input type="text" maxlength="16" v-model="registerForm.name" placeholder="请输入用户名" />
+          <input type="text" maxlength="16" v-model="registerForm.username" placeholder="请输入用户名" />
         </view>
         <view class="form-item">
           <i class="ai-lock" />
@@ -58,14 +58,14 @@ export default {
     return {
       formType: 0,
       loginForm: {
-        name: '',
+        username: '',
         password: ''
       },
       registerForm: {
         email: '',
-        name: '',
+        username: '',
         password: '',
-        checkPassword: '',
+        checkPassword: ''
       }
     }
   },
@@ -100,11 +100,11 @@ export default {
         setTimeout(() => {
           this.goIndex()
           this.$store.dispatch('token')
-        }, 2000);
+        }, 2000)
       }
     },
     checkLoginForm() {
-      if (!this.loginForm.name) {
+      if (!this.loginForm.username) {
         return '请输入用户名'
       } else if (!this.loginForm.password) {
         return '请输入密码'
@@ -115,7 +115,7 @@ export default {
         if (!/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(this.registerForm.email)) {
           return '邮箱格式不正确'
         }
-      } else if (!this.registerForm.name) {
+      } else if (!this.registerForm.username) {
         return '请输入用户名'
       } else if (!/^[a-zA-Z0-9_-]{4,16}$/.test(this.registerForm.name)) {
         return '用户名格式不正确，请输入字母和数字组合，4~16位'
@@ -186,7 +186,7 @@ export default {
   .action-btn {
     display: flex;
     flex-flow: column nowrap;
-    align-items: center;    
+    align-items: center;
     button {
       background-color: $main-color;
       border-radius: 10rpx;

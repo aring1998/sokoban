@@ -67,33 +67,33 @@ export default {
 
 .common-popup-shade {
   background-color: rgba($color: #000000, $alpha: 0.2);
-  >.popup {
+  > .popup {
     width: 700rpx;
     padding: 40rpx;
-    background-image: url('http://81.68.189.158:88/project/sokoban-static/img/common/common-menu-bg.png');
+    background-image: url('https://source.aring.cc/assets/project/sokoban/imgs/common/common-menu-bg.png');
     border-radius: 20rpx;
   }
 }
 
 .paper-popup-shade {
-  >.popup {
+  > .popup {
     width: 700rpx;
     height: 70vh;
     padding: 40rpx;
-    background-image: url('http://81.68.189.158:88/project/sokoban-static/img/common/popup-bg.png');
+    background-image: url('https://source.aring.cc/assets/project/sokoban/imgs/common/popup-bg.png');
     border-radius: 20rpx;
   }
 }
 
 .menu-popup-shade {
-  >.popup {
+  > .popup {
     width: 700rpx;
     height: 1000rpx;
     padding: 40rpx;
     background-color: #fff;
-    background-image: url('http://81.68.189.158:88/project/sokoban-static/img/game/menu-bg.png');
+    background-image: url('https://source.aring.cc/assets/project/sokoban/imgs/game/menu-bg.png');
     border-radius: 20rpx;
-    >.closes {
+    > .closes {
       margin-bottom: 160rpx;
     }
   }
@@ -102,11 +102,11 @@ export default {
   display: none !important;
 }
 .fade-in {
-  animation: fadeIn .3s linear;
+  animation: fadeIn 0.3s linear;
 }
 @keyframes fadeIn {
   0% {
-    opacity: .5;
+    opacity: 0.5;
   }
   100% {
     opacity: 1;

@@ -1,7 +1,7 @@
 <template>
   <view class="index-page">
     <index-top-bar></index-top-bar>
-		<view class="title">魔改推箱子</view>
+    <view class="title">魔改推箱子</view>
     <view class="action">
       <view class="btn" @click="$refs.choiceLevel.show()">开始游戏</view>
       <view class="btn" @click="routerGo('workshop')">创意工坊</view>
@@ -18,14 +18,14 @@ import ArPopup from '@/components/ar-popup.vue'
 import IndexTopBar from './components/index-top-bar/index-top-bar.vue'
 import ChoiceLevel from './components/choice-level/choice-level.vue'
 export default {
-	components: { ArPopup, IndexTopBar, ChoiceLevel },
+  components: { ArPopup, IndexTopBar, ChoiceLevel },
   methods: {
     routerGo(name) {
       uni.navigateTo({
         url: `/pack-${name}/pages/index`
       })
     }
-  },
+  }
 }
 </script>
 
@@ -34,7 +34,7 @@ export default {
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
-  background-image: url('http://81.68.189.158:88/project/sokoban-static/img/index/bg.png');
+  background-image: url('https://source.aring.cc/assets/project/sokoban/imgs/index/bg.png');
   .title {
     width: 100%;
     height: 180rpx;
@@ -45,7 +45,7 @@ export default {
     color: rgb(247, 244, 49);
     margin-bottom: 100rpx;
     padding: 0 15rpx;
-    background-image: url('http://81.68.189.158:88/project/sokoban-static/img/common/common-title.png');
+    background-image: url('https://source.aring.cc/assets/project/sokoban/imgs/common/common-title.png');
   }
   .action {
     .btn {
@@ -56,7 +56,7 @@ export default {
       font-weight: bold;
       color: rgb(36, 131, 40);
       margin: 60rpx 120rpx;
-      background-image: url('http://81.68.189.158:88/project/sokoban-static/img/index/btn.png');
+      background-image: url('https://source.aring.cc/assets/project/sokoban/imgs/index/btn.png');
     }
   }
 }

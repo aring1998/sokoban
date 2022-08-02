@@ -19,13 +19,13 @@ const store = new Vuex.Store({
     setUserInfo(_, res) {
       if (res.code === 0) {
         this.state.userInfo = res.data
-        uni.showToast({ title: `欢迎回来，${res.data.name}` })
+        uni.showToast({ title: `欢迎回来，${res.data.username}` })
       } else uni.removeStorageSync('token')
     }
   },
   getters: {
     checkLogin(state) {
-      if (!state.userInfo.name) {
+      if (!state.userInfo.username) {
         uni.showToast({ title: '您需要先登录', icon: 'none' })
         return false
       }

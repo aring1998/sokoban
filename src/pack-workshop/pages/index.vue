@@ -24,14 +24,14 @@
           </view>
         </view>
         <view class="champion">
-          <img src="http://81.68.189.158:88/project/sokoban-static/img/workshop/champion.png" alt="">
-          <span>{{ item.recorder }}</span>
+          <img src="https://source.aring.cc/assets/project/sokoban/imgs/workshop/champion.png" alt="" />
+          <span>{{ item.mapKingName }}</span>
         </view>
       </view>
     </view>
     <view class="pagination">
-      <i class="ai-caret-left" @click="prePage" :style="searchInfo.current === 1 ? 'color: gray' : ''" />
-      <i class="ai-caret-right" @click="nextPage" :style="searchInfo.current >= searchInfo.total / searchInfo.size ? 'color: gray' : ''" />
+      <i class="ai-caret-left" @click="prePage" :style="searchInfo.page === 1 ? 'color: gray' : ''" />
+      <i class="ai-caret-right" @click="nextPage" :style="searchInfo.page >= searchInfo.total / searchInfo.pageSize ? 'color: gray' : ''" />
     </view>
   </view>
 </template>
@@ -51,8 +51,8 @@ export default {
       searchInfo: {
         mapName: '',
         creator: '',
-        current: 1,
-        size: 20,
+        page: 1,
+        pageSize: 20,
         total: 0,
         sort: 0,
         type: ''
@@ -75,18 +75,18 @@ export default {
   },
   methods: {
     async search() {
-      switch(this.currentTab) {
+      switch (this.currentTab) {
         case 1: {
           this.searchInfo.sort = 1
           break
         }
         case 2: {
-          if (!this.$store.getters.checkLogin) return this.mapData = []
+          if (!this.$store.getters.checkLogin) return (this.mapData = [])
           this.searchInfo.type = 'collect'
           break
         }
         case 3: {
-          if (!this.$store.getters.checkLogin) return this.mapData = []
+          if (!this.$store.getters.checkLogin) return (this.mapData = [])
           this.searchInfo.type = 'personal'
           break
         }
@@ -117,13 +117,13 @@ export default {
       })
     },
     prePage() {
-      if (this.searchInfo.current === 1) return uni.showToast({ title: '已是第一页', icon: 'none' })
-      this.searchInfo.current--
+      if (this.searchInfo.page === 1) return uni.showToast({ title: '已是第一页', icon: 'none' })
+      this.searchInfo.page--
       this.search()
     },
     nextPage() {
-      if (this.searchInfo.current >= this.searchInfo.total / this.searchInfo.size) return uni.showToast({ title: '已是最后一页', icon: 'none' })
-      this.searchInfo.current++
+      if (this.searchInfo.page >= this.searchInfo.total / this.searchInfo.pageSize) return uni.showToast({ title: '已是最后一页', icon: 'none' })
+      this.searchInfo.page++
       this.search()
     },
     formCreate(form) {
@@ -138,7 +138,7 @@ export default {
   height: 100vh;
   display: flex;
   flex-flow: column nowrap;
-  background-image: url('http://81.68.189.158:88/project/sokoban-static/img/common/bg.png');
+  background-image: url('https://source.aring.cc/assets/project/sokoban/imgs/common/bg.png');
   .tabs {
     background-color: rgba($color: #fff, $alpha: 0.7);
   }

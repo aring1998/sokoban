@@ -42,7 +42,9 @@ export default {
   created() {
     const form = {}
     this.formOptions.forEach(item => {
-      if (item.prop) form[item.prop] = item.initValue || ''
+      if (item.prop) {
+        form[item.prop] = item.initValue === undefined ? '' : item.initValue
+      }
     })
     this.form = form
     this.$emit('formCreate', form)
