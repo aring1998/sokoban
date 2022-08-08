@@ -53,7 +53,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
+  z-index: 1000;
   .closes {
     width: 100%;
     text-align: right;
