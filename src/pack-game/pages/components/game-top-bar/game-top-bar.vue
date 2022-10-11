@@ -1,5 +1,6 @@
 <template>
   <view class="game-top-bar">
+    <u-notify ref="notify"></u-notify>
     <view class="info-wrap">
       <view class="info-item">
         <span>步数</span>
@@ -26,13 +27,17 @@
       <span>{{ gameMap.mapName || '(未命名)' }}</span>
     </view>
     <view class="best-step">
-      <i class="ai-star-o" />
+      <i class="ai-trophy" />
       <span>{{ gameMap.stepsPas || '**' }}</span>
+    </view>
+    <view class="player-status">
+      <span v-for="(item, index) of getPlayerStatus" :key="index" @click.stop="$refs.notify.show({ type: 'error', message: item.desc })">{{ item.name }}</span>
     </view>
   </view>
 </template>
 
 <script>
+import { playerStatusText } from './config/player-status-text'
 export default {
   data() {
     return {
@@ -52,6 +57,10 @@ export default {
       type: [Number, String],
       default: 0
     },
+    status: {
+      type: Object,
+      default: () => {}
+    },
     showEdit: {
       type: Boolean,
       default: false
@@ -63,6 +72,15 @@ export default {
     showUpload: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    getPlayerStatus() {
+      const playerStatus = []
+      for (let key in this.status) {
+        if (this.status[key]) playerStatus.push(playerStatusText[key])
+      }
+      return playerStatus
     }
   },
   methods: {
@@ -167,6 +185,31 @@ export default {
     border-radius: 99px;
     i {
       margin-right: 16rpx;
+    }
+  }
+  .player-status {
+    position: absolute;
+    width: 100%;
+    top: 150rpx;
+    left: 0;
+    font-size: 28rpx;
+    padding: 10rpx 30rpx;
+    border-radius: 99px;
+    text-align: right;
+    span {
+      background-color: #fef0f0;
+      border-color: #fde2e2;
+      color: #f56c6c;
+      display: inline-block;
+      font-size: 12px;
+      border: 1px solid #d9ecff;
+      border-radius: 4px;
+      box-sizing: border-box;
+      white-space: nowrap;
+      height: 20px;
+      padding: 0 5px;
+      line-height: 19px;
+      margin: 0 6rpx;
     }
   }
 }

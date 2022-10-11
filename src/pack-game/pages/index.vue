@@ -5,6 +5,7 @@
       :gameMap="gameMap"
       :step="gameCore.step"
       :life="gameCore.life"
+      :status="gameCore.status"
       :showEdit="routeInfo.type === 'create'"
       :showLike="routeInfo.type === 'workshop' && routeInfo.id !== 'undefined'"
       :showUpload="routeInfo.type === 'workshop' && routeInfo.localId !== 'undefined'"
@@ -367,7 +368,7 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   .game-container {
-    margin-top: 80rpx;
+    margin-top: 90rpx;
   }
   .game-action {
     padding: 0 40rpx;
