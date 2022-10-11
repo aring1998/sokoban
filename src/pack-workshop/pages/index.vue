@@ -5,7 +5,7 @@
       <ar-form :formOptions="formOptions" @formCreate="formCreate" @ok="search() && $refs.search.show()"></ar-form>
     </ar-popup>
     <view class="tabs">
-      <u-tabs :list="tabList" @click="item => (currentTab = item.id)" lineColor="#5ac725" :current="currentTab"></u-tabs>
+      <ar-tabs :list="tabList" :current="currentTab" @click="item => (currentTab = item.id)"></ar-tabs>
     </view>
     <view class="map-wrap">
       <view class="map-item" v-for="(item, index) of mapData" :key="index" @click="goGame(item.id, item.localId)">
@@ -39,6 +39,7 @@
 <script>
 import TopBar from '@/components/top-bar.vue'
 import ArPopup from '@/components/ar-popup.vue'
+import ArTabs from '@/components/ar-tabs.vue'
 import ArForm from '@/components/ar-form.vue'
 import CreateContent from '@/components/game-content/create-content.vue'
 import { tabList, formOptions } from './config/data'
@@ -60,7 +61,7 @@ export default {
       mapData: []
     }
   },
-  components: { TopBar, ArPopup, ArForm, CreateContent },
+  components: { TopBar, ArPopup, ArTabs, ArForm, CreateContent },
   onReady() {
     this.search()
   },

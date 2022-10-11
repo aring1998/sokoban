@@ -1,12 +1,8 @@
 <template>
   <view class="choice-level">
-    <u-tabs :list="tabList" @click="tabClick" lineColor="#5ac725" :current="currentTab"></u-tabs>
+    <ar-tabs :list="tabList" :current="currentTab" :spaceBetween="false" @click="tabClick"></ar-tabs>
     <view class="level-list">
-      <view class="level-item"
-        v-for="(item, index) of levelList"
-        :key="index"
-        @click="goGame(index)"
-      >
+      <view class="level-item" v-for="(item, index) of levelList" :key="index" @click="goGame(index)">
         {{ index + 1 }}
       </view>
     </view>
@@ -14,6 +10,7 @@
 </template>
 
 <script>
+import ArTabs from '@/components/ar-tabs.vue'
 import { basic, expand } from '@/static/js/level/index'
 export default {
   data() {
@@ -32,6 +29,7 @@ export default {
       currentTab: 0
     }
   },
+  components: { ArTabs },
   methods: {
     tabClick(item) {
       if (item.id === 0) this.levelList = basic

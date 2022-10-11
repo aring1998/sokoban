@@ -1,4 +1,9 @@
 @import './theme.scss';
+
+html {
+  color: #333;
+}
+
 :not(not) {
   margin: 0;
   padding: 0;
@@ -38,10 +43,6 @@
       font-size: 32rpx;
     }
   }
-}
-
-.u-tabs__wrapper__nav__item {
-  font-weight: bold;
 }
 
 .u-icon__icon {

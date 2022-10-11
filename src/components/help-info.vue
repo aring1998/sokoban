@@ -1,13 +1,6 @@
 <template>
   <view class="help-info">
-    <u-tabs
-      :list="tabList"
-      @click="item => (currentTab = item.id)"
-      lineColor="#5ac725"
-      activeStyle="font-size: 28rpx"
-      inactiveStyle="font-size: 28rpx"
-      itemStyle="padding: 16rpx"
-    ></u-tabs>
+    <ar-tabs :list="tabList" :current="currentTab" fontSize="28rpx" @click="item => (currentTab = item.id)"></ar-tabs>
     <view class="item" v-show="currentTab === 0">
       <span>
         通过虚拟手柄<img src="https://source.aring.cc/assets/project/sokoban/imgs/help-info/handle.png" alt="" /> 控制人物移动，将所有箱子
@@ -60,6 +53,7 @@
 </template>
 
 <script>
+import ArTabs from '@/components/ar-tabs.vue'
 import { mapEl } from '@/static/js/map-el/index'
 export default {
   data() {
@@ -85,15 +79,13 @@ export default {
       ],
       currentTab: 0
     }
-  }
+  },
+  components: { ArTabs }
 }
 </script>
 
 <style lang="scss" scoped>
 .help-info {
-  .u-tabs__wrapper__nav__item {
-    font-size: 12px !important;
-  }
   .item {
     width: 100%;
     padding: 20rpx;

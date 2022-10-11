@@ -39,10 +39,6 @@ export default {
     width: 80rpx;
     border-radius: 50%;
   }
-  .item {
-    height: 80rpx;
-    width: 80rpx;
-  }
   .common-title {
     width: 400rpx;
     height: 120rpx;
