@@ -135,7 +135,6 @@ export default {
     },
     advancedFormCreate(form) {
       this.advancedForm = form
-      console.log(this.advancedForm)
     },
     doNotTip() {
       uni.setStorageSync('loginTips', '1')

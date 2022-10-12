@@ -6,3 +6,6 @@ export const deepCloneObjArr = data => {
   }
   return res
 }
+
+// 复制内容到剪切板
+export const copyToClipboard = text => navigator.clipboard.writeText(text)

@@ -12,7 +12,7 @@
           <i class="ai-home"></i>
           <span>首页</span>
         </view>
-        <view class="common-bottom-form-item">
+        <view class="common-bottom-form-item" @click="share">
           <i class="ai-share-alt"></i>
           <span>分享</span>
         </view>
@@ -32,17 +32,31 @@
 import ArPopup from '@/components/ar-popup.vue'
 import ArForm from '@/components/ar-form.vue'
 import HelpInfo from '@/components/help-info.vue'
+import { copyToClipboard } from '@/utils/index'
 export default {
   components: { ArPopup, ArForm, HelpInfo },
   methods: {
+    bgmPlay() {
+      this.$music.bgmPlay(this.$store.state.bgmPlay)
+      uni.setStorageSync('bgmPlay', JSON.stringify(this.$store.state.bgmPlay))
+    },
     goIndex() {
       uni.redirectTo({
         url: '/pages/index/index'
       })
     },
-    bgmPlay() {
-      this.$music.bgmPlay(this.$store.state.bgmPlay)
-      uni.setStorageSync('bgmPlay', JSON.stringify(this.$store.state.bgmPlay))
+    share() {
+      const url = window.location.href
+      if (url.includes('aring.cc')) {
+        copyToClipboard(url)
+      } else {
+        copyToClipboard('https://www.taptap.com/app/224432/')
+      }
+      uni.showToast({
+        title: '复制链接成功，快去分享给好友吧！',
+        icon: 'success',
+        duration: 5000
+      })
     }
   }
 }
