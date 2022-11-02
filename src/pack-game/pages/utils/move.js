@@ -69,11 +69,14 @@ export class Move {
     Vue.set(this.gameCore.activeMap[this.gameCore.setY], this.gameCore.setX, 2)
     this.gameCore.playerX = this.gameCore.setX
     this.gameCore.playerY = this.gameCore.setY
-    console.log(this.gameCore)
     this.gameCore.moveDirection = this.gameCore.direction
     this.gameCore.step++
     // 记录游戏记录
-    this.gameRecord.push(deepCloneObjArr(this.gameCore))
+    this.gameRecord.push({
+      ...deepCloneObjArr(this.gameCore),
+      disabledHandle: false,
+      onSlid: false
+    })
     this.gameCore.processData.push(this.gameCore.direction)
   }
 
@@ -155,13 +158,13 @@ const staticEvent = {
       // 通过上一次移动的步数是否与此次相同以判断移动被阻止
       if (gameCoreStep === gameCore.step || !gameCore.onSlid) {
         clearInterval(interval)
-        gameCore.disabledHandle = false
-        gameCore.onSlid = false
         // 清理滑行移动途中的记录
         setTimeout(() => {
           const endRecordLength = gameRecord.length
           const totalStep = endRecordLength - startRecordLength
           gameRecord.splice(startRecordLength, totalStep - 1)
+          gameCore.disabledHandle = false
+          gameCore.onSlid = false
         }, 50)
       }
     }, 300)
