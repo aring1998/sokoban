@@ -9,8 +9,8 @@
       :showEdit="routeInfo.type === 'create'"
       :showLike="routeInfo.type === 'workshop' && routeInfo.id !== 'undefined'"
       :showUpload="routeInfo.type === 'workshop' && routeInfo.localId !== 'undefined'"
-      @reset="reset"
-      @regret="regret"
+      @reset="!gameCore.onSlid && regret()"
+      @regret="!gameCore.onSlid && regret()"
       @showMenu="$refs.settings.show()"
       @upload="
         saveType = 1
@@ -20,20 +20,13 @@
     <game-content
       :staticMap="gameCore.staticMap"
       :activeMap="gameCore.activeMap"
-      :direction="gameCore.direction"
+      :direction="gameCore.moveDirection"
       :playerPostion="{ playerX: gameCore.playerX, playerY: gameCore.playerY }"
       :nightMode="gameMap.nightMode"
       ref="game"
     ></game-content>
 
-    <analog-handle
-      @moveBeforeHook="moveBeforeHook"
-      @moveAfterHook="moveAfterHook"
-      @moveLeft="moveLeft"
-      @moveRight="moveRight"
-      @moveUp="moveUp"
-      @moveDown="moveDown"
-    ></analog-handle>
+    <analog-handle @moveFunc="moveFunc" :disabled="gameCore.disabledHandle"></analog-handle>
 
     <ar-popup type="menu" ref="settings">
       <game-menu></game-menu>
@@ -113,7 +106,10 @@ export default {
         step: 0,
         suc: 0,
         direction: -1,
-        processData: []
+        moveDirection: -1,
+        processData: [],
+        disabledHandle: false,
+        onSlid: false
       },
       gameRecord: [], // 游戏记录
       routeInfo: {},
@@ -193,32 +189,31 @@ export default {
       this.gameRecord = []
       this.gameRecord.push(deepCloneObjArr(this.gameCore))
     },
-    moveBeforeHook(clickEvent) {
+    moveBeforeHook(direction) {
       this.gameCore.setX = this.gameCore.playerX
       this.gameCore.setY = this.gameCore.playerY
       this.gameCore.setBoxX = this.gameCore.setX
       this.gameCore.setBoxY = this.gameCore.setY
-      this.statusEvent(clickEvent)
+      return this.statusEvent(direction)
     },
-    moveLeft() {
-      this.gameCore.setX--
-      this.gameCore.setBoxX = this.gameCore.setX - 1
-      new Move(this.gameCore, 3, this.gameRecord)
-    },
-    moveRight() {
-      this.gameCore.setX++
-      this.gameCore.setBoxX = this.gameCore.setX + 1
-      new Move(this.gameCore, 1, this.gameRecord)
-    },
-    moveUp() {
-      this.gameCore.setY--
-      this.gameCore.setBoxY = this.gameCore.setY - 1
-      new Move(this.gameCore, 0, this.gameRecord)
-    },
-    moveDown() {
-      this.gameCore.setY++
-      this.gameCore.setBoxY = this.gameCore.setY + 1
-      new Move(this.gameCore, 2, this.gameRecord)
+    moveFunc(direction, disabledBeforeHook = false, moveCount = 1) {
+      this.gameCore.direction = direction
+      if (!disabledBeforeHook && !this.moveBeforeHook(0)) return
+      if (this.gameCore.direction === 0) {
+        this.gameCore.setY -= moveCount
+        this.gameCore.setBoxY = this.gameCore.setY - 1
+      } else if (this.gameCore.direction === 1) {
+        this.gameCore.setX += moveCount
+        this.gameCore.setBoxX = this.gameCore.setX + 1
+      } else if (this.gameCore.direction === 2) {
+        this.gameCore.setY += moveCount
+        this.gameCore.setBoxY = this.gameCore.setY + 1
+      } else if (this.gameCore.direction === 3) {
+        this.gameCore.setX -= moveCount
+        this.gameCore.setBoxX = this.gameCore.setX - 1
+      }
+      new Move(this.gameCore, direction, this.gameRecord, this.moveFunc)
+      this.moveAfterHook()
     },
     moveAfterHook() {
       if (this.gameCore.suc === 1) return
@@ -245,30 +240,25 @@ export default {
         this.$refs.game.scrollTop = this.gameCore.playerY * screenScale * 30 - screenScale * 165
       }
     },
-    statusEvent(clickEvent) {
+    statusEvent() {
+      let flag = true
       // 中毒事件
       if (this.gameCore.status.poisoning) {
-        if (clickEvent.direction === 0) clickEvent.direction = 2
-        else if (clickEvent.direction === 1) clickEvent.direction = 3
-        else if (clickEvent.direction === 2) clickEvent.direction = 0
-        else if (clickEvent.direction === 3) clickEvent.direction = 1
+        if (this.gameCore.direction === 0) this.gameCore.direction = 2
+        else if (this.gameCore.direction === 1) this.gameCore.direction = 3
+        else if (this.gameCore.direction === 2) this.gameCore.direction = 0
+        else if (this.gameCore.direction === 3) this.gameCore.direction = 1
       }
       // 酗酒事件
       if (this.gameCore.status.drunk) {
         // 随机再进行0~2次移动
         const drunkStep = Math.floor(Math.random() * 3)
-        let moveFunc = null
-        if (clickEvent.direction === 0) moveFunc = this.moveUp
-        else if (clickEvent.direction === 1) moveFunc = this.moveRight
-        else if (clickEvent.direction === 2) moveFunc = this.moveDown
-        else if (clickEvent.direction === 3) moveFunc = this.moveLeft
         const startRecordLength = this.gameRecord.length
         for (let i = 0; i < drunkStep; i++) {
           this.$nextTick(() => {
-            if (this.gameCore.staticTarget === 13) return // 碰到甘露则停止
-            Move.moveIndex(this.gameCore)
-            moveFunc()
-            this.moveAfterHook()
+            if ([13, 14].includes(this.gameCore.staticTarget)) return // 碰到解药则停止
+            if (this.gameCore.onSlid) return // 滑行中不触发
+            this.moveFunc(this.gameCore.direction, true)
           })
         }
         // 清理酗酒移动途中的记录
@@ -278,6 +268,7 @@ export default {
           this.gameRecord.splice(startRecordLength, totalStep - 1)
         }, 50)
       }
+      return flag
     },
     reset() {
       this.gameCore = deepCloneObjArr(this.gameRecord[0])
@@ -287,7 +278,7 @@ export default {
       if (this.gameMap.regretDisabled === 1) return this.$refs.notify.show({ type: 'error', message: '该图作者已禁用撤回' })
       if (this.gameRecord.length === 1) return this.$refs.notify.show({ type: 'error', message: '已经回退到头啦~' })
       this.gameRecord.pop()
-      this.gameRecord[this.gameRecord.length - 1].direction = -1
+      this.gameRecord[this.gameRecord.length - 1].moveDirection = -1
       this.gameCore = deepCloneObjArr(this.gameRecord[this.gameRecord.length - 1])
     },
     nextLevel() {

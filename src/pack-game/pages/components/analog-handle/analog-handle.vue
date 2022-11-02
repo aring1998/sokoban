@@ -17,33 +17,25 @@
 export default {
   data() {
     return {
-      clickEvent: {
-        direction: 0
-      },
-      emitEvent: null,
       keepMove: null
     }
   },
-  mounted() {
-    this.emitEvent = {
-      0: () => this.$emit('moveUp'),
-      1: () => this.$emit('moveRight'),
-      2: () => this.$emit('moveDown'),
-      3: () => this.$emit('moveLeft')
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     sendMoveEvent(direction) {
+      if (this.disabled) return
       // 长按持续移动
       clearTimeout(this.keepMove)
       this.keepMove = setTimeout(() => {
         this.sendMoveEvent(direction)
       }, 300)
 
-      this.clickEvent.direction = direction
-      this.$emit('moveBeforeHook', this.clickEvent)
-      this.emitEvent[this.clickEvent.direction]()
-      this.$emit('moveAfterHook', this.clickEvent)
+      this.$emit('moveFunc', direction)
     },
     stopMove() {
       clearTimeout(this.keepMove)

@@ -8,7 +8,8 @@ export const staticMapRander = {
   10: 'portal-entry',
   11: 'portal-exit',
   12: 'beer',
-  13: 'nectar'
+  13: 'nectar',
+  14: 'slider'
 }
 
 export const acitveMapRander = {

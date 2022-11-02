@@ -26,11 +26,15 @@ export class Move {
     step: 0, // 步数
     suc: 0, // 获胜标识
     direction: -1, // 方向
-    processData: [] // 流程记录
+    moveDirection: -1, // 移动方向（动画用）
+    processData: [], // 流程记录
+    disabledHandle: false, // 禁用虚拟手柄
+    onSlid: false // 滑行状态
   }
   gameRecord = []
+  moveFunc = null
 
-  constructor(gameCore, direction, gameRecord) {
+  constructor(gameCore, direction, gameRecord, moveFunc) {
     this.gameCore = gameCore
     // 超出表格
     if (
@@ -42,10 +46,11 @@ export class Move {
       return
     this.getTarget()
     this.gameRecord = gameRecord
+    this.moveFunc = moveFunc
     // 静止层人物目标点事件
     let staticEventFlag = true
     if (staticEvent[this.gameCore.staticTarget]) {
-      staticEventFlag = staticEvent[this.gameCore.staticTarget](this.gameCore, direction, this.gameRecord)
+      staticEventFlag = staticEvent[this.gameCore.staticTarget](this.gameCore, this.moveFunc, this.gameRecord)
     }
     if (!staticEventFlag) return
     // 活动层人物目标点事件
@@ -54,21 +59,22 @@ export class Move {
       activeEventFlag = activeEvent[this.gameCore.activeTarget](this.gameCore)
     }
     if (!activeEventFlag) return
-    this.commonMove(direction)
+    this.commonMove()
     return true
   }
 
   // 常规移动
-  commonMove(direction) {
+  commonMove() {
     Vue.set(this.gameCore.activeMap[this.gameCore.playerY], this.gameCore.playerX, 1)
     Vue.set(this.gameCore.activeMap[this.gameCore.setY], this.gameCore.setX, 2)
     this.gameCore.playerX = this.gameCore.setX
     this.gameCore.playerY = this.gameCore.setY
-    this.gameCore.direction = direction
+    console.log(this.gameCore)
+    this.gameCore.moveDirection = this.gameCore.direction
     this.gameCore.step++
     // 记录游戏记录
     this.gameRecord.push(deepCloneObjArr(this.gameCore))
-    this.gameCore.processData.push(direction)
+    this.gameCore.processData.push(this.gameCore.direction)
   }
 
   static moveIndex(gameCore) {
@@ -100,13 +106,15 @@ const staticEvent = {
     return true
   },
   // 弹簧
-  9: (gameCore, direction, gameRecord) => {
+  9: (gameCore, _moveFunc, gameRecord) => {
     setTimeout(() => {
-      if (direction === 0) gameCore.setY = gameCore.playerY - 2
-      else if (direction === 1) gameCore.setX = gameCore.playerX + 2
-      else if (direction === 2) gameCore.setY = gameCore.playerY + 2
-      else if (direction === 3) gameCore.setX = gameCore.playerX - 2
-      new Move(gameCore, direction, gameRecord)
+      if (gameCore.direction === 0) gameCore.setY = gameCore.playerY - 2
+      else if (gameCore.direction === 1) gameCore.setX = gameCore.playerX + 2
+      else if (gameCore.direction === 2) gameCore.setY = gameCore.playerY + 2
+      else if (gameCore.direction === 3) gameCore.setX = gameCore.playerX - 2
+      gameRecord.splice(gameRecord.length - 1, 1)
+      gameCore.step--
+      new Move(gameCore, gameCore.direction, gameRecord)
     }, 0)
     return true
   },
@@ -117,6 +125,8 @@ const staticEvent = {
     // 修改目标点
     gameCore.setY = Number(exit.y)
     gameCore.setX = Number(exit.x)
+    // 打断滑行
+    gameCore.onSlid = false
     new Move(gameCore, direction, gameRecord)
   },
   // 啤酒
@@ -131,6 +141,30 @@ const staticEvent = {
     for (let key in gameCore.status) {
       gameCore.status[key] = false
     }
+    return true
+  },
+  // 滑块
+  14: (gameCore, moveFunc, gameRecord) => {
+    gameCore.disabledHandle = true
+    gameCore.onSlid = true
+    let gameCoreStep = gameCore.step
+    const startRecordLength = gameRecord.length
+    const interval = setInterval(() => {
+      moveFunc(gameCore.direction, true)
+      gameCoreStep++
+      // 通过上一次移动的步数是否与此次相同以判断移动被阻止
+      if (gameCoreStep === gameCore.step || !gameCore.onSlid) {
+        clearInterval(interval)
+        gameCore.disabledHandle = false
+        gameCore.onSlid = false
+        // 清理滑行移动途中的记录
+        setTimeout(() => {
+          const endRecordLength = gameRecord.length
+          const totalStep = endRecordLength - startRecordLength
+          gameRecord.splice(startRecordLength, totalStep - 1)
+        }, 50)
+      }
+    }, 300)
     return true
   }
 }
