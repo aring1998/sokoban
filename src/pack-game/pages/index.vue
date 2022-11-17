@@ -190,13 +190,13 @@ export default {
       this.gameRecord.push(deepCloneObjArr(this.gameCore))
     },
     moveBeforeHook(direction) {
+      return this.statusEvent(direction)
+    },
+    moveFunc(direction, disabledBeforeHook = false, moveCount = 1) {
       this.gameCore.setX = this.gameCore.playerX
       this.gameCore.setY = this.gameCore.playerY
       this.gameCore.setBoxX = this.gameCore.setX
       this.gameCore.setBoxY = this.gameCore.setY
-      return this.statusEvent(direction)
-    },
-    moveFunc(direction, disabledBeforeHook = false, moveCount = 1) {
       this.gameCore.direction = direction
       if (!disabledBeforeHook && !this.moveBeforeHook(0)) return
       if (this.gameCore.direction === 0) {
@@ -256,7 +256,7 @@ export default {
         const startRecordLength = this.gameRecord.length
         for (let i = 0; i < drunkStep; i++) {
           this.$nextTick(() => {
-            if ([13, 14].includes(this.gameCore.staticTarget)) return // 碰到解药则停止
+            if ([10, 11, 13, 14].includes(this.gameCore.staticTarget)) return // 碰到传送门/解药/滑块则停止
             if (this.gameCore.onSlid) return // 滑行中不触发
             this.moveFunc(this.gameCore.direction, true)
           })
